@@ -1,0 +1,6 @@
+node_modules/
+genbbs/
+.git/
+*.bat
+pm2-*
+.DS_Store
