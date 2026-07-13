@@ -1,0 +1,28 @@
+# GENFUN论坛 Fly.io 配置
+app = "genfun-bbs"
+primary_region = "nrt"  # 东京（离中国近，速度快）
+
+[build]
+  dockerfile = "Dockerfile"
+
+[[mounts]]
+  source = "genfun_data"
+  destination = "/data"
+  initial_size = "3gb"
+
+[env]
+  PORT = "3456"
+  DATA_DIR = "/data/genbbs"
+
+[http_service]
+  internal_port = 3456
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    method = "GET"
+    path = "/api/health"

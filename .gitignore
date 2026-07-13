@@ -1,0 +1,4 @@
+node_modules/
+genbbs/
+*.bat
+.DS_Store

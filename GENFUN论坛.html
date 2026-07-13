@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GENFUN论坛 - 发现精彩，分享热爱</title>
+<style>
+/* ========== CSS Variables ========== */
+:root {
+  /* Dark Theme (default) */
+  --bg: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-card: #1c2128;
+  --bg-hover: #21262d;
+  --bg-input: #0d1117;
+  --header-bg: rgba(13, 17, 23, 0.85);
+  --border: #30363d;
+  --border-light: #21262d;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-light: rgba(59, 130, 246, 0.15);
+  --accent-glow: rgba(59, 130, 246, 0.3);
+  --accent-alt: #06b6d4;
+  --success: #3fb950;
+  --success-bg: rgba(63, 185, 80, 0.15);
+  --danger: #f85149;
+  --danger-bg: rgba(248, 81, 73, 0.15);
+  --warning: #d29922;
+  --warning-bg: rgba(210, 153, 34, 0.15);
+  --info: #58a6ff;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 4px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ========== Light Theme ========== */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-secondary: #f6f8fa;
+  --bg-card: #ffffff;
+  --bg-hover: #f0f2f5;
+  --bg-input: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --border: #d0d7de;
+  --border-light: #d8dee4;
+  --text: #1f2328;
+  --text-secondary: #656d76;
+  --text-muted: #8c959f;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: rgba(37, 99, 235, 0.1);
+  --accent-glow: rgba(37, 99, 235, 0.25);
+  --accent-alt: #0891b2;
+  --success: #1a7f37;
+  --success-bg: rgba(26, 127, 55, 0.1);
+  --danger: #cf222e;
+  --danger-bg: rgba(207, 34, 46, 0.1);
+  --warning: #9a6700;
+  --warning-bg: rgba(154, 103, 0, 0.1);
+  --info: #0969da;
+  --shadow: 0 1px 3px rgba(31,35,40,0.12), 0 1px 2px rgba(31,35,40,0.06);
+  --shadow-lg: 0 8px 24px rgba(140,149,159,0.2);
+}
+
+/* ========== Reset & Base ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+
+/* ========== Scrollbar ========== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ========== App Container ========== */
+#app { max-width: 960px; margin: 0 auto; padding: 0 20px; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ========== Header ========== */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--header-bg); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px; margin: 0 -20px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.header-left { display: flex; align-items: center; gap: 24px; }
+.logo {
+  font-size: 20px; font-weight: 800; color: var(--text);
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  user-select: none; white-space: nowrap;
+}
+.logo-icon {
+  width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff; font-weight: 900;
+}
+.nav { display: flex; gap: 4px; }
+.nav-btn {
+  padding: 6px 16px; border-radius: 20px; border: none; background: transparent;
+  color: var(--text-secondary); font-size: 14px; cursor: pointer;
+  transition: var(--transition); font-family: inherit; white-space: nowrap;
+}
+.nav-btn:hover { color: var(--text); background: var(--bg-hover); }
+.nav-btn.active { color: #fff; background: var(--accent); font-weight: 600; }
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+.user-btn {
+  display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px;
+  border-radius: 24px; border: 1px solid var(--border); background: var(--bg-secondary);
+  color: var(--text); cursor: pointer; transition: var(--transition);
+  font-family: inherit; font-size: 14px;
+}
+.user-btn:hover { border-color: var(--accent); background: var(--bg-hover); }
+.user-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.admin-badge {
+  background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff;
+  font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 700;
+  margin-left: 4px; white-space: nowrap;
+}
+.login-link {
+  padding: 6px 18px; border-radius: 20px; border: 1px solid var(--accent);
+  background: transparent; color: var(--accent); font-size: 14px; cursor: pointer;
+  transition: var(--transition); font-family: inherit; white-space: nowrap;
+}
+.login-link:hover { background: var(--accent); color: #fff; }
+
+/* Theme toggle */
+.theme-toggle {
+  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
+  background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: var(--transition); flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--bg-hover); }
+
+/* ========== Main Content ========== */
+.main { flex: 1; padding: 24px 0; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ========== Category Tabs ========== */
+.category-tabs {
+  display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap;
+  padding: 4px; background: var(--bg-secondary); border-radius: var(--radius);
+}
+.cat-tab {
+  padding: 6px 16px; border-radius: 20px; border: none; background: transparent;
+  color: var(--text-secondary); font-size: 13px; cursor: pointer;
+  transition: var(--transition); font-family: inherit;
+}
+.cat-tab:hover { color: var(--text); }
+.cat-tab.active { background: var(--accent); color: #fff; font-weight: 600; }
+
+/* ========== Search ========== */
+.search-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+.search-input {
+  flex: 1; padding: 10px 16px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--bg-input);
+  color: var(--text); font-size: 14px; font-family: inherit;
+  outline: none; transition: var(--transition);
+}
+.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.search-input::placeholder { color: var(--text-muted); }
+
+/* ========== Post Cards ========== */
+.post-list { display: flex; flex-direction: column; gap: 12px; }
+.post-card {
+  background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: var(--radius); padding: 20px; cursor: pointer;
+  transition: var(--transition); position: relative;
+}
+.post-card:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+.post-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.post-card-title { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.4; flex: 1; }
+.post-card-category {
+  font-size: 11px; padding: 2px 10px; border-radius: 12px;
+  background: var(--accent-light); color: var(--accent);
+  white-space: nowrap; font-weight: 600;
+}
+.post-card-preview { color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
+.post-card-meta {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  font-size: 12px; color: var(--text-muted);
+}
+.post-card-meta span { display: flex; align-items: center; gap: 4px; }
+.post-card-author { color: var(--text-secondary); font-weight: 500; }
+.post-card-tag { display: inline-flex; align-items: center; gap: 3px; }
+
+/* ========== Post Detail ========== */
+.post-detail { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius); padding: 28px; margin-bottom: 24px; }
+.post-detail-header { margin-bottom: 20px; }
+.post-detail-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
+.post-detail-meta {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  font-size: 13px; color: var(--text-muted); padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+.post-detail-content {
+  padding: 20px 0; font-size: 15px; line-height: 1.8; white-space: pre-wrap; word-break: break-word;
+}
+.post-attachments { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); }
+.post-attachments h4 { font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; }
+.attach-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  background: var(--bg-secondary); border-radius: var(--radius-sm);
+  margin-bottom: 6px; font-size: 13px;
+}
+.attach-item a { color: var(--info); word-break: break-all; }
+.attach-size { color: var(--text-muted); font-size: 12px; white-space: nowrap; }
+
+/* ========== Replies ========== */
+.replies-section { margin-top: 8px; }
+.replies-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.reply-card {
+  background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); padding: 16px; margin-bottom: 10px;
+}
+.reply-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.reply-author { font-weight: 600; font-size: 13px; }
+.reply-time { font-size: 12px; color: var(--text-muted); }
+.reply-content { font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+
+/* ========== Reply Form ========== */
+.reply-form { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+.reply-form textarea {
+  width: 100%; min-height: 100px; padding: 14px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--bg-input); color: var(--text);
+  font-size: 14px; font-family: inherit; resize: vertical; outline: none; transition: var(--transition);
+}
+.reply-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+
+/* ========== Forms ========== */
+.form-container {
+  max-width: 440px; margin: 40px auto; background: var(--bg-card);
+  border: 1px solid var(--border-light); border-radius: var(--radius);
+  padding: 32px;
+}
+.form-title { font-size: 22px; font-weight: 700; margin-bottom: 24px; text-align: center; }
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 500; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 10px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-input); color: var(--text);
+  font-size: 14px; font-family: inherit; outline: none; transition: var(--transition);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light);
+}
+.form-textarea { min-height: 160px; resize: vertical; }
+.form-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Toggle switch for email/phone */
+.login-type-toggle {
+  display: flex; background: var(--bg-secondary); border-radius: var(--radius);
+  padding: 3px; margin-bottom: 20px;
+}
+.toggle-option {
+  flex: 1; padding: 8px; text-align: center; border-radius: var(--radius-sm);
+  border: none; background: transparent; color: var(--text-secondary);
+  font-size: 14px; cursor: pointer; transition: var(--transition); font-family: inherit;
+}
+.toggle-option.active { background: var(--accent); color: #fff; font-weight: 600; }
+.form-footer { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-secondary); }
+.form-footer a { cursor: pointer; font-weight: 600; }
+
+.code-input-row { display: flex; gap: 10px; }
+.code-input-row .code-input { flex: 1; }
+.code-hint { margin-top: 8px; padding: 8px 14px; background: var(--accent-light); border: 1px solid var(--accent); border-radius: var(--radius-xs); font-size: 13px; color: var(--accent); font-weight: 600; text-align: center; }
+.btn-code {
+  flex-shrink: 0; padding: 0 16px; height: 44px; border: none; border-radius: var(--radius-sm);
+  background: var(--accent); color: #fff; font-size: 13px; cursor: pointer; white-space: nowrap;
+  transition: var(--transition);
+}
+.btn-code:hover { background: var(--accent-hover); }
+.btn-code:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+
+/* ========== New Post Form ========== */
+.new-post-form { max-width: 100%; }
+.new-post-form .form-group { margin-bottom: 20px; }
+
+/* ========== File Upload ========== */
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 32px; text-align: center; cursor: pointer; transition: var(--transition);
+  background: var(--bg-secondary); position: relative;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent); background: var(--accent-light);
+}
+.upload-icon { font-size: 36px; margin-bottom: 8px; opacity: 0.6; }
+.upload-text { font-size: 14px; color: var(--text-secondary); }
+.upload-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.upload-zone input[type="file"] { display: none; }
+
+.file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.file-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: var(--bg-secondary); border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+.file-item-info { flex: 1; min-width: 0; }
+.file-item-name { font-size: 13px; font-weight: 500; word-break: break-all; }
+.file-item-meta { font-size: 12px; color: var(--text-muted); }
+.file-item-remove {
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  background: var(--danger-bg); color: var(--danger); cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: var(--transition); flex-shrink: 0;
+}
+.file-item-remove:hover { background: var(--danger); color: #fff; }
+
+.upload-progress {
+  margin-top: 12px; background: var(--bg-secondary);
+  border-radius: var(--radius-sm); padding: 12px; display: none;
+}
+.upload-progress.show { display: block; }
+.progress-bar-bg {
+  height: 6px; background: var(--border); border-radius: 3px;
+  overflow: hidden; margin-bottom: 6px;
+}
+.progress-bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-alt));
+  border-radius: 3px; transition: width 0.3s; width: 0%;
+}
+.progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+
+/* ========== Buttons ========== */
+.btn {
+  padding: 10px 24px; border-radius: var(--radius-sm); border: none;
+  font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: var(--transition); display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 4px 12px var(--accent-glow); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-block { width: 100%; justify-content: center; }
+.btn-sm { padding: 6px 14px; font-size: 13px; }
+.btn-danger { background: var(--danger-bg); color: var(--danger); }
+.btn-danger:hover { background: var(--danger); color: #fff; }
+.btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ========== Toast ========== */
+#toast-container { position: fixed; top: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-sm); font-size: 14px;
+  box-shadow: var(--shadow-lg); animation: slideIn 0.3s ease; max-width: 380px;
+  display: flex; align-items: center; gap: 8px;
+}
+.toast-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(63,185,80,0.3); }
+.toast-error { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(248,81,73,0.3); }
+.toast-info { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-light); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* ========== States ========== */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-state-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+.empty-state-text { font-size: 15px; }
+.loading { text-align: center; padding: 40px; color: var(--text-muted); }
+.spinner {
+  width: 32px; height: 32px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
+  margin: 0 auto 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========== Pagination ========== */
+.pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 24px; }
+.page-btn {
+  padding: 6px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text); font-size: 13px; cursor: pointer;
+  transition: var(--transition); font-family: inherit;
+}
+.page-btn:hover:not(:disabled) { border-color: var(--accent); }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.page-info { font-size: 13px; color: var(--text-muted); }
+
+/* ========== Back Button ========== */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-secondary); font-size: 13px;
+  cursor: pointer; margin-bottom: 20px; transition: var(--transition); font-family: inherit;
+}
+.back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ========== Floating Action Button ========== */
+.fab {
+  position: fixed; bottom: 32px; right: 32px; z-index: 999;
+  width: 56px; height: 56px; border-radius: 50%; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  color: #fff; font-size: 28px; cursor: pointer; box-shadow: 0 4px 16px var(--accent-glow);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s; line-height: 1;
+}
+.fab:hover { transform: scale(1.1); box-shadow: 0 6px 24px var(--accent-glow); }
+.fab:active { transform: scale(0.95); }
+.fab.hidden { display: none; }
+
+.admin-nav-btn { border-color: #f59e0b !important; color: #f59e0b !important; }
+.admin-badge {
+  font-size: 10px; padding: 2px 8px; border-radius: 8px; background: rgba(245,158,11,0.2); color: #f59e0b;
+  border: 1px solid rgba(245,158,11,0.3); font-weight: 700; white-space: nowrap; margin-left: 6px;
+}
+
+/* ========== Theme Picker ========== */
+.theme-picker-btn { 
+  cursor: pointer; width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border);
+  background: transparent; display: flex; align-items: center; justify-content: center; font-size: 16px;
+  transition: var(--transition); position: relative;
+}
+.theme-picker-btn:hover { border-color: var(--accent); }
+.theme-popup {
+  position: absolute; top: 56px; right: 52px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px; z-index: 100; min-width: 260px;
+  box-shadow: var(--shadow-lg); display: none;
+}
+.theme-popup.show { display: block; }
+.theme-popup-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; color: var(--text); }
+.theme-presets { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.theme-preset {
+  width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer;
+  transition: var(--transition); position: relative;
+}
+.theme-preset:hover { transform: scale(1.15); }
+.theme-preset.active { border-color: var(--text); box-shadow: 0 0 8px var(--accent-glow); }
+.theme-preset.blue { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+.theme-preset.green { background: linear-gradient(135deg, #10b981, #34d399); }
+.theme-preset.orange { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+.theme-preset.purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+.theme-preset.pink { background: linear-gradient(135deg, #ec4899, #f472b6); }
+.theme-preset.teal { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+.theme-color-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.theme-color-input { width: 40px; height: 30px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: none; padding: 2px; }
+.theme-color-input-alt { width: 40px; height: 30px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: none; padding: 2px; }
+.theme-color-label { font-size: 12px; color: var(--text-secondary); min-width: 50px; }
+.theme-apply-btn { margin-top: 12px; width: 100%; padding: 8px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: inherit; }
+
+/* ========== User Profile Page ========== */
+.user-profile-header {
+  display: flex; align-items: center; gap: 20px; padding: 24px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; flex-wrap: wrap;
+}
+.user-profile-avatar {
+  width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px; font-weight: 800; flex-shrink: 0;
+}
+.user-profile-info { flex: 1; min-width: 0; }
+.user-profile-name { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.user-profile-role { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 10px; background: rgba(245,158,11,0.2); color: #f59e0b; font-weight: 600; margin-left: 8px; }
+.user-profile-stats { display: flex; gap: 24px; margin-top: 10px; flex-wrap: wrap; }
+.user-profile-stat { text-align: center; cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: var(--transition); }
+.user-profile-stat:hover { background: var(--bg-hover); }
+.stat-num { font-size: 20px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--text-secondary); }
+.user-profile-actions { flex-shrink: 0; }
+.follow-btn {
+  padding: 10px 24px; border-radius: 20px; font-weight: 700; font-size: 14px; cursor: pointer;
+  border: 2px solid var(--accent); font-family: inherit; transition: var(--transition);
+}
+.follow-btn.follow { background: var(--accent); color: #fff; }
+.follow-btn.follow:hover { opacity: 0.85; }
+.follow-btn.unfollow { background: transparent; color: var(--accent); }
+.follow-btn.unfollow:hover { background: var(--accent); color: #fff; }
+
+/* User list (followers/following) */
+.user-list { display: flex; flex-direction: column; gap: 10px; }
+.user-list-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);
+}
+.user-list-item:hover { border-color: var(--accent); }
+.user-list-avatar {
+  width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; flex-shrink: 0;
+}
+.user-list-name { font-weight: 600; color: var(--text); }
+.user-list-role { font-size: 11px; color: #f59e0b; margin-left: 6px; }
+
+/* Author clickable in posts */
+.post-author { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s; }
+.post-author:hover { opacity: 0.8; }
+
+/* ========== Admin Dashboard ========== */
+.admin-tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+.admin-tab {
+  padding: 8px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-secondary); cursor: pointer;
+  font-size: 13px; font-family: inherit; transition: var(--transition);
+}
+.admin-tab:hover { border-color: var(--accent); color: var(--text); }
+.admin-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+
+.admin-panel { display: none; }
+.admin-panel.active { display: block; }
+
+/* Stats Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 18px; text-align: center; transition: var(--transition);
+}
+.stat-card:hover { border-color: var(--accent); }
+.stat-value { font-size: 32px; font-weight: 800; color: var(--accent); line-height: 1.2; }
+.stat-label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.stat-icon { font-size: 24px; margin-bottom: 6px; }
+
+/* Admin Toolbar */
+.admin-toolbar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.admin-count { font-size: 13px; color: var(--text-secondary); }
+.btn-sm { padding: 6px 14px; font-size: 13px; border-radius: 6px; }
+
+/* Admin Post List */
+.admin-post-list { display: flex; flex-direction: column; gap: 8px; }
+.admin-post-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  transition: var(--transition); flex-wrap: wrap;
+}
+.admin-post-item:hover { border-color: var(--accent); }
+.admin-post-item.pinned { border-left: 3px solid #f59e0b; }
+.admin-post-check { width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
+.admin-post-info { flex: 1; min-width: 0; }
+.admin-post-title { font-weight: 600; color: var(--text); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-post-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; display: flex; gap: 12px; flex-wrap: wrap; }
+.admin-post-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.admin-action-btn {
+  padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg);
+  color: var(--text-secondary); cursor: pointer; font-size: 12px; font-family: inherit; transition: var(--transition);
+}
+.admin-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.admin-action-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+.admin-action-btn.pin-active { border-color: #f59e0b; color: #f59e0b; }
+
+/* User Management (extends existing) */
+.admin-user-list { display: flex; flex-direction: column; gap: 10px; }
+.admin-user-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); gap: 12px; flex-wrap: wrap;
+}
+.admin-user-item.banned { opacity: 0.5; border-color: var(--danger); }
+.admin-user-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.admin-user-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; flex-shrink: 0;
+}
+.admin-user-name { font-weight: 600; color: var(--text); }
+.admin-user-email { font-size: 12px; color: var(--text-secondary); }
+.admin-role-badge {
+  font-size: 11px; padding: 3px 10px; border-radius: 10px; font-weight: 600; white-space: nowrap;
+}
+.admin-role-admin { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.admin-role-banned { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid rgba(248,81,73,0.3); }
+.admin-role-user { background: var(--bg-hover); color: var(--text-secondary); }
+.admin-user-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.admin-toggle-btn {
+  padding: 4px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg);
+  color: var(--text); cursor: pointer; font-size: 12px; font-family: inherit; transition: var(--transition);
+}
+.admin-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+.admin-toggle-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  #app { padding: 0 12px; }
+  .header { padding: 0 12px; margin: 0 -12px; }
+  .header-left { gap: 12px; }
+  .logo { font-size: 16px; }
+  .nav-btn { padding: 5px 10px; font-size: 12px; }
+  .post-detail { padding: 20px; }
+  .post-detail-title { font-size: 20px; }
+  .form-container { margin: 20px 0; padding: 24px; }
+}
+
+@media (max-width: 480px) {
+  .header { height: 52px; }
+  .nav { gap: 2px; }
+  .nav-btn { padding: 4px 8px; font-size: 11px; }
+  .category-tabs { overflow-x: auto; flex-wrap: nowrap; }
+  .cat-tab { flex-shrink: 0; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- ====== Header ====== -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo" onclick="App.navigate('home')">
+        <div class="logo-icon">G</div>
+        GENFUN论坛
+      </div>
+      <nav class="nav" id="mainNav">
+        <button class="nav-btn active" data-page="home" onclick="App.navigate('home')">首页</button>
+        <button class="nav-btn" data-page="new" id="navNewPost" style="display:none;" onclick="App.navigate('new')">发帖</button>
+        <button class="nav-btn admin-nav-btn" data-page="admin" id="navAdmin" style="display:none;" onclick="App.navigate('admin')">⚙ 管理</button>
+      </nav>
+    </div>
+    <div class="header-right" id="headerRight">
+      <button class="theme-toggle" id="themeToggle" onclick="App.toggleTheme()" title="切换主题">🌓</button>
+      <button class="login-link" id="btnLogin" onclick="App.navigate('login')">登录</button>
+      <button class="user-btn" id="btnUser" style="display:none;" onclick="App.showUserMenu()">
+        <div class="user-avatar" id="userAvatarSmall">?</div>
+        <span id="userNameSmall"></span>
+        <span class="admin-badge" id="adminBadgeSmall" style="display:none;">管理</span>
+      </button>
+      <button class="theme-picker-btn" id="themePickerBtn" onclick="App.toggleThemePopup()" title="切换配色">🎨</button>
+    </div>
+  </header>
+
+  <!-- Theme Picker Popup -->
+  <div class="theme-popup" id="themePopup">
+    <div class="theme-popup-title">🎨 选择配色方案</div>
+    <div class="theme-presets" id="themePresets">
+      <div class="theme-preset active blue" data-theme="blue" onclick="App.setThemePreset('blue')" title="蓝青"></div>
+      <div class="theme-preset green" data-theme="green" onclick="App.setThemePreset('green')" title="翠绿"></div>
+      <div class="theme-preset orange" data-theme="orange" onclick="App.setThemePreset('orange')" title="红橙"></div>
+      <div class="theme-preset purple" data-theme="purple" onclick="App.setThemePreset('purple')" title="紫罗兰"></div>
+      <div class="theme-preset pink" data-theme="pink" onclick="App.setThemePreset('pink')" title="粉红"></div>
+      <div class="theme-preset teal" data-theme="teal" onclick="App.setThemePreset('teal')" title="青绿"></div>
+    </div>
+    <div class="theme-popup-title" style="font-size:12px;margin-bottom:8px;">自定义颜色</div>
+    <div class="theme-color-row">
+      <span class="theme-color-label">主色:</span>
+      <input type="color" class="theme-color-input" id="customAccent" value="#3b82f6" onchange="App.previewCustom()">
+      <span class="theme-color-label">辅色:</span>
+      <input type="color" class="theme-color-input-alt" id="customAccentAlt" value="#06b6d4" onchange="App.previewCustom()">
+    </div>
+    <button class="theme-apply-btn" onclick="App.applyCustomTheme()">✅ 应用自定配色</button>
+  </div>
+
+  <!-- ====== Main Content ====== -->
+  <main class="main">
+
+    <!-- Home Page: Post List -->
+    <section class="page active" id="page-home">
+      <div class="category-tabs" id="categoryTabs">
+        <button class="cat-tab active" data-cat="全部">全部</button>
+        <button class="cat-tab" data-cat="技术">技术</button>
+        <button class="cat-tab" data-cat="生活">生活</button>
+        <button class="cat-tab" data-cat="游戏">游戏</button>
+        <button class="cat-tab" data-cat="资源">资源</button>
+        <button class="cat-tab" data-cat="其他">其他</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索帖子标题或内容..." onkeydown="if(event.key==='Enter')App.loadPosts()">
+        <button class="btn btn-primary btn-sm" onclick="App.loadPosts()">搜索</button>
+      </div>
+      <div class="post-list" id="postList"></div>
+      <div class="loading" id="postsLoading" style="display:none;"><div class="spinner"></div>加载中...</div>
+      <div class="empty-state" id="postsEmpty" style="display:none;">
+        <div class="empty-state-icon">📭</div>
+        <div class="empty-state-text">还没有帖子，快来发第一个吧！</div>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </section>
+
+    <!-- Post Detail Page -->
+    <section class="page" id="page-post">
+      <button class="back-btn" onclick="App.navigate('home')">← 返回首页</button>
+      <div id="postDetail"></div>
+      <div class="loading" id="postLoading"><div class="spinner"></div>加载中...</div>
+    </section>
+
+    <!-- New Post Page -->
+    <section class="page" id="page-new">
+      <div class="form-container new-post-form">
+        <div class="form-title">发布新帖</div>
+        <div class="form-group">
+          <label class="form-label">分类</label>
+          <select class="form-select" id="newPostCategory">
+            <option value="技术">技术</option>
+            <option value="生活">生活</option>
+            <option value="游戏">游戏</option>
+            <option value="资源">资源</option>
+            <option value="其他">其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">标题</label>
+          <input type="text" class="form-input" id="newPostTitle" placeholder="输入帖子标题（不超过200字）" maxlength="200">
+        </div>
+        <div class="form-group">
+          <label class="form-label">内容</label>
+          <textarea class="form-textarea" id="newPostContent" placeholder="写下你想分享的内容..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">附件上传（支持大文件，单文件最大 2GB）</label>
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📎</div>
+            <div class="upload-text">点击或拖拽文件到此处上传</div>
+            <div class="upload-hint">支持图片、文档、压缩包、视频等任意格式</div>
+          </div>
+          <input type="file" id="fileInput" multiple onchange="App.handleFileSelect(event)">
+          <div class="file-list" id="fileList"></div>
+          <div class="upload-progress" id="uploadProgress">
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+            <div class="progress-info"><span id="progressText">准备上传...</span><span id="progressPercent">0%</span></div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" id="btnSubmit" onclick="App.submitPost()">发布帖子</button>
+      </div>
+    </section>
+
+    <!-- Login / Register Page -->
+    <section class="page" id="page-login">
+      <div class="form-container" id="loginForm">
+        <div class="form-title" id="formTitle">登录 GENFUN论坛</div>
+
+        <div class="login-type-toggle" id="loginTypeToggle">
+          <button class="toggle-option active" data-type="email">邮箱登录</button>
+          <button class="toggle-option" data-type="phone">手机号登录</button>
+        </div>
+
+        <div class="form-group" id="groupEmail">
+          <label class="form-label">邮箱</label>
+          <input type="email" class="form-input" id="inputEmail" placeholder="请输入邮箱地址">
+        </div>
+        <div class="form-group" id="groupPhone" style="display:none;">
+          <label class="form-label">手机号</label>
+          <input type="tel" class="form-input" id="inputPhone" placeholder="请输入手机号" maxlength="11">
+        </div>
+
+        <div class="form-group" id="groupNickname" style="display:none;">
+          <label class="form-label">昵称</label>
+          <input type="text" class="form-input" id="inputNickname" placeholder="给自己取个名字">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">密码</label>
+          <input type="password" class="form-input" id="inputPassword" placeholder="请输入密码（至少6位）">
+        </div>
+
+        <div class="form-group" id="groupConfirmPwd" style="display:none;">
+          <label class="form-label">确认密码</label>
+          <input type="password" class="form-input" id="inputConfirmPwd" placeholder="再次输入密码">
+        </div>
+
+        <div class="form-group" id="groupVerifyCode" style="display:none;">
+          <label class="form-label">验证码</label>
+          <div class="code-input-row">
+            <input type="text" class="form-input code-input" id="inputVerifyCode" placeholder="输入验证码" maxlength="6">
+            <button class="btn btn-code" id="btnSendCode" onclick="App.sendCode()">发送验证码</button>
+          </div>
+          <div class="code-hint" id="codeHint" style="display:none;"></div>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="btnSubmitAuth" onclick="App.handleAuth()">登录</button>
+
+        <div class="form-footer">
+          <span id="switchText">还没有账号？</span>
+          <a id="switchLink" onclick="App.toggleAuthMode()">立即注册</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Page -->
+    <section class="page" id="page-admin">
+      <div class="container">
+        <h2 class="section-title">⚙ 管理后台</h2>
+
+        <!-- 子导航 -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="dashboard">📊 仪表盘</button>
+          <button class="admin-tab" data-tab="posts">📝 帖子管理</button>
+          <button class="admin-tab" data-tab="users">👥 用户管理</button>
+          <button class="admin-tab" data-tab="settings">⚙ 系统设置</button>
+        </div>
+
+        <!-- 仪表盘 -->
+        <div class="admin-panel active" id="admin-panel-dashboard">
+          <div class="stats-grid" id="statsGrid">
+            <div class="loading">加载中...</div>
+          </div>
+        </div>
+
+        <!-- 帖子管理 -->
+        <div class="admin-panel" id="admin-panel-posts">
+          <div class="admin-toolbar">
+            <button class="btn btn-danger btn-sm" id="btnBatchDelete" onclick="App.batchDeletePosts()" disabled>🗑 批量删除</button>
+            <span class="admin-count" id="adminPostCount"></span>
+          </div>
+          <div class="admin-post-list" id="adminPostList">
+            <div class="loading">加载中...</div>
+          </div>
+        </div>
+
+        <!-- 用户管理 -->
+        <div class="admin-panel" id="admin-panel-users">
+          <div class="admin-user-list" id="adminUserList">
+            <div class="loading">加载中...</div>
+          </div>
+        </div>
+
+        <!-- 系统设置 -->
+        <div class="admin-panel" id="admin-panel-settings">
+          <div class="form-group">
+            <label class="form-label">站点名称</label>
+            <input type="text" class="form-input" id="settingSiteName" placeholder="GENFUN 论坛">
+          </div>
+          <div class="form-group">
+            <label class="form-label">站点公告</label>
+            <textarea class="form-input" id="settingAnnouncement" rows="3" placeholder="输入公告内容..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="display:flex;align-items:center;gap:8px;">
+              <input type="checkbox" id="settingAllowRegister" checked style="width:18px;height:18px;cursor:pointer;">
+              允许新用户注册
+            </label>
+          </div>
+          <button class="btn btn-primary" onclick="App.saveSettings()" style="width:100%;margin-top:12px;">💾 保存设置</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- User Profile Page -->
+    <section class="page" id="page-profile">
+      <div class="container" id="profileContainer">
+        <div class="loading">加载中...</div>
+      </div>
+    </section>
+
+    <!-- User Lists Page (following/fans) -->
+    <section class="page" id="page-userlist">
+      <div class="container">
+        <button class="back-btn" onclick="App.navigate('profile', {userId: App.viewingUserId})">← 返回用户主页</button>
+        <h2 class="section-title" id="userlistTitle">列表</h2>
+        <div class="user-list" id="userListContent">
+          <div class="loading">加载中...</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Floating Action Button -->
+<button class="fab hidden" id="fabNewPost" onclick="App.navigate('new')" title="发布新帖">+</button>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<script>
+/* ================================================================
+   GENFUN论坛 - 前端应用
+   ================================================================ */
+
+const App = {
+  // ---- 状态 ----
+  token: localStorage.getItem('genfun_token') || '',
+  user: JSON.parse(localStorage.getItem('genfun_user') || 'null'),
+  theme: localStorage.getItem('genfun_theme') || 'dark',
+  themePreset: localStorage.getItem('genfun_theme_preset') || 'blue',
+  customAccent: localStorage.getItem('genfun_custom_accent') || '#3b82f6',
+  customAccentAlt: localStorage.getItem('genfun_custom_accent_alt') || '#06b6d4',
+  currentPage: 'home',
+  viewingUserId: null,
+  adminTab: 'dashboard',
+  selectedPosts: new Set(),
+  currentCategory: '全部',
+  currentPostId: null,
+  currentPostPage: 1,
+  isRegisterMode: false,
+  loginType: 'email',
+  codeTimer: null,
+  codeCountdown: 0,
+  selectedFiles: [],
+  uploadedFiles: [],
+
+  // ---- 初始化 ----
+  init() {
+    this.token = localStorage.getItem('genfun_token') || '';
+    this.user = JSON.parse(localStorage.getItem('genfun_user') || 'null');
+    this.initTheme();
+    this.updateAuthUI();
+    this.bindEvents();
+    this.loadPosts();
+    // 自动重载以刷新数据（解决旧缓存无role字段问题）
+    if (this.token && (!this.user || !this.user.role)) {
+      this.refreshUser();
+    }
+  },
+
+  async refreshUser() {
+    try {
+      const data = await this.api('GET', '/api/me');
+      this.user = data.user;
+      localStorage.setItem('genfun_user', JSON.stringify(this.user));
+      this.updateAuthUI();
+    } catch (e) { /* token 过期则忽略 */ }
+  },
+
+  // ---- 导航 ----
+  navigate(page, data) {
+    this.currentPage = page;
+    if (data && data.postId) this.currentPostId = data.postId;
+
+    // 更新页面显示
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const pageEl = document.getElementById('page-' + page);
+    if (pageEl) pageEl.classList.add('active');
+
+    // 更新导航按钮
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.page === page);
+    });
+
+    // 页面逻辑
+    if (page === 'home') { this.currentPostPage = 1; this.loadPosts(); }
+    if (page === 'post') { this.loadPostDetail(); }
+    if (page === 'new') { if (!this.user) { this.navigate('login'); this.toast('请先登录', 'info'); } }
+    if (page === 'login') { this.resetAuthForm(); }
+    if (page === 'admin') { if (!this.user || this.user.role !== 'admin') { this.navigate('home'); return; } this.switchAdminTab('dashboard'); }
+    if (page === 'profile') { if (data && data.userId) { this.viewingUserId = data.userId; this.loadUserProfile(data.userId); } }
+    if (page === 'userlist') { if (data && data.type) { this.loadUserList(data.type, data.userId); } }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.updateFab();
+  },
+
+  // ---- 主题切换 ----
+  initTheme() {
+    document.documentElement.setAttribute('data-theme', this.theme);
+    this.updateThemeIcon();
+    this.applyThemeColors();
+  },
+
+  toggleTheme() {
+    this.theme = this.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('genfun_theme', this.theme);
+    document.documentElement.setAttribute('data-theme', this.theme);
+    this.updateThemeIcon();
+  },
+
+  updateThemeIcon() {
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = this.theme === 'dark' ? '☀' : '🌙';
+  },
+
+  // ======== 配色方案 ========
+  PRESETS: {
+    blue: ['#3b82f6', '#06b6d4'],
+    green: ['#10b981', '#34d399'],
+    orange: ['#f59e0b', '#ef4444'],
+    purple: ['#8b5cf6', '#a78bfa'],
+    pink: ['#ec4899', '#f472b6'],
+    teal: ['#0d9488', '#14b8a6'],
+  },
+
+  applyThemeColors() {
+    const accent = this.themePreset === 'custom' ? this.customAccent : (this.PRESETS[this.themePreset] || this.PRESETS.blue)[0];
+    const accentAlt = this.themePreset === 'custom' ? this.customAccentAlt : (this.PRESETS[this.themePreset] || this.PRESETS.blue)[1];
+    const root = document.documentElement;
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--accent-hover', accent + 'cc');
+    root.style.setProperty('--accent-light', accent + '26');
+    root.style.setProperty('--accent-glow', accent + '4d');
+    root.style.setProperty('--accent-alt', accentAlt);
+    // 更新预设指示
+    document.querySelectorAll('.theme-preset').forEach(el => {
+      el.classList.toggle('active', el.dataset.theme === this.themePreset);
+    });
+    document.getElementById('customAccent').value = accent;
+    document.getElementById('customAccentAlt').value = accentAlt;
+  },
+
+  setThemePreset(preset) {
+    this.themePreset = preset;
+    localStorage.setItem('genfun_theme_preset', preset);
+    this.applyThemeColors();
+  },
+
+  previewCustom() {
+    const accent = document.getElementById('customAccent').value;
+    const accentAlt = document.getElementById('customAccentAlt').value;
+    const root = document.documentElement;
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--accent-alt', accentAlt);
+  },
+
+  applyCustomTheme() {
+    this.themePreset = 'custom';
+    this.customAccent = document.getElementById('customAccent').value;
+    this.customAccentAlt = document.getElementById('customAccentAlt').value;
+    localStorage.setItem('genfun_theme_preset', 'custom');
+    localStorage.setItem('genfun_custom_accent', this.customAccent);
+    localStorage.setItem('genfun_custom_accent_alt', this.customAccentAlt);
+    this.applyThemeColors();
+    this.toggleThemePopup(); // close
+    this.toast('已应用自定配色', 'success');
+  },
+
+  toggleThemePopup() {
+    const popup = document.getElementById('themePopup');
+    popup.classList.toggle('show');
+  },
+
+  updateFab() {
+    const fab = document.getElementById('fabNewPost');
+    if (!fab) return;
+    if (this.user && this.currentPage === 'home') {
+      fab.classList.remove('hidden');
+    } else if (this.currentPage !== 'home') {
+      fab.classList.add('hidden');
+    } else {
+      fab.classList.add('hidden');
+    }
+  },
+
+  // ---- 事件绑定 ----
+  bindEvents() {
+    // 分类切换
+    document.getElementById('categoryTabs').addEventListener('click', (e) => {
+      if (e.target.classList.contains('cat-tab')) {
+        document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        this.currentCategory = e.target.dataset.cat;
+        this.currentPostPage = 1;
+        this.loadPosts();
+      }
+    });
+
+    // 登录方式切换
+    document.getElementById('loginTypeToggle').addEventListener('click', (e) => {
+      if (e.target.classList.contains('toggle-option')) {
+        document.querySelectorAll('#loginTypeToggle .toggle-option').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        this.loginType = e.target.dataset.type;
+        this.updateLoginTypeUI();
+      }
+    });
+
+    // 拖拽上传
+    const uploadZone = document.getElementById('uploadZone');
+    if (uploadZone) {
+      ['dragenter', 'dragover'].forEach(ev => {
+        uploadZone.addEventListener(ev, (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+      });
+      ['dragleave', 'drop'].forEach(ev => {
+        uploadZone.addEventListener(ev, (e) => { e.preventDefault(); uploadZone.classList.remove('drag-over'); });
+      });
+      uploadZone.addEventListener('drop', (e) => {
+        if (e.dataTransfer.files.length) this.addFiles(e.dataTransfer.files);
+      });
+    }
+
+    // 管理后台标签切换
+    const adminTabs = document.querySelector('.admin-tabs');
+    if (adminTabs) {
+      adminTabs.addEventListener('click', (e) => {
+        if (e.target.classList.contains('admin-tab')) {
+          this.switchAdminTab(e.target.dataset.tab);
+        }
+      });
+    }
+  },
+
+  // ---- API 调用 ----
+  async api(method, path, body) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (this.token) headers['Authorization'] = 'Bearer ' + this.token;
+
+    const opts = { method, headers };
+    if (body && method !== 'GET') opts.body = JSON.stringify(body);
+
+    const res = await fetch(path, opts);
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { this.logout(); throw new Error('请先登录'); }
+      throw new Error(data.error || '请求失败');
+    }
+    return data;
+  },
+
+  // ---- 认证 ----
+
+  // 发送验证码
+  async sendCode() {
+    if (this.codeCountdown > 0) return;
+
+    const email = this.loginType === 'email' ? document.getElementById('inputEmail').value.trim() : '';
+    const phone = this.loginType === 'phone' ? document.getElementById('inputPhone').value.trim() : '';
+
+    if (!email && !phone) return this.toast('请先输入' + (this.loginType === 'email' ? '邮箱' : '手机号'), 'error');
+    if (this.loginType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return this.toast('邮箱格式不正确', 'error');
+    if (this.loginType === 'phone' && !/^1[3-9]\d{9}$/.test(phone)) return this.toast('手机号格式不正确', 'error');
+
+    try {
+      const btn = document.getElementById('btnSendCode');
+      btn.disabled = true;
+      btn.textContent = '发送中...';
+
+      const body = {};
+      if (this.loginType === 'email') body.email = email;
+      else body.phone = phone;
+
+      const data = await this.api('POST', '/api/send-code', body);
+
+      if (data.fallback && data.code) {
+        // 自动填入验证码 + 页面显示
+        document.getElementById('inputVerifyCode').value = data.code;
+        const hint = document.getElementById('codeHint');
+        hint.textContent = '因邮件无法发送，验证码已自动填入: ' + data.code;
+        hint.style.display = 'block';
+        this.toast('验证码已自动填入: ' + data.code, 'info', 8000);
+      } else {
+        this.toast('验证码已发送至您的' + (this.loginType === 'email' ? '邮箱' : '手机号') + '，请注意查收', 'success');
+      }
+
+      // 60秒倒计时
+      this.codeCountdown = 60;
+      btn.textContent = this.codeCountdown + 's';
+      this.codeTimer = setInterval(() => {
+        this.codeCountdown--;
+        if (this.codeCountdown <= 0) {
+          clearInterval(this.codeTimer);
+          btn.disabled = false;
+          btn.textContent = '发送验证码';
+        } else {
+          btn.textContent = this.codeCountdown + 's';
+        }
+      }, 1000);
+    } catch (e) {
+      document.getElementById('btnSendCode').disabled = false;
+      document.getElementById('btnSendCode').textContent = '发送验证码';
+      this.toast(e.message, 'error');
+    }
+  },
+
+  clearCodeTimer() {
+    if (this.codeTimer) { clearInterval(this.codeTimer); this.codeTimer = null; }
+    this.codeCountdown = 0;
+  },
+
+  // 登录/注册
+  async handleAuth() {
+    const password = document.getElementById('inputPassword').value.trim();
+    if (!password || password.length < 6) return this.toast('密码至少6位', 'error');
+
+    if (this.isRegisterMode) {
+      const email = document.getElementById('inputEmail').value.trim();
+      const phone = document.getElementById('inputPhone').value.trim();
+      const nickname = document.getElementById('inputNickname').value.trim();
+      const confirmPwd = document.getElementById('inputConfirmPwd').value.trim();
+
+      if (!nickname) return this.toast('请输入昵称', 'error');
+      if (this.loginType === 'email' && !email) return this.toast('请输入邮箱', 'error');
+      if (this.loginType === 'phone' && !phone) return this.toast('请输入手机号', 'error');
+      if (password !== confirmPwd) return this.toast('两次密码不一致', 'error');
+
+      const verifyCode = document.getElementById('inputVerifyCode').value.trim();
+      if (!verifyCode) return this.toast('请输入验证码', 'error');
+      if (verifyCode.length !== 6) return this.toast('验证码为6位数字', 'error');
+    } else {
+      const account = this.loginType === 'email'
+        ? document.getElementById('inputEmail').value.trim()
+        : document.getElementById('inputPhone').value.trim();
+      if (!account) return this.toast('请输入' + (this.loginType === 'email' ? '邮箱' : '手机号'), 'error');
+    }
+
+    try {
+      const btn = document.getElementById('btnSubmitAuth');
+      btn.disabled = true;
+      btn.textContent = '处理中...';
+
+      if (this.isRegisterMode) {
+        const body = {
+          password,
+          nickname: document.getElementById('inputNickname').value.trim()
+        };
+        if (this.loginType === 'email') body.email = document.getElementById('inputEmail').value.trim();
+        else body.phone = document.getElementById('inputPhone').value.trim();
+        body.verifyCode = document.getElementById('inputVerifyCode').value.trim();
+
+        const data = await this.api('POST', '/api/register', body);
+        this.token = data.token;
+        this.user = data.user;
+        localStorage.setItem('genfun_token', this.token);
+        localStorage.setItem('genfun_user', JSON.stringify(this.user));
+        this.updateAuthUI();
+        this.toast('注册成功！欢迎 ' + data.user.nickname, 'success');
+        this.navigate('home');
+      } else {
+        const account = this.loginType === 'email'
+          ? document.getElementById('inputEmail').value.trim()
+          : document.getElementById('inputPhone').value.trim();
+
+        const data = await this.api('POST', '/api/login', { account, password });
+        this.token = data.token;
+        this.user = data.user;
+        localStorage.setItem('genfun_token', this.token);
+        localStorage.setItem('genfun_user', JSON.stringify(this.user));
+        this.updateAuthUI();
+        this.toast('登录成功！欢迎回来，' + data.user.nickname, 'success');
+        this.navigate('home');
+      }
+    } catch (e) {
+      this.toast(e.message, 'error');
+    } finally {
+      const btn = document.getElementById('btnSubmitAuth');
+      btn.disabled = false;
+      btn.textContent = this.isRegisterMode ? '注册' : '登录';
+    }
+  },
+
+  toggleAuthMode() {
+    this.isRegisterMode = !this.isRegisterMode;
+    document.getElementById('formTitle').textContent = this.isRegisterMode ? '注册 GENFUN论坛' : '登录 GENFUN论坛';
+    document.getElementById('groupNickname').style.display = this.isRegisterMode ? '' : 'none';
+    document.getElementById('groupConfirmPwd').style.display = this.isRegisterMode ? '' : 'none';
+    document.getElementById('groupVerifyCode').style.display = this.isRegisterMode ? '' : 'none';
+    document.getElementById('btnSubmitAuth').textContent = this.isRegisterMode ? '注册' : '登录';
+    document.getElementById('switchText').textContent = this.isRegisterMode ? '已有账号？' : '还没有账号？';
+    document.getElementById('switchLink').textContent = this.isRegisterMode ? '立即登录' : '立即注册';
+    // 切换模式时清除验证码和计时器
+    document.getElementById('inputVerifyCode').value = '';
+    this.clearCodeTimer();
+  },
+
+  resetAuthForm() {
+    this.isRegisterMode = false;
+    document.getElementById('formTitle').textContent = '登录 GENFUN论坛';
+    document.getElementById('groupNickname').style.display = 'none';
+    document.getElementById('groupConfirmPwd').style.display = 'none';
+    document.getElementById('groupVerifyCode').style.display = 'none';
+    document.getElementById('btnSubmitAuth').textContent = '登录';
+    document.getElementById('switchText').textContent = '还没有账号？';
+    document.getElementById('switchLink').textContent = '立即注册';
+    document.getElementById('inputEmail').value = '';
+    document.getElementById('inputPhone').value = '';
+    document.getElementById('inputPassword').value = '';
+    document.getElementById('inputNickname').value = '';
+    document.getElementById('inputConfirmPwd').value = '';
+    document.getElementById('inputVerifyCode').value = '';
+    this.clearCodeTimer();
+    this.updateLoginTypeUI();
+  },
+
+  updateLoginTypeUI() {
+    document.getElementById('groupEmail').style.display = this.loginType === 'email' ? '' : 'none';
+    document.getElementById('groupPhone').style.display = this.loginType === 'phone' ? '' : 'none';
+  },
+
+  logout() {
+    if (this.token) {
+      fetch('/api/logout', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json' }
+      }).catch(() => {});
+    }
+    this.token = '';
+    this.user = null;
+    localStorage.removeItem('genfun_token');
+    localStorage.removeItem('genfun_user');
+    this.updateAuthUI();
+    this.navigate('home');
+    this.toast('已退出登录', 'info');
+  },
+
+  // ---- 管理员功能 ----
+  adminTab: 'dashboard',
+  selectedPosts: new Set(),
+
+  switchAdminTab(tab) {
+    this.adminTab = tab;
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.querySelectorAll('.admin-panel').forEach(p => p.classList.toggle('active', p.id === 'admin-panel-' + tab));
+    if (tab === 'dashboard') this.loadDashboard();
+    else if (tab === 'posts') this.loadAdminPosts();
+    else if (tab === 'users') this.loadAdminUsers();
+    else if (tab === 'settings') this.loadSettings();
+  },
+
+  async loadDashboard() {
+    const grid = document.getElementById('statsGrid');
+    grid.innerHTML = '<div class="loading">加载中...</div>';
+    try {
+      const data = await this.api('GET', '/api/admin/stats');
+      const s = data.stats;
+      grid.innerHTML = [
+        { icon: '👥', value: s.users, label: '注册用户' },
+        { icon: '📝', value: s.posts, label: '帖子总数' },
+        { icon: '💬', value: s.replies, label: '回复总数' },
+        { icon: '👁', value: s.views, label: '总浏览量' },
+        { icon: '📎', value: s.attachments, label: '附件总数' },
+        { icon: '🛡', value: s.admins, label: '管理员' },
+        { icon: '🚫', value: s.banned, label: '被封禁' },
+        { icon: '🆕', value: s.todayPosts, label: '今日新帖' },
+      ].map(c => '<div class="stat-card"><div class="stat-icon">' + c.icon + '</div><div class="stat-value">' + c.value + '</div><div class="stat-label">' + c.label + '</div></div>').join('');
+    } catch (e) { grid.innerHTML = '<p style="color:var(--danger);">加载失败</p>'; }
+  },
+
+  async loadAdminPosts() {
+    const container = document.getElementById('adminPostList');
+    const countEl = document.getElementById('adminPostCount');
+    const btn = document.getElementById('btnBatchDelete');
+    container.innerHTML = '<div class="loading">加载中...</div>';
+    this.selectedPosts.clear();
+    btn.disabled = true;
+    try {
+      const data = await this.api('GET', '/api/admin/posts');
+      countEl.textContent = '共 ' + data.posts.length + ' 篇';
+      if (!data.posts.length) { container.innerHTML = '<p style="color:var(--text-secondary);">暂无帖子</p>'; return; }
+      container.innerHTML = data.posts.map(p => {
+        const pinnedClass = p.pinned ? ' pinned' : '';
+        return '<div class="admin-post-item' + pinnedClass + '">' +
+          '<input type="checkbox" class="admin-post-check" value="' + p.id + '" onchange="App.togglePostSelect(\'' + p.id + '\')">' +
+          '<div class="admin-post-info">' +
+            '<div class="admin-post-title">' + (p.pinned ? '📌 ' : '') + p.title + '</div>' +
+            '<div class="admin-post-meta">' +
+              '<span>' + p.author.nickname + '</span>' +
+              '<span>' + (p.category || '未分类') + '</span>' +
+              '<span>' + p.views + ' 浏览</span>' +
+              '<span>' + p.replyCount + ' 回复</span>' +
+              '<span>' + (p.updatedAt || p.createdAt).slice(0, 16).replace('T', ' ') + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="admin-post-actions">' +
+            '<button class="admin-action-btn' + (p.pinned ? ' pin-active' : '') + '" onclick="App.togglePin(\'' + p.id + '\')">' + (p.pinned ? '取消置顶' : '📌 置顶') + '</button>' +
+            '<button class="admin-action-btn danger" onclick="App.deletePostAdmin(\'' + p.id + '\')">🗑 删除</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } catch (e) { container.innerHTML = '<p style="color:var(--danger);">加载失败: ' + e.message + '</p>'; }
+  },
+
+  togglePostSelect(id) {
+    if (this.selectedPosts.has(id)) this.selectedPosts.delete(id);
+    else this.selectedPosts.add(id);
+    document.getElementById('btnBatchDelete').disabled = this.selectedPosts.size === 0;
+  },
+
+  async togglePin(postId) {
+    try {
+      const data = await this.api('POST', '/api/admin/posts/' + postId + '/pin');
+      this.toast(data.pinned ? '已置顶' : '已取消置顶', 'success');
+      this.loadAdminPosts();
+    } catch (e) { this.toast(e.message, 'error'); }
+  },
+
+  async deletePostAdmin(postId) {
+    if (!confirm('确定要删除这个帖子吗？此操作不可撤销！')) return;
+    try {
+      await this.api('DELETE', '/api/admin/posts/' + postId);
+      this.toast('帖子已删除', 'success');
+      this.loadAdminPosts();
+      this.loadDashboard();
+    } catch (e) { this.toast(e.message, 'error'); }
+  },
+
+  async batchDeletePosts() {
+    if (this.selectedPosts.size === 0) return;
+    if (!confirm('确定要删除选中的 ' + this.selectedPosts.size + ' 个帖子吗？此操作不可撤销！')) return;
+    try {
+      const data = await this.api('POST', '/api/admin/posts/batch-delete', { ids: [...this.selectedPosts] });
+      this.toast('已删除 ' + data.count + ' 个帖子', 'success');
+      this.selectedPosts.clear();
+      this.loadAdminPosts();
+      this.loadDashboard();
+    } catch (e) { this.toast(e.message, 'error'); }
+  },
+
+  async loadAdminUsers() {
+    const container = document.getElementById('adminUserList');
+    container.innerHTML = '<div class="loading">加载中...</div>';
+    try {
+      const data = await this.api('GET', '/api/admin/users');
+      if (!data.users.length) { container.innerHTML = '<p style="color:var(--text-secondary);">暂无用户</p>'; return; }
+      container.innerHTML = data.users.map(u => {
+        const isAdmin = u.role === 'admin';
+        const isBanned = u.banned;
+        const isSelf = this.user && this.user.id === u.id;
+        return '<div class="admin-user-item' + (isBanned ? ' banned' : '') + '">' +
+          '<div class="admin-user-info">' +
+            '<div class="admin-user-avatar">' + (u.nickname || '?')[0].toUpperCase() + '</div>' +
+            '<div><div class="admin-user-name">' + u.nickname +
+              (isBanned ? ' <span class="admin-role-badge admin-role-banned">已封禁</span>' : '') +
+              (isAdmin ? ' <span class="admin-role-badge admin-role-admin">管理员</span>' : '') +
+            '</div><div class="admin-user-email">' + (u.email || u.phone || '—') + ' · ' + (u.createdAt || '').slice(0, 10) + '</div></div>' +
+          '</div>' +
+          '<div class="admin-user-actions">' +
+            (isSelf ? '' : '<button class="admin-toggle-btn' + (isBanned ? ' danger' : '') + '" onclick="App.toggleBan(\'' + u.id + '\')">' + (isBanned ? '解封' : '封禁') + '</button>') +
+            (isSelf ? '' : '<button class="admin-toggle-btn" onclick="App.toggleUserRole(\'' + u.id + '\',\'' + (isAdmin ? 'user' : 'admin') + '\')">' + (isAdmin ? '取消管理员' : '设为管理员') + '</button>') +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } catch (e) { container.innerHTML = '<p style="color:var(--danger);">加载失败: ' + e.message + '</p>'; }
+  },
+
+  async toggleUserRole(userId, newRole) {
+    try {
+      await this.api('POST', '/api/admin/user-role', { userId, role: newRole });
+      this.toast(newRole === 'admin' ? '已设为管理员' : '已取消管理员', 'success');
+      this.loadAdminUsers();
+      this.loadDashboard();
+    } catch (e) { this.toast(e.message, 'error'); }
+  },
+
+  async toggleBan(userId) {
+    try {
+      const data = await this.api('POST', '/api/admin/users/' + userId + '/ban');
+      this.toast(data.banned ? '用户已封禁' : '用户已解封', 'success');
+      this.loadAdminUsers();
+      this.loadDashboard();
+    } catch (e) { this.toast(e.message, 'error'); }
+  },
+
+  async loadSettings() {
+    try {
+      const data = await this.api('GET', '/api/admin/settings');
+      document.getElementById('settingSiteName').value = data.settings.siteName || '';
+      document.getElementById('settingAnnouncement').value = data.settings.announcement || '';
+      document.getElementById('settingAllowRegister').checked = data.settings.allowRegister !== false;
+    } catch (e) { this.toast('加载设置失败', 'error'); }
+  },
+
+  async saveSettings() {
+    try {
+      const siteName = document.getElementById('settingSiteName').value.trim();
+      const announcement = document.getElementById('settingAnnouncement').value.trim();
+      const allowRegister = document.getElementById('settingAllowRegister').checked;
+      await this.api('POST', '/api/admin/settings', { siteName, announcement, allowRegister });
+      this.toast('设置已保存', 'success');
+    } catch (e) { this.toast(e.message, 'error'); }
+  },
+
+  updateAuthUI() {
+    const btnLogin = document.getElementById('btnLogin');
+    const btnUser = document.getElementById('btnUser');
+    const navNewPost = document.getElementById('navNewPost');
+    const adminBadge = document.getElementById('adminBadgeSmall');
+    const adminNav = document.getElementById('navAdmin');
+
+    if (this.user) {
+      btnLogin.style.display = 'none';
+      btnUser.style.display = 'flex';
+      navNewPost.style.display = '';
+      document.getElementById('userNameSmall').textContent = this.user.nickname;
+      document.getElementById('userAvatarSmall').textContent = (this.user.nickname || '?')[0].toUpperCase();
+      // 管理员标识 + 导航
+      if (this.user.role === 'admin') {
+        adminBadge.style.display = '';
+        if (adminNav) adminNav.style.display = '';
+      } else {
+        adminBadge.style.display = 'none';
+        if (adminNav) adminNav.style.display = 'none';
+      }
+    } else {
+      btnLogin.style.display = '';
+      btnUser.style.display = 'none';
+      navNewPost.style.display = 'none';
+      adminBadge.style.display = 'none';
+      if (adminNav) adminNav.style.display = 'none';
+    }
+    this.updateFab();
+  },
+
+  showUserMenu() {
+    if (confirm('确定要退出登录吗？')) this.logout();
+  },
+
+  // ---- 帖子列表 ----
+  async loadPosts() {
+    document.getElementById('postList').innerHTML = '';
+    document.getElementById('postsLoading').style.display = 'block';
+    document.getElementById('postsEmpty').style.display = 'none';
+    document.getElementById('pagination').innerHTML = '';
+
+    try {
+      const search = document.getElementById('searchInput').value.trim();
+      const params = new URLSearchParams({
+        category: this.currentCategory,
+        page: this.currentPostPage,
+        limit: 20
+      });
+      if (search) params.set('search', search);
+
+      const data = await this.api('GET', '/api/posts?' + params.toString());
+      document.getElementById('postsLoading').style.display = 'none';
+
+      if (data.posts.length === 0) {
+        document.getElementById('postsEmpty').style.display = '';
+        return;
+      }
+
+      this.renderPostList(data.posts);
+      this.renderPagination(data);
+    } catch (e) {
+      document.getElementById('postsLoading').style.display = 'none';
+      document.getElementById('postList').innerHTML = `<div class="empty-state"><div class="empty-state-text">加载失败：${e.message}</div></div>`;
+    }
+  },
+
+  renderPostList(posts) {
+    const container = document.getElementById('postList');
+    container.innerHTML = posts.map(p => `
+      <div class="post-card" onclick="App.navigate('post', {postId: '${p.id}'})">
+        <div class="post-card-header">
+          <div class="post-card-title">${this.escape(p.title)}</div>
+          <span class="post-card-category">${this.escape(p.category)}</span>
+        </div>
+        <div class="post-card-preview">${this.escape(p.content)}</div>
+        <div class="post-card-meta">
+          <span class="post-card-author" onclick="event.stopPropagation(); App.viewUserProfile('${p.author.id}')" style="cursor:pointer;">${this.avatarIcon(p.author)} ${this.escape(p.author.nickname)}</span>
+          <span class="post-card-tag">👁 ${p.views || 0} 浏览</span>
+          <span class="post-card-tag">💬 ${p.replyCount || 0} 回复</span>
+          ${p.attachCount ? `<span class="post-card-tag">📎 ${p.attachCount} 附件</span>` : ''}
+          <span>${this.timeAgo(p.createdAt)}</span>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  renderPagination(data) {
+    const container = document.getElementById('pagination');
+    if (data.totalPages <= 1) return;
+    let html = '';
+    html += `<button class="page-btn" onclick="App.goPage(${data.page - 1})" ${data.page <= 1 ? 'disabled' : ''}>上一页</button>`;
+    for (let i = 1; i <= data.totalPages; i++) {
+      if (i === 1 || i === data.totalPages || (i >= data.page - 2 && i <= data.page + 2)) {
+        html += `<button class="page-btn ${i === data.page ? 'active' : ''}" onclick="App.goPage(${i})">${i}</button>`;
+      } else if (i === data.page - 3 || i === data.page + 3) {
+        html += `<span class="page-info">...</span>`;
+      }
+    }
+    html += `<button class="page-btn" onclick="App.goPage(${data.page + 1})" ${data.page >= data.totalPages ? 'disabled' : ''}>下一页</button>`;
+    html += `<span class="page-info">共 ${data.total} 篇</span>`;
+    container.innerHTML = html;
+  },
+
+  goPage(page) { this.currentPostPage = page; this.loadPosts(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+
+  // ---- 帖子详情 ----
+  async loadPostDetail() {
+    document.getElementById('postDetail').innerHTML = '';
+    document.getElementById('postLoading').style.display = 'block';
+
+    try {
+      const data = await this.api('GET', '/api/posts/' + this.currentPostId);
+      document.getElementById('postLoading').style.display = 'none';
+      this.renderPostDetail(data.post);
+    } catch (e) {
+      document.getElementById('postLoading').style.display = 'none';
+      document.getElementById('postDetail').innerHTML = `<div class="empty-state"><div class="empty-state-text">加载失败：${e.message}</div></div>`;
+    }
+  },
+
+  renderPostDetail(post) {
+    let html = `
+      <div class="post-detail">
+        <div class="post-detail-header">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+            <span class="post-card-category">${this.escape(post.category)}</span>
+            ${this.user && this.user.id === post.author.id ? `<button class="btn btn-danger btn-sm" onclick="App.deletePost('${post.id}')">删除</button>` : ''}
+          </div>
+          <h1 class="post-detail-title">${this.escape(post.title)}</h1>
+          <div class="post-detail-meta">
+            <span style="cursor:pointer;" onclick="App.viewUserProfile('${post.author.id}')">${this.avatarIcon(post.author)} <strong>${this.escape(post.author.nickname)}</strong></span>
+            <span>${this.timeAgo(post.createdAt)}</span>
+            <span>👁 ${post.views || 0} 浏览</span>
+            <span>💬 ${(post.replies || []).length} 回复</span>
+          </div>
+        </div>
+        <div class="post-detail-content">${this.escape(post.content)}</div>`;
+
+    if (post.attachments && post.attachments.length) {
+      html += `<div class="post-attachments"><h4>附件 (${post.attachments.length})</h4>`;
+      post.attachments.forEach(f => {
+        html += `<div class="attach-item">
+          📎 <a href="${f.path}" target="_blank" download>${this.escape(f.name)}</a>
+          <span class="attach-size">${f.sizeDisplay || this.fmtSize(f.size)}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `</div>`;
+
+    // 回复区
+    html += `<div class="replies-section"><div class="replies-title">回复 (${(post.replies || []).length})</div>`;
+    if (post.replies && post.replies.length) {
+      post.replies.forEach(r => {
+        html += `<div class="reply-card">
+          <div class="reply-header" style="cursor:pointer;" onclick="App.viewUserProfile('${r.author.id}')">${this.avatarIcon(r.author)} <span class="reply-author">${this.escape(r.author.nickname)}</span> <span class="reply-time">${this.timeAgo(r.createdAt)}</span></div>
+          <div class="reply-content">${this.escape(r.content)}</div>
+        </div>`;
+      });
+    } else {
+      html += `<div class="empty-state" style="padding:24px;"><div class="empty-state-text" style="font-size:13px;">暂无回复，来说点什么吧</div></div>`;
+    }
+    html += `</div>`;
+
+    // 回复表单
+    if (this.user) {
+      html += `<div class="reply-form">
+        <textarea id="replyContent" placeholder="写下你的回复..."></textarea>
+        <button class="btn btn-primary" onclick="App.submitReply('${post.id}')">发表回复</button>
+      </div>`;
+    } else {
+      html += `<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px;">
+        请先 <a style="cursor:pointer;color:var(--accent);" onclick="App.navigate('login')">登录</a> 后回复
+      </div>`;
+    }
+
+    document.getElementById('postDetail').innerHTML = html;
+  },
+
+  async submitReply(postId) {
+    const content = document.getElementById('replyContent').value.trim();
+    if (!content) return this.toast('请输入回复内容', 'error');
+    try {
+      await this.api('POST', '/api/posts/' + postId + '/reply', { content });
+      this.toast('回复成功', 'success');
+      this.loadPostDetail();
+    } catch (e) {
+      this.toast(e.message, 'error');
+    }
+  },
+
+  async deletePost(postId) {
+    if (!confirm('确定要删除这个帖子吗？此操作不可撤销。')) return;
+    try {
+      await this.api('DELETE', '/api/posts/' + postId);
+      this.toast('帖子已删除', 'success');
+      this.navigate('home');
+    } catch (e) {
+      this.toast(e.message, 'error');
+    }
+  },
+
+  // ---- 发帖 ----
+  async submitPost() {
+    const title = document.getElementById('newPostTitle').value.trim();
+    const content = document.getElementById('newPostContent').value.trim();
+    const category = document.getElementById('newPostCategory').value;
+
+    if (!title) return this.toast('请输入标题', 'error');
+    if (!content) return this.toast('请输入内容', 'error');
+
+    try {
+      // 如果有待上传文件，先上传
+      if (this.selectedFiles.length > 0) {
+        await this.uploadAllFiles();
+      }
+
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.textContent = '发布中...';
+
+      await this.api('POST', '/api/posts', {
+        title, content, category,
+        attachments: this.uploadedFiles
+      });
+
+      this.toast('帖子发布成功！', 'success');
+      // 清空表单
+      document.getElementById('newPostTitle').value = '';
+      document.getElementById('newPostContent').value = '';
+      this.selectedFiles = [];
+      this.uploadedFiles = [];
+      this.renderFileList();
+      document.getElementById('uploadProgress').classList.remove('show');
+      btn.disabled = false;
+      btn.textContent = '发布帖子';
+      this.navigate('home');
+    } catch (e) {
+      this.toast(e.message, 'error');
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = false;
+      btn.textContent = '发布帖子';
+    }
+  },
+
+  // ---- 文件上传 ----
+  handleFileSelect(e) {
+    if (e.target.files.length) this.addFiles(e.target.files);
+  },
+
+  addFiles(fileList) {
+    for (const file of fileList) {
+      if (this.selectedFiles.find(f => f.name === file.name && f.size === file.size)) continue;
+      this.selectedFiles.push(file);
+    }
+    this.renderFileList();
+    document.getElementById('fileInput').value = '';
+  },
+
+  removeFile(index) {
+    this.selectedFiles.splice(index, 1);
+    this.renderFileList();
+  },
+
+  renderFileList() {
+    const container = document.getElementById('fileList');
+    if (this.selectedFiles.length === 0) { container.innerHTML = ''; return; }
+    container.innerHTML = this.selectedFiles.map((f, i) => `
+      <div class="file-item">
+        <div class="file-item-info">
+          <div class="file-item-name">${this.escape(f.name)}</div>
+          <div class="file-item-meta">${this.fmtSize(f.size)}</div>
+        </div>
+        <button class="file-item-remove" onclick="App.removeFile(${i})" title="移除">&times;</button>
+      </div>
+    `).join('');
+  },
+
+  async uploadAllFiles() {
+    const progressEl = document.getElementById('uploadProgress');
+    const fillEl = document.getElementById('progressFill');
+    const textEl = document.getElementById('progressText');
+    const percentEl = document.getElementById('progressPercent');
+    progressEl.classList.add('show');
+
+    this.uploadedFiles = [];
+
+    for (let i = 0; i < this.selectedFiles.length; i++) {
+      const file = this.selectedFiles[i];
+      textEl.textContent = `上传中 (${i + 1}/${this.selectedFiles.length}): ${file.name}`;
+      percentEl.textContent = '0%';
+      fillEl.style.width = '0%';
+
+      // 大文件（>100MB）使用分块上传
+      if (file.size > 100 * 1024 * 1024) {
+        const result = await this.uploadFileChunked(file, (progress) => {
+          fillEl.style.width = progress + '%';
+          percentEl.textContent = Math.round(progress) + '%';
+        });
+        this.uploadedFiles.push(result);
+      } else {
+        const result = await this.uploadFileSingle(file, (progress) => {
+          fillEl.style.width = progress + '%';
+          percentEl.textContent = Math.round(progress) + '%';
+        });
+        this.uploadedFiles.push(result);
+      }
+    }
+
+    textEl.textContent = `上传完成 (${this.selectedFiles.length} 个文件)`;
+    percentEl.textContent = '100%';
+    fillEl.style.width = '100%';
+  },
+
+  uploadFileSingle(file, onProgress) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/upload');
+      xhr.setRequestHeader('Authorization', 'Bearer ' + this.token);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) onProgress((e.loaded / e.total) * 100);
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) resolve(JSON.parse(xhr.responseText).file);
+        else {
+          try { reject(new Error(JSON.parse(xhr.responseText).error)); }
+          catch { reject(new Error('上传失败')); }
+        }
+      };
+
+      xhr.onerror = () => reject(new Error('网络错误'));
+      xhr.send(formData);
+    });
+  },
+
+  async uploadFileChunked(file, onProgress) {
+    const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB per chunk
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+    const fileId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36);
+
+    for (let i = 0; i < totalChunks; i++) {
+      const start = i * CHUNK_SIZE;
+      const end = Math.min(start + CHUNK_SIZE, file.size);
+      const chunk = file.slice(start, end);
+
+      const formData = new FormData();
+      formData.append('chunk', chunk);
+      formData.append('fileId', fileId);
+      formData.append('chunkIndex', i);
+      formData.append('totalChunks', totalChunks);
+      formData.append('fileName', file.name);
+
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/upload/chunk');
+        xhr.setRequestHeader('Authorization', 'Bearer ' + this.token);
+        xhr.onload = () => {
+          if (xhr.status === 200) resolve();
+          else reject(new Error('分块上传失败'));
+        };
+        xhr.onerror = () => reject(new Error('网络错误'));
+        xhr.send(formData);
+      });
+
+      onProgress(((i + 1) / totalChunks) * 100);
+    }
+
+    // 合并分块
+    const res = await this.api('POST', '/api/upload/complete', { fileId, fileName: file.name });
+    return res.file;
+  },
+
+  // ---- 工具函数 ----
+  escape(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  },
+
+  timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const sec = Math.floor(diff / 1000);
+    if (sec < 60) return '刚刚';
+    if (sec < 3600) return Math.floor(sec / 60) + ' 分钟前';
+    if (sec < 86400) return Math.floor(sec / 3600) + ' 小时前';
+    if (sec < 2592000) return Math.floor(sec / 86400) + ' 天前';
+    return new Date(dateStr).toLocaleDateString('zh-CN');
+  },
+
+  fmtSize(bytes) {
+    if (!bytes) return '0 B';
+    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(2) + ' GB';
+    if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+    if (bytes >= 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    return bytes + ' B';
+  },
+
+  avatarIcon(author) {
+    const initial = (author.nickname || '?')[0].toUpperCase();
+    return `<span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-alt));color:#fff;font-size:11px;font-weight:700;flex-shrink:0;vertical-align:middle;">${initial}</span>`;
+  },
+
+  // ---- 用户主页 & 关注系统 ----
+  async loadUserProfile(userId) {
+    const container = document.getElementById('profileContainer');
+    container.innerHTML = '<div class="loading">加载中...</div>';
+    try {
+      const data = await this.api('GET', '/api/user/' + userId + '/profile');
+      const u = data.user;
+      const isSelf = this.user && this.user.id === userId;
+      let followBtn = '';
+      if (this.user && !isSelf) {
+        followBtn = '<button class="follow-btn follow" id="profileFollowBtn" onclick="App.toggleFollow(\'' + userId + '\')">+ 关注</button>';
+      }
+      container.innerHTML = 
+        '<div class="user-profile-header">' +
+          '<div class="user-profile-avatar">' + (u.nickname || '?')[0].toUpperCase() + '</div>' +
+          '<div class="user-profile-info">' +
+            '<div class="user-profile-name">' + u.nickname + (u.role === 'admin' ? '<span class="user-profile-role">管理员</span>' : '') + '</div>' +
+            '<div class="user-profile-stats">' +
+              '<div class="user-profile-stat" onclick="App.viewUserList(\'following\',\'' + userId + '\')"><div class="stat-num">' + data.following + '</div><div class="stat-label">关注</div></div>' +
+              '<div class="user-profile-stat" onclick="App.viewUserList(\'fans\',\'' + userId + '\')"><div class="stat-num">' + data.fans + '</div><div class="stat-label">粉丝</div></div>' +
+              '<div class="user-profile-stat"><div class="stat-num">' + data.postCount + '</div><div class="stat-label">帖子</div></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="user-profile-actions">' + followBtn + '</div>' +
+        '</div>';
+      // 异步检查关注状态
+      if (this.user && !isSelf) {
+        this.checkFollowing(userId);
+      }
+    } catch (e) { container.innerHTML = '<p style="color:var(--danger);text-align:center;margin-top:40px;">加载失败: ' + e.message + '</p>'; }
+  },
+
+  async checkFollowing(userId) {
+    try {
+      const data = await this.api('GET', '/api/follow/' + userId);
+      const btn = document.getElementById('profileFollowBtn');
+      if (btn && data.following) {
+        btn.textContent = '✓ 已关注';
+        btn.className = 'follow-btn unfollow';
+      }
+    } catch (e) { /* ignore */ }
+  },
+
+  async toggleFollow(userId) {
+    if (!this.user) { this.toast('请先登录', 'error'); return; }
+    try {
+      const data = await this.api('POST', '/api/follow', { targetId: userId });
+      const btn = document.getElementById('profileFollowBtn');
+      if (data.following) {
+        if (btn) { btn.textContent = '✓ 已关注'; btn.className = 'follow-btn unfollow'; }
+        this.toast('已关注', 'success');
+      } else {
+        if (btn) { btn.textContent = '+ 关注'; btn.className = 'follow-btn follow'; }
+        this.toast('已取消关注', 'info');
+      }
+    } catch (e) { this.toast(e.message, 'error'); }
+  },
+
+  async loadUserList(type, userId) {
+    const titleEl = document.getElementById('userlistTitle');
+    const container = document.getElementById('userListContent');
+    titleEl.textContent = type === 'fans' ? '粉丝列表' : '关注列表';
+    container.innerHTML = '<div class="loading">加载中...</div>';
+    try {
+      const data = await this.api('GET', '/api/user/' + userId + '/' + type);
+      if (!data.list.length) {
+        container.innerHTML = '<p style="color:var(--text-secondary);padding:20px;text-align:center;">暂无数据</p>';
+        return;
+      }
+      container.innerHTML = data.list.map(u =>
+        '<div class="user-list-item" onclick="App.viewUserProfile(\'' + u.id + '\')">' +
+          '<div class="user-list-avatar">' + (u.nickname || '?')[0].toUpperCase() + '</div>' +
+          '<div><div class="user-list-name">' + u.nickname + (u.role === 'admin' ? '<span class="user-list-role">管理</span>' : '') + '</div></div>' +
+        '</div>'
+      ).join('');
+    } catch (e) { container.innerHTML = '<p style="color:var(--danger);">加载失败</p>'; }
+  },
+
+  viewUserList(type, userId) {
+    this.viewingUserId = userId;
+    this.navigate('userlist', { type, userId });
+  },
+
+  viewUserProfile(userId) {
+    this.navigate('profile', { userId });
+  },
+
+  toast(message, type, duration) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    const icons = { success: '✓', error: '✕', info: 'ℹ' };
+    toast.innerHTML = `<strong>${icons[type] || ''}</strong> ${message}`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, duration || 3500);
+  }
+};
+
+// 启动应用
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>
