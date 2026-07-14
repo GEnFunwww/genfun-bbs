@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GENFUN论坛 - 发现精彩，分享热爱</title>
+<style>
+:root {
+  --bg: #0d1117; --bg-secondary: #161b22; --bg-card: #1c2128; --bg-hover: #21262d; --bg-input: #0d1117;
+  --header-bg: rgba(13,17,23,0.85); --border: #30363d; --border-light: #21262d;
+  --text: #e6edf3; --text-secondary: #8b949e; --text-muted: #6e7681;
+  --accent: #3b82f6; --accent-hover: #60a5fa; --accent-light: rgba(59,130,246,0.15);
+  --accent-glow: rgba(59,130,246,0.3); --accent-alt: #06b6d4;
+  --success: #3fb950; --success-bg: rgba(63,185,80,0.15); --danger: #f85149; --danger-bg: rgba(248,81,73,0.15);
+  --warning: #d29922; --warning-bg: rgba(210,153,34,0.15); --info: #58a6ff;
+  --radius: 12px; --radius-sm: 8px; --radius-xs: 4px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5); --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="light"] {
+  --bg: #ffffff; --bg-secondary: #f6f8fa; --bg-card: #ffffff; --bg-hover: #f0f2f5; --bg-input: #ffffff;
+  --header-bg: rgba(255,255,255,0.85); --border: #d0d7de; --border-light: #d8dee4;
+  --text: #1f2328; --text-secondary: #656d76; --text-muted: #8c959f;
+  --accent: #2563eb; --accent-hover: #1d4ed8; --accent-light: rgba(37,99,235,0.1);
+  --accent-glow: rgba(37,99,235,0.25); --accent-alt: #0891b2;
+  --success: #1a7f37; --success-bg: rgba(26,127,55,0.1); --danger: #cf222e; --danger-bg: rgba(207,34,46,0.1);
+  --shadow: 0 1px 3px rgba(31,35,40,0.12); --shadow-lg: 0 8px 24px rgba(140,149,159,0.2);
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
+a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-hover); }
+::-webkit-scrollbar { width:8px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+#app { max-width:960px; margin:0 auto; padding:0 20px; min-height:100vh; display:flex; flex-direction:column; }
+
+.header { position:sticky; top:0; z-index:100; background:var(--header-bg); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0 20px; margin:0 -20px; display:flex; align-items:center; justify-content:space-between; height:60px; }
+.header-left { display:flex; align-items:center; gap:24px; }
+.logo { font-size:20px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
+.logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; font-weight:900; }
+.nav { display:flex; gap:4px; }
+.nav-btn { padding:6px 16px; border-radius:20px; border:none; background:transparent; color:var(--text-secondary); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.nav-btn:hover { color:var(--text); background:var(--bg-hover); }
+.nav-btn.active { color:#fff; background:var(--accent); font-weight:600; }
+
+.header-right { display:flex; align-items:center; gap:12px; }
+.user-btn { display:flex; align-items:center; gap:8px; padding:4px 12px 4px 4px; border-radius:24px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); cursor:pointer; transition:var(--transition); font-family:inherit; font-size:14px; }
+.user-btn:hover { border-color:var(--accent); }
+.user-avatar-img { width:30px; height:30px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.user-avatar-letter { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0; }
+.admin-badge { font-size:10px; padding:2px 8px; border-radius:8px; background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); font-weight:700; margin-left:4px; }
+.login-link { padding:6px 18px; border-radius:20px; border:1px solid var(--accent); background:transparent; color:var(--accent); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.login-link:hover { background:var(--accent); color:#fff; }
+.theme-toggle { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text-secondary); cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:var(--transition); flex-shrink:0; }
+.theme-toggle:hover { border-color:var(--accent); color:var(--accent); }
+
+.main { flex:1; padding:24px 0; }
+.page { display:none; } .page.active { display:block; }
+
+.category-tabs { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; padding:4px; background:var(--bg-secondary); border-radius:var(--radius); }
+.cat-tab { padding:6px 16px; border-radius:20px; border:none; background:transparent; color:var(--text-secondary); font-size:13px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.cat-tab:hover { color:var(--text); } .cat-tab.active { background:var(--accent); color:#fff; font-weight:600; }
+
+.search-bar { display:flex; gap:8px; margin-bottom:20px; }
+.search-input { flex:1; padding:10px 16px; border-radius:var(--radius); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; transition:var(--transition); }
+.search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+
+.post-list { display:flex; flex-direction:column; gap:12px; }
+.post-card { background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius); padding:20px; cursor:pointer; transition:var(--transition); }
+.post-card:hover { border-color:var(--accent); transform:translateY(-1px); box-shadow:var(--shadow-lg); }
+.post-card.pinned { border-left:3px solid #f59e0b; }
+.post-card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.post-card-title { font-size:17px; font-weight:600; color:var(--text); line-height:1.4; flex:1; }
+.post-card-category { font-size:11px; padding:2px 10px; border-radius:12px; background:var(--accent-light); color:var(--accent); white-space:nowrap; font-weight:600; }
+.post-card-preview { color:var(--text-secondary); font-size:14px; line-height:1.6; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.post-card-meta { display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--text-muted); }
+.post-card-author { color:var(--text-secondary); font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+.post-card-author img { width:20px; height:20px; border-radius:50%; }
+
+.post-detail { background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+.post-detail-title { font-size:24px; font-weight:700; margin-bottom:12px; line-height:1.3; }
+.post-detail-meta { display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; color:var(--text-muted); padding-bottom:20px; border-bottom:1px solid var(--border-light); }
+.post-detail-content { padding:20px 0; font-size:15px; line-height:1.8; white-space:pre-wrap; word-break:break-word; }
+
+.replies-section { margin-top:8px; }
+.replies-title { font-size:16px; font-weight:600; margin-bottom:16px; color:var(--text); }
+.reply-card { background:var(--bg-card); border:1px solid var(--border-light); border-radius:8px; padding:16px; margin-bottom:10px; }
+.reply-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.reply-header img { width:24px; height:24px; border-radius:50%; }
+.reply-author { font-weight:600; font-size:13px; cursor:pointer; color:var(--accent); }
+.reply-time { font-size:12px; color:var(--text-muted); }
+.reply-content { font-size:14px; line-height:1.7; white-space:pre-wrap; word-break:break-word; }
+
+.reply-form { margin-top:20px; display:flex; flex-direction:column; gap:12px; }
+.reply-form textarea { width:100%; min-height:100px; padding:14px; border-radius:var(--radius); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; resize:vertical; outline:none; }
+.reply-form textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+
+.form-container { max-width:440px; margin:40px auto; background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius); padding:32px; }
+.form-title { font-size:22px; font-weight:700; margin-bottom:24px; text-align:center; }
+.form-group { margin-bottom:18px; }
+.form-label { display:block; font-size:13px; color:var(--text-secondary); margin-bottom:6px; font-weight:500; }
+.form-input,.form-select,.form-textarea { width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; transition:var(--transition); }
+.form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.form-textarea { min-height:160px; resize:vertical; }
+.form-footer { text-align:center; margin-top:16px; font-size:13px; color:var(--text-secondary); }
+.form-footer a { cursor:pointer; font-weight:600; }
+
+.btn { padding:10px 24px; border-radius:8px; border:none; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; transition:var(--transition); display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:var(--accent); color:#fff; } .btn-primary:hover { background:var(--accent-hover); box-shadow:0 4px 12px var(--accent-glow); }
+.btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+.btn-block { width:100%; justify-content:center; }
+.btn-sm { padding:6px 14px; font-size:13px; }
+.btn-danger { background:var(--danger-bg); color:var(--danger); } .btn-danger:hover { background:var(--danger); color:#fff; }
+.btn-ghost { background:transparent; color:var(--text-secondary); border:1px solid var(--border); }
+.btn-github { background:#24292e; color:#fff; font-size:15px; } .btn-github:hover { background:#2f363d; }
+
+#toast-container { position:fixed; top:80px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:12px 20px; border-radius:8px; font-size:14px; box-shadow:var(--shadow-lg); animation:slideIn 0.3s ease; max-width:380px; display:flex; align-items:center; gap:8px; }
+.toast-success { background:var(--success-bg); color:var(--success); border:1px solid rgba(63,185,80,0.3); }
+.toast-error { background:var(--danger-bg); color:var(--danger); border:1px solid rgba(248,81,73,0.3); }
+.toast-info { background:var(--accent-light); color:var(--accent); }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+
+.empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); }
+.empty-state-icon { font-size:48px; margin-bottom:12px; opacity:0.4; }
+.empty-state-text { font-size:15px; }
+.loading { text-align:center; padding:40px; color:var(--text-muted); }
+.spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 8px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.pagination { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:24px; }
+.page-btn { padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text); font-size:13px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.page-btn:hover:not(:disabled) { border-color:var(--accent); } .page-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.page-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+.page-info { font-size:13px; color:var(--text-muted); }
+
+.back-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-secondary); font-size:13px; cursor:pointer; margin-bottom:20px; transition:var(--transition); font-family:inherit; }
+.back-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+.fab { position:fixed; bottom:32px; right:32px; z-index:999; width:56px; height:56px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); color:#fff; font-size:28px; cursor:pointer; box-shadow:0 4px 16px var(--accent-glow); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; line-height:1; }
+.fab:hover { transform:scale(1.1); } .fab.hidden { display:none; }
+
+.admin-nav-btn { border-color:#f59e0b!important; color:#f59e0b!important; }
+
+.login-device-code { text-align:center; margin:20px 0; }
+.device-code-box { font-size:28px; font-weight:800; letter-spacing:4px; padding:16px 24px; background:var(--accent-light); border-radius:var(--radius); color:var(--accent); margin-bottom:12px; user-select:all; }
+.device-link { font-size:14px; color:var(--text-secondary); }
+.device-link a { color:var(--accent); font-weight:600; }
+
+@media (max-width:768px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} }
+@media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo" onclick="App.navigate('home')"><div class="logo-icon">G</div>GENFUN论坛</div>
+      <nav class="nav" id="mainNav">
+        <button class="nav-btn active" data-page="home" onclick="App.navigate('home')">首页</button>
+        <button class="nav-btn" data-page="new" id="navNewPost" style="display:none" onclick="App.navigate('new')">发帖</button>
+        <button class="nav-btn admin-nav-btn" data-page="admin" id="navAdmin" style="display:none" onclick="App.navigate('admin')">⚙ 管理</button>
+      </nav>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" onclick="App.toggleTheme()">☀</button>
+      <button class="login-link" id="btnLogin" onclick="App.navigate('login')">GitHub 登录</button>
+      <button class="user-btn" id="btnUser" style="display:none" onclick="App.showUserMenu()">
+        <img class="user-avatar-img" id="userAvatarImg" src="" alt="" style="display:none">
+        <div class="user-avatar-letter" id="userAvatarLetter" style="display:none">?</div>
+        <span id="userNameSmall"></span>
+        <span class="admin-badge" id="adminBadgeSmall" style="display:none">管理</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- 首页 -->
+    <section class="page active" id="page-home">
+      <div class="category-tabs" id="categoryTabs">
+        <button class="cat-tab active" data-cat="全部">全部</button>
+        <button class="cat-tab" data-cat="技术">技术</button>
+        <button class="cat-tab" data-cat="生活">生活</button>
+        <button class="cat-tab" data-cat="游戏">游戏</button>
+        <button class="cat-tab" data-cat="资源">资源</button>
+        <button class="cat-tab" data-cat="其他">其他</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索帖子..." onkeydown="if(event.key==='Enter')App.loadPosts()">
+        <button class="btn btn-primary btn-sm" onclick="App.loadPosts()">搜索</button>
+      </div>
+      <div class="post-list" id="postList"></div>
+      <div class="loading" id="postsLoading"><div class="spinner"></div>加载中...</div>
+      <div class="empty-state" id="postsEmpty" style="display:none"><div class="empty-state-icon">📭</div><div class="empty-state-text">还没有帖子，快来发第一个吧！</div></div>
+      <div class="pagination" id="pagination"></div>
+    </section>
+
+    <!-- 帖子详情 -->
+    <section class="page" id="page-post">
+      <button class="back-btn" onclick="App.navigate('home')">← 返回首页</button>
+      <div id="postDetail"></div>
+    </section>
+
+    <!-- 发帖 -->
+    <section class="page" id="page-new">
+      <div class="form-container">
+        <div class="form-title">发布新帖</div>
+        <div class="form-group">
+          <label class="form-label">分类</label>
+          <select class="form-select" id="newPostCategory"><option value="技术">技术</option><option value="生活">生活</option><option value="游戏">游戏</option><option value="资源">资源</option><option value="其他">其他</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">标题</label><input type="text" class="form-input" id="newPostTitle" placeholder="输入帖子标题" maxlength="200"></div>
+        <div class="form-group"><label class="form-label">内容</label><textarea class="form-textarea" id="newPostContent" placeholder="写下你想分享的内容..."></textarea></div>
+        <button class="btn btn-primary btn-block" id="btnSubmit" onclick="App.submitPost()">发布帖子</button>
+      </div>
+    </section>
+
+    <!-- GitHub 登录 -->
+    <section class="page" id="page-login">
+      <div class="form-container">
+        <div class="form-title">登录 GENFUN论坛</div>
+        <p style="text-align:center;color:var(--text-secondary);margin-bottom:20px;font-size:13px;">使用 GitHub 账号登录，即可发帖和回复</p>
+        <div id="loginStep1">
+          <button class="btn btn-github btn-block" onclick="App.startDeviceAuth()" style="font-size:16px;padding:14px;">
+            <img src="https://github.githubassets.com/favicons/favicon-dark.svg" width="20" height="20" style="vertical-align:middle;margin-right:8px;"> GitHub 登录
+          </button>
+        </div>
+        <div id="loginStep2" style="display:none">
+          <div class="login-device-code">
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">请前往 GitHub 输入以下验证码：</p>
+            <div class="device-code-box" id="deviceUserCode">------</div>
+            <div class="device-link"><a href="https://github.com/login/device" target="_blank">👉 点击前往 github.com/login/device</a></div>
+            <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">等待授权中... <span id="authPollStatus">⏳</span></p>
+          </div>
+          <button class="btn btn-ghost btn-block" onclick="App.cancelAuth()" style="margin-top:16px;">取消</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 管理后台 -->
+    <section class="page" id="page-admin">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:16px;">⚙ 管理后台</h2>
+      <div style="display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;">
+        <button class="btn btn-sm" style="background:var(--accent);color:#fff;" onclick="App.loadAdminPosts()">📝 帖子管理</button>
+        <button class="btn btn-sm btn-ghost" onclick="App.loadDashboard()">📊 统计</button>
+      </div>
+      <div id="adminContent"><div class="loading"><div class="spinner"></div>加载中...</div></div>
+    </section>
+  </main>
+</div>
+
+<button class="fab hidden" id="fabNewPost" onclick="App.navigate('new')" title="发布新帖">+</button>
+<div id="toast-container"></div>
+
+<script>
+/* ================================================================
+   GENFUN论坛 - GitHub Issues 驱动版本
+   前端部署在 GitHub Pages，数据存储在 GitHub Issues
+   ================================================================ */
+
+const REPO_OWNER = 'GEnFunwww';
+const REPO_NAME = 'genfun-bbs';
+const REPO = REPO_OWNER + '/' + REPO_NAME;
+const GH_API = 'https://api.github.com';
+const CLIENT_ID = 'Ov23liqHd0WR1s7n3mTs'; // ← 替换为你的 GitHub OAuth App Client ID
+
+const App = {
+  token: localStorage.getItem('gh_token') || '',
+  user: JSON.parse(localStorage.getItem('gh_user') || 'null'),
+  theme: localStorage.getItem('genfun_theme') || 'dark',
+  currentPage: 'home',
+  currentCategory: '全部',
+  currentIssueNumber: null,
+  currentPostPage: 1,
+  authInterval: null,
+  cachedPosts: [],
+  cacheTime: 0,
+
+  // ---- 初始化 ----
+  init() {
+    this.initTheme();
+    if (this.token) this.verifyToken();
+    this.updateAuthUI();
+    this.bindEvents();
+    this.loadPosts();
+  },
+
+  async verifyToken() {
+    try {
+      const u = await this.ghApi('GET', '/user');
+      this.user = u;
+      localStorage.setItem('gh_user', JSON.stringify(u));
+      this.updateAuthUI();
+    } catch(e) {
+      this.token = '';
+      localStorage.removeItem('gh_token');
+      localStorage.removeItem('gh_user');
+      this.user = null;
+      this.updateAuthUI();
+    }
+  },
+
+  // ---- GitHub API ----
+  async ghApi(method, path, body) {
+    const headers = { 'Accept': 'application/vnd.github.v3+json' };
+    if (this.token) headers['Authorization'] = 'Bearer ' + this.token;
+    if (body) headers['Content-Type'] = 'application/json';
+    const opts = { method, headers };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(GH_API + path, opts);
+    if (res.status === 401) { this.logout(); throw new Error('请先登录'); }
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || '请求失败'); }
+    if (res.status === 204) return null;
+    return res.json();
+  },
+
+  // ---- GitHub 设备流认证 ----
+  async startDeviceAuth() {
+    try {
+      const res = await fetch('https://github.com/login/device/code', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client_id: CLIENT_ID, scope: 'public_repo' })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error_description);
+
+      document.getElementById('loginStep1').style.display = 'none';
+      document.getElementById('loginStep2').style.display = '';
+      document.getElementById('deviceUserCode').textContent = data.user_code;
+
+      // 每5秒轮询
+      this.authInterval = setInterval(() => this.pollToken(data.device_code, data.interval || 5), (data.interval || 5) * 1000);
+    } catch(e) {
+      this.toast(e.message, 'error');
+    }
+  },
+
+  async pollToken(deviceCode, interval) {
+    try {
+      const res = await fetch('https://github.com/login/oauth/access_token', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client_id: CLIENT_ID, device_code: deviceCode, grant_type: 'urn:ietf:params:oauth:grant-type:device_code' })
+      });
+      const data = await res.json();
+      if (data.access_token) {
+        clearInterval(this.authInterval);
+        this.token = data.access_token;
+        localStorage.setItem('gh_token', this.token);
+        this.user = await this.ghApi('GET', '/user');
+        localStorage.setItem('gh_user', JSON.stringify(this.user));
+        this.updateAuthUI();
+        this.toast('登录成功！欢迎，' + (this.user.name || this.user.login), 'success');
+        this.navigate('home');
+      } else if (data.error === 'authorization_pending') {
+        document.getElementById('authPollStatus').textContent = '⏳ 等待授权...';
+      } else if (data.error === 'slow_down') {
+        clearInterval(this.authInterval);
+        this.authInterval = setInterval(() => this.pollToken(deviceCode, interval + 5), (interval + 5) * 1000);
+      } else if (data.error === 'expired_token') {
+        clearInterval(this.authInterval);
+        this.toast('验证码已过期，请重试', 'error');
+        this.cancelAuth();
+      }
+    } catch(e) { /* network error, retry */ }
+  },
+
+  cancelAuth() {
+    if (this.authInterval) clearInterval(this.authInterval);
+    document.getElementById('loginStep1').style.display = '';
+    document.getElementById('loginStep2').style.display = 'none';
+    this.navigate('login');
+  },
+
+  logout() {
+    this.token = '';
+    this.user = null;
+    localStorage.removeItem('gh_token');
+    localStorage.removeItem('gh_user');
+    this.updateAuthUI();
+    this.navigate('home');
+    this.toast('已退出登录', 'info');
+  },
+
+  showUserMenu() { if (confirm('确定退出登录？')) this.logout(); },
+
+  // ---- 主题 ----
+  initTheme() {
+    document.documentElement.setAttribute('data-theme', this.theme);
+    document.getElementById('themeToggle').textContent = this.theme === 'dark' ? '☀' : '🌙';
+  },
+  toggleTheme() {
+    this.theme = this.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('genfun_theme', this.theme);
+    document.documentElement.setAttribute('data-theme', this.theme);
+    document.getElementById('themeToggle').textContent = this.theme === 'dark' ? '☀' : '🌙';
+  },
+
+  // ---- 导航 ----
+  navigate(page, data) {
+    this.currentPage = page;
+    if (data && data.issueNumber) this.currentIssueNumber = data.issueNumber;
+
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if (el) el.classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+
+    if (page === 'home') { this.currentPostPage = 1; this.loadPosts(); }
+    if (page === 'post') this.loadPostDetail();
+    if (page === 'new') { if (!this.user) { this.navigate('login'); this.toast('请先登录', 'info'); } }
+    if (page === 'login') { document.getElementById('loginStep1').style.display = ''; document.getElementById('loginStep2').style.display = 'none'; }
+    if (page === 'admin') { if (!this.user || this.user.login !== REPO_OWNER) { this.navigate('home'); return; } this.loadAdminPosts(); }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.updateFab();
+  },
+
+  updateFab() {
+    const fab = document.getElementById('fabNewPost');
+    fab.classList.toggle('hidden', !this.user || this.currentPage !== 'home');
+  },
+
+  updateAuthUI() {
+    const btnLogin = document.getElementById('btnLogin');
+    const btnUser = document.getElementById('btnUser');
+    const navNew = document.getElementById('navNewPost');
+    const adminNav = document.getElementById('navAdmin');
+    const badge = document.getElementById('adminBadgeSmall');
+
+    if (this.user) {
+      btnLogin.style.display = 'none';
+      btnUser.style.display = 'flex';
+      navNew.style.display = '';
+      document.getElementById('userNameSmall').textContent = this.user.name || this.user.login;
+      const imgEl = document.getElementById('userAvatarImg');
+      const letterEl = document.getElementById('userAvatarLetter');
+      if (this.user.avatar_url) { imgEl.src = this.user.avatar_url; imgEl.style.display = ''; letterEl.style.display = 'none'; }
+      else { letterEl.textContent = (this.user.login || '?')[0].toUpperCase(); letterEl.style.display = ''; imgEl.style.display = 'none'; }
+      if (this.user.login === REPO_OWNER) { badge.style.display = ''; adminNav.style.display = ''; }
+      else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
+    } else {
+      btnLogin.style.display = ''; btnUser.style.display = 'none'; navNew.style.display = 'none'; badge.style.display = 'none'; adminNav.style.display = 'none';
+    }
+    this.updateFab();
+  },
+
+  bindEvents() {
+    document.getElementById('categoryTabs').addEventListener('click', e => {
+      if (e.target.classList.contains('cat-tab')) {
+        document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        this.currentCategory = e.target.dataset.cat;
+        this.currentPostPage = 1;
+        this.loadPosts();
+      }
+    });
+  },
+
+  // ---- 帖子列表 ----
+  async loadPosts() {
+    const listEl = document.getElementById('postList');
+    const emptyEl = document.getElementById('postsEmpty');
+    const loadEl = document.getElementById('postsLoading');
+    const pagEl = document.getElementById('pagination');
+
+    listEl.innerHTML = '';
+    loadEl.style.display = '';
+    emptyEl.style.display = 'none';
+
+    try {
+      // 缓存5分钟
+      const now = Date.now();
+      if (this.cachedPosts.length && now - this.cacheTime < 300000) {
+        this.renderPosts(this.filterPosts(this.cachedPosts));
+        loadEl.style.display = 'none';
+        return;
+      }
+
+      const params = new URLSearchParams({ state: 'open', sort: 'created', direction: 'desc', per_page: 100 });
+      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?' + params);
+      // 过滤掉 Pull Requests
+      this.cachedPosts = issues.filter(i => !i.pull_request);
+      this.cacheTime = now;
+      const filtered = this.filterPosts(this.cachedPosts);
+
+      loadEl.style.display = 'none';
+      if (!filtered.length) { emptyEl.style.display = ''; return; }
+      this.renderPosts(filtered);
+    } catch(e) {
+      loadEl.style.display = 'none';
+      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>';
+    }
+  },
+
+  filterPosts(posts) {
+    let filtered = posts;
+    // 置顶排前
+    filtered.sort((a, b) => {
+      const aPin = a.labels.some(l => l.name === 'pinned');
+      const bPin = b.labels.some(l => l.name === 'pinned');
+      if (aPin && !bPin) return -1;
+      if (!aPin && bPin) return 1;
+      return 0;
+    });
+    // 分类筛选
+    if (this.currentCategory !== '全部') {
+      filtered = filtered.filter(i => i.labels.some(l => l.name === this.currentCategory));
+    }
+    // 搜索
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (search) {
+      filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || (i.body || '').toLowerCase().includes(search));
+    }
+    // 分页
+    const perPage = 20;
+    const total = filtered.length;
+    const totalPages = Math.ceil(total / perPage) || 1;
+    if (this.currentPostPage > totalPages) this.currentPostPage = totalPages;
+    const start = (this.currentPostPage - 1) * perPage;
+    return filtered.slice(start, start + perPage);
+  },
+
+  renderPosts(posts) {
+    const listEl = document.getElementById('postList');
+    const emptyEl = document.getElementById('postsEmpty');
+    if (!posts.length) { listEl.innerHTML = ''; emptyEl.style.display = ''; return; }
+    emptyEl.style.display = 'none';
+
+    listEl.innerHTML = posts.map(i => {
+      const isPinned = i.labels.some(l => l.name === 'pinned');
+      const cats = i.labels.filter(l => l.name !== 'pinned').map(l => l.name);
+      const cat = cats[0] || '其他';
+      const preview = (i.body || '').slice(0, 150);
+      return `<div class="post-card${isPinned ? ' pinned' : ''}" onclick="App.navigate('post',{issueNumber:${i.number}})">
+        <div class="post-card-header">
+          <div class="post-card-title">${isPinned ? '📌 ' : ''}${this.esc(i.title)}</div>
+          <span class="post-card-category">${cat}</span>
+        </div>
+        <div class="post-card-preview">${this.esc(preview)}</div>
+        <div class="post-card-meta">
+          <span class="post-card-author" onclick="event.stopPropagation();App.viewUserProfile('${i.user.login}')"><img src="${i.user.avatar_url}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(i.user.name || i.user.login)}</span>
+          <span>💬 ${i.comments} 回复</span>
+          <span>${this.timeAgo(i.created_at)}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    // 分页
+    this.renderPagination();
+  },
+
+  renderPagination() {
+    const total = this.cachedPosts.length;
+    let filtered = this.cachedPosts;
+    if (this.currentCategory !== '全部') filtered = filtered.filter(i => i.labels.some(l => l.name === this.currentCategory));
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (search) filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || (i.body||'').toLowerCase().includes(search));
+    const totalPages = Math.ceil(filtered.length / 20) || 1;
+    const pagEl = document.getElementById('pagination');
+    if (totalPages <= 1) { pagEl.innerHTML = ''; return; }
+    let html = `<button class="page-btn" onclick="App.goPage(${this.currentPostPage-1})" ${this.currentPostPage<=1?'disabled':''}>上一页</button>`;
+    for (let p=1;p<=totalPages;p++) {
+      if (p===1||p===totalPages||(p>=this.currentPostPage-2&&p<=this.currentPostPage+2))
+        html+=`<button class="page-btn ${p===this.currentPostPage?'active':''}" onclick="App.goPage(${p})">${p}</button>`;
+      else if (p===this.currentPostPage-3||p===this.currentPostPage+3) html+=`<span class="page-info">...</span>`;
+    }
+    html+=`<button class="page-btn" onclick="App.goPage(${this.currentPostPage+1})" ${this.currentPostPage>=totalPages?'disabled':''}>下一页</button>`;
+    html+=`<span class="page-info">共 ${filtered.length} 篇</span>`;
+    pagEl.innerHTML = html;
+  },
+
+  goPage(p) { this.currentPostPage = p; this.renderPosts(this.filterPosts(this.cachedPosts)); window.scrollTo({top:0,behavior:'smooth'}); },
+
+  // ---- 帖子详情 ----
+  async loadPostDetail() {
+    const el = document.getElementById('postDetail');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
+    try {
+      const issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber);
+      const comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100');
+      const isPinned = issue.labels.some(l => l.name === 'pinned');
+      const cats = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
+      const cat = cats[0] || '其他';
+      const isAdmin = this.user && this.user.login === REPO_OWNER;
+      const isAuthor = this.user && this.user.login === issue.user.login;
+
+      let html = `<div class="post-detail">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <span class="post-card-category">${cat}</span>
+          ${(isAdmin||isAuthor) ? `<button class="btn btn-danger btn-sm" onclick="App.closeIssue(${issue.number})">关闭帖子</button>` : ''}
+          ${isAdmin ? `<button class="btn btn-sm btn-ghost" onclick="App.togglePin(${issue.number})">${isPinned?'取消置顶':'📌 置顶'}</button>` : ''}
+        </div>
+        <h1 class="post-detail-title">${isPinned?'📌 ':''}${this.esc(issue.title)}</h1>
+        <div class="post-detail-meta">
+          <span style="cursor:pointer" onclick="App.viewUserProfile('${issue.user.login}')"><img src="${issue.user.avatar_url}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(issue.user.name||issue.user.login)}</strong></span>
+          <span>${this.timeAgo(issue.created_at)}</span>
+          <span>💬 ${issue.comments} 回复</span>
+        </div>
+        <div class="post-detail-content">${this.esc(issue.body||'（无内容）')}</div>
+      </div>`;
+
+      // 回复
+      html += `<div class="replies-section"><div class="replies-title">回复 (${comments.length})</div>`;
+      if (comments.length) {
+        comments.forEach(c => {
+          html += `<div class="reply-card">
+            <div class="reply-header" style="cursor:pointer" onclick="App.viewUserProfile('${c.user.login}')">
+              <img src="${c.user.avatar_url}" width="24" height="24" style="border-radius:50%;">
+              <span class="reply-author">${this.esc(c.user.name||c.user.login)}</span>
+              <span class="reply-time">${this.timeAgo(c.created_at)}</span>
+            </div>
+            <div class="reply-content">${this.esc(c.body)}</div>
+          </div>`;
+        });
+      } else {
+        html += '<div class="empty-state" style="padding:24px"><div class="empty-state-text" style="font-size:13px">暂无回复</div></div>';
+      }
+      html += '</div>';
+
+      // 回复表单
+      if (this.user) {
+        html += `<div class="reply-form"><textarea id="replyContent" placeholder="写下你的回复..."></textarea>
+          <button class="btn btn-primary" onclick="App.submitReply(${issue.number})">发表回复</button></div>`;
+      } else {
+        html += '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px">请先 <a style="cursor:pointer;color:var(--accent)" onclick="App.navigate(\'login\')">登录</a> 后回复</div>';
+      }
+
+      el.innerHTML = html;
+    } catch(e) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>';
+    }
+  },
+
+  async submitReply(issueNumber) {
+    if (!this.user) return this.toast('请先登录', 'error');
+    const content = document.getElementById('replyContent').value.trim();
+    if (!content) return this.toast('请输入回复内容', 'error');
+    try {
+      await this.ghApi('POST', '/repos/' + REPO + '/issues/' + issueNumber + '/comments', { body: content });
+      this.toast('回复成功', 'success');
+      this.loadPostDetail();
+    } catch(e) { this.toast(e.message, 'error'); }
+  },
+
+  // ---- 发帖 ----
+  async submitPost() {
+    if (!this.user) return this.toast('请先登录', 'error');
+    const title = document.getElementById('newPostTitle').value.trim();
+    const content = document.getElementById('newPostContent').value.trim();
+    const category = document.getElementById('newPostCategory').value;
+    if (!title) return this.toast('请输入标题', 'error');
+    if (!content) return this.toast('请输入内容', 'error');
+
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true; btn.textContent = '发布中...';
+    try {
+      await this.ghApi('POST', '/repos/' + REPO + '/issues', { title, body: content, labels: [category] });
+      this.toast('帖子发布成功！', 'success');
+      document.getElementById('newPostTitle').value = '';
+      document.getElementById('newPostContent').value = '';
+      this.cacheTime = 0; // 清缓存
+      this.navigate('home');
+    } catch(e) { this.toast(e.message, 'error'); }
+    btn.disabled = false; btn.textContent = '发布帖子';
+  },
+
+  // ---- 管理 ----
+  async closeIssue(number) {
+    if (!confirm('确定关闭此帖子？')) return;
+    try {
+      await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { state: 'closed' });
+      this.toast('帖子已关闭', 'success');
+      this.cacheTime = 0;
+      this.navigate('home');
+    } catch(e) { this.toast(e.message, 'error'); }
+  },
+
+  async togglePin(number) {
+    try {
+      const issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + number);
+      const isPinned = issue.labels.some(l => l.name === 'pinned');
+      const catLabels = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
+      const newLabels = isPinned ? catLabels : [...catLabels, 'pinned'];
+      await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { labels: newLabels });
+      this.toast(isPinned ? '已取消置顶' : '已置顶', 'success');
+      this.cacheTime = 0;
+      this.loadPostDetail();
+    } catch(e) { this.toast(e.message, 'error'); }
+  },
+
+  async loadAdminPosts() {
+    const el = document.getElementById('adminContent');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
+    try {
+      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?state=all&per_page=100');
+      const posts = issues.filter(i => !i.pull_request);
+      el.innerHTML = `<p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">共 ${posts.length} 篇帖子</p>` +
+        posts.map(i => {
+          const isPinned = i.labels.some(l => l.name === 'pinned');
+          const cat = i.labels.filter(l => l.name !== 'pinned').map(l => l.name)[0] || '其他';
+          const stateTag = i.state === 'closed' ? ' <span style="color:var(--danger);font-size:11px;">[已关闭]</span>' : '';
+          return `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;flex-wrap:wrap;${isPinned?'border-left:3px solid #f59e0b;':''}">
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:600;color:var(--text);font-size:14px;">${isPinned?'📌 ':''}${this.esc(i.title)}${stateTag}</div>
+              <div style="font-size:12px;color:var(--text-secondary);">${this.esc(i.user.login)} · ${cat} · 💬 ${i.comments} · ${this.timeAgo(i.created_at)}</div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-ghost" onclick="App.togglePin(${i.number})">${isPinned?'取消置顶':'📌 置顶'}</button>
+              <button class="btn btn-sm btn-ghost" onclick="App.closeIssue(${i.number})">${i.state==='open'?'关闭':' reopening'}</button>
+            </div>
+          </div>`;
+        }).join('');
+    } catch(e) { el.innerHTML = '<div class="empty-state-text" style="color:var(--danger)">加载失败</div>'; }
+  },
+
+  async loadDashboard() {
+    const el = document.getElementById('adminContent');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
+    try {
+      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?state=all&per_page=1');
+      const open = await this.ghApi('GET', '/repos/' + REPO + '/issues?state=open&per_page=1');
+      const repo = await this.ghApi('GET', '/repos/' + REPO);
+      el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;">
+          <div style="font-size:32px;font-weight:800;color:var(--accent);">${repo.open_issues_count}</div><div style="font-size:13px;color:var(--text-secondary);">开放帖子</div></div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;">
+          <div style="font-size:32px;font-weight:800;color:var(--accent);">${repo.stargazers_count}</div><div style="font-size:13px;color:var(--text-secondary);">Stars</div></div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;">
+          <div style="font-size:32px;font-weight:800;color:var(--accent);">${repo.forks_count}</div><div style="font-size:13px;color:var(--text-secondary);">Forks</div></div>
+      </div>`;
+    } catch(e) { el.innerHTML = '<div style="color:var(--danger)">加载失败</div>'; }
+  },
+
+  viewUserProfile(login) {
+    window.open('https://github.com/' + login, '_blank');
+  },
+
+  // ---- 工具 ----
+  esc(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; },
+  timeAgo(s) { const d = Date.now()-new Date(s).getTime(); const sec=Math.floor(d/1000); if(sec<60)return'刚刚'; if(sec<3600)return Math.floor(sec/60)+'分钟前'; if(sec<86400)return Math.floor(sec/3600)+'小时前'; if(sec<2592000)return Math.floor(sec/86400)+'天前'; return new Date(s).toLocaleDateString('zh-CN'); },
+  toast(msg, type, dur) { const c=document.getElementById('toast-container'); const t=document.createElement('div'); t.className='toast toast-'+type; const icons={success:'✓',error:'✕',info:'ℹ'}; t.innerHTML=`<strong>${icons[type]||''}</strong> ${msg}`; c.appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300);},dur||3500); }
+};
+
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>
