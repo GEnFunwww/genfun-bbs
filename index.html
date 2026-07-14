@@ -199,6 +199,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <div class="post-list" id="postList"></div>
       <div class="loading" id="postsLoading"><div class="spinner"></div>加载中...</div>
       <div class="empty-state" id="postsEmpty" style="display:none"><div class="empty-state-icon">📭</div><div class="empty-state-text">还没有帖子，快来发第一个吧！</div></div>
+      <div id="apiDebug" style="display:none;font-size:12px;color:var(--text-muted);padding:12px;border-top:1px solid var(--border);margin-top:12px;"></div>
       <div class="pagination" id="pagination"></div>
     </section>
 
@@ -735,9 +736,62 @@ const App = {
       }
 
       const params = new URLSearchParams({ state: 'open', sort: 'created', direction: 'desc', per_page: 100 });
-      // 用PAT读取，确保能读到所有帖子
-      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?' + params, null, true);
-      this.cachedPosts = issues.filter(i => !i.pull_request);
+      // 先用公开请求(不带PAT)加载帖子，所有游客都能看
+      // 如果失败再尝试带PAT的请求
+      let issues = null;
+      let debugMsg = '';
+      try {
+        const res = await fetch(GH_API + '/repos/' + REPO + '/issues?' + params, {
+          headers: { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (res.ok) {
+          issues = await res.json();
+          issues = issues.filter(i => !i.pull_request);
+          debugMsg += '✅ 公开API成功(' + issues.length + '条)';
+        } else {
+          debugMsg += '❌ 公开API返回' + res.status;
+        }
+      } catch(e1) {
+        debugMsg += '❌ 公开API网络错误:' + e1.message;
+      }
+      // 如果公开请求失败，尝试带PAT
+      if (!issues) {
+        try {
+          issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?' + params, null, true);
+          issues = issues.filter(i => !i.pull_request);
+          debugMsg += ' ✅ PAT请求成功(' + issues.length + '条)';
+        } catch(e2) {
+          debugMsg += ' ❌ PAT请求失败:' + e2.message;
+        }
+      }
+      // 如果都失败，用GitHub Search API作为第三备用
+      if (!issues) {
+        try {
+          const searchRes = await fetch(GH_API + '/search/issues?q=repo:' + REPO + '+type:issue+state:open&per_page=100', {
+            headers: { 'Accept': 'application/vnd.github.v3+json' }
+          });
+          if (searchRes.ok) {
+            const searchData = await searchRes.json();
+            issues = searchData.items || [];
+            debugMsg += ' ✅ SearchAPI成功(' + issues.length + '条)';
+          } else {
+            debugMsg += ' ❌ SearchAPI返回' + searchRes.status;
+          }
+        } catch(e3) {
+          debugMsg += ' ❌ SearchAPI失败:' + e3.message;
+        }
+      }
+      // 显示调试信息
+      const debugEl = document.getElementById('apiDebug');
+      if (debugEl) { debugEl.textContent = 'API调试: ' + debugMsg; debugEl.style.display = ''; }
+
+      if (!issues || !issues.length) {
+        loadEl.style.display = 'none';
+        emptyEl.style.display = '';
+        return;
+      }
+
+      this.cachedPosts = issues;
       this.cacheTime = now;
       const filtered = this.filterPosts(this.cachedPosts);
 
@@ -746,7 +800,7 @@ const App = {
       this.renderPosts(filtered);
     } catch(e) {
       loadEl.style.display = 'none';
-      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>';
+      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-text">⚠️ 加载失败<br><small>' + this.esc(e.message) + '</small><br><small style="color:var(--text-muted);">可能是网络问题，GitHub API在中国可能不稳定。请刷新页面重试。</small></div></div>';
     }
   },
 
@@ -830,8 +884,27 @@ const App = {
     const el = document.getElementById('postDetail');
     el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
     try {
-      const issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber, null, true);
-      const comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', null, true);
+      let issue, comments;
+      // 先尝试公开请求
+      try {
+        const iRes = await fetch(GH_API + '/repos/' + REPO + '/issues/' + this.currentIssueNumber, {
+          headers: { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (iRes.ok) issue = await iRes.json();
+        const cRes = await fetch(GH_API + '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', {
+          headers: { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (cRes.ok) comments = await cRes.json();
+      } catch(e) {
+        console.log('Public detail fetch failed:', e.message);
+      }
+      // 备用：带PAT请求
+      if (!issue) {
+        issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber, null, true);
+      }
+      if (!comments) {
+        comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', null, true);
+      }
       const isPinned = issue.labels.some(l => l.name === 'pinned');
       const cats = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
       const cat = cats[0] || '其他';
