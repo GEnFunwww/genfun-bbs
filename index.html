@@ -607,6 +607,38 @@ const App = {
     }
   },
 
+  // ---- 带超时的fetch + 多CORS代理备用 ----
+  CORS_PROXIES: [
+    'https://corsproxy.io/?',
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.sh/?',
+  ],
+
+  async fetchWithTimeout(url, opts, timeout = 8000) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    try {
+      const res = await fetch(url, { ...opts, signal: controller.signal });
+      clearTimeout(id);
+      return res;
+    } catch(e) {
+      clearTimeout(id);
+      throw e;
+    }
+  },
+
+  async fetchViaProxy(apiUrl, timeout = 8000) {
+    // 依次尝试3个CORS代理
+    for (const proxy of this.CORS_PROXIES) {
+      try {
+        const proxyUrl = proxy + encodeURIComponent(apiUrl);
+        const res = await this.fetchWithTimeout(proxyUrl, { headers: { 'Accept': 'application/json' } }, timeout);
+        if (res.ok) return await res.json();
+      } catch(e) { continue; }
+    }
+    return null;
+  },
+
   // ---- GitHub API ----
   async ghApi(method, path, body, usePat) {
     const token = usePat ? REPO_PAT : this.getAuthToken();
@@ -830,41 +862,36 @@ const App = {
         return;
       }
 
+      const apiUrl = GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc';
       let comments = null;
       let debugMsg = '';
-      // 先公开请求
-      try {
-        const res = await fetch(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', {
-          headers: { 'Accept': 'application/vnd.github.v3+json' }
-        });
-        if (res.ok) { comments = await res.json(); debugMsg += '✅ 公开API成功(' + comments.length + '条)'; }
-        else { debugMsg += '❌ 公开API返回' + res.status; }
-      } catch(e) { debugMsg += '❌ 公开API网络错误:' + e.message; }
 
-      // 备用带PAT
+      // 1) 直连（8秒超时）
+      try {
+        const res = await this.fetchWithTimeout(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
+        if (res.ok) { comments = await res.json(); debugMsg += '✅ 直连(' + comments.length + '条)'; }
+        else { debugMsg += '❌ API返回' + res.status; }
+      } catch(e) { debugMsg += '❌ 直连超时:' + e.message; }
+
+      // 2) PAT
       if (!comments) {
         try {
           comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', null, true);
-          debugMsg += ' ✅ PAT请求成功(' + comments.length + '条)';
-        } catch(e2) { debugMsg += ' ❌ PAT请求失败:' + e2.message; }
+          debugMsg += ' ✅ PAT(' + comments.length + '条)';
+        } catch(e2) { debugMsg += ' ❌ PAT:' + e2.message; }
       }
 
-      // 第三备用：用JSONP式请求绕过（通过script标签）
+      // 3) CORS代理
       if (!comments) {
-        try {
-          // 用cors代理（https://corsproxy.io 是免费的CORS代理）
-          const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc');
-          const proxyRes = await fetch(proxyUrl, { headers: { 'Accept': 'application/json' } });
-          if (proxyRes.ok) { comments = await proxyRes.json(); debugMsg += ' ✅ CORS代理成功(' + comments.length + '条)'; }
-          else { debugMsg += ' ❌ CORS代理返回' + proxyRes.status; }
-        } catch(e3) { debugMsg += ' ❌ CORS代理失败:' + e3.message; }
+        const proxyResult = await this.fetchViaProxy(apiUrl, 8000);
+        if (proxyResult) { comments = proxyResult; debugMsg += ' ✅ 代理(' + comments.length + '条)'; }
+        else { debugMsg += ' ❌ 所有代理失败'; }
       }
 
-      // 显示调试信息
-      if (debugEl) { debugEl.textContent = '聊天API: ' + debugMsg; debugEl.style.display = ''; }
+      if (debugEl) { debugEl.textContent = '聊天: ' + debugMsg; debugEl.style.display = ''; }
 
       if (!comments) {
-        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">无法加载聊天消息</div><div style="font-size:12px;color:var(--text-muted);margin-top:8px;">' + this.esc(debugMsg) + '</div></div>';
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">无法加载聊天消息</div><div style="font-size:12px;color:var(--text-muted);margin-top:8px;">' + this.esc(debugMsg) + '</div><button class="btn btn-primary btn-sm" onclick="App.loadChat()" style="margin-top:12px;">重新加载</button></div>';
         return;
       }
 
@@ -872,7 +899,7 @@ const App = {
       this.chatCacheTime = now;
       this.renderChat(comments);
     } catch(e) {
-      el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + this.esc(e.message) + '</div></div>';
+      el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + this.esc(e.message) + '</div><button class="btn btn-primary btn-sm" onclick="App.loadChat()" style="margin-top:12px;">重新加载</button></div>';
     }
   },
 
@@ -949,53 +976,40 @@ const App = {
       }
 
       const params = new URLSearchParams({ state: 'open', sort: 'created', direction: 'desc', per_page: 100 });
+      const apiUrl = GH_API + '/repos/' + REPO + '/issues?' + params;
       let issues = null;
       let debugMsg = '';
+
+      // 1) 直接请求GitHub API（8秒超时）
       try {
-        const res = await fetch(GH_API + '/repos/' + REPO + '/issues?' + params, {
-          headers: { 'Accept': 'application/vnd.github.v3+json' }
-        });
+        const res = await this.fetchWithTimeout(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
         if (res.ok) {
           issues = await res.json();
-          // 过滤掉聊天大厅的Issue
           issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
-          debugMsg += '✅ 公开API成功(' + issues.length + '条)';
-        } else { debugMsg += '❌ 公开API返回' + res.status; }
-      } catch(e1) { debugMsg += '❌ 公开API网络错误:' + e1.message; }
+          debugMsg += '✅ 直连API(' + issues.length + '条)';
+        } else { debugMsg += '❌ API返回' + res.status; }
+      } catch(e1) { debugMsg += '❌ 直连超时:' + e1.message; }
+
+      // 2) PAT认证请求（8秒超时）
       if (!issues) {
         try {
           issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?' + params, null, true);
           issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
-          debugMsg += ' ✅ PAT请求成功(' + issues.length + '条)';
-        } catch(e2) { debugMsg += ' ❌ PAT请求失败:' + e2.message; }
+          debugMsg += ' ✅ PAT(' + issues.length + '条)';
+        } catch(e2) { debugMsg += ' ❌ PAT:' + e2.message; }
       }
+
+      // 3) CORS代理（逐个尝试）
       if (!issues) {
-        try {
-          const searchRes = await fetch(GH_API + '/search/issues?q=repo:' + REPO + '+type:issue+state:open&per_page=100', {
-            headers: { 'Accept': 'application/vnd.github.v3+json' }
-          });
-          if (searchRes.ok) {
-            const searchData = await searchRes.json();
-            issues = (searchData.items || []).filter(i => i.number !== CHAT_ISSUE_NUMBER);
-            debugMsg += ' ✅ SearchAPI成功(' + issues.length + '条)';
-          }
-        } catch(e3) { debugMsg += ' ❌ SearchAPI失败:' + e3.message; }
+        const proxyResult = await this.fetchViaProxy(apiUrl, 8000);
+        if (proxyResult) {
+          issues = proxyResult.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
+          debugMsg += ' ✅ CORS代理(' + issues.length + '条)';
+        } else { debugMsg += ' ❌ 所有代理失败'; }
       }
-      // 第四备用：CORS代理
-      if (!issues) {
-        try {
-          const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(GH_API + '/repos/' + REPO + '/issues?' + params);
-          const proxyRes = await fetch(proxyUrl, { headers: { 'Accept': 'application/json' } });
-          if (proxyRes.ok) {
-            issues = await proxyRes.json();
-            issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
-            debugMsg += ' ✅ CORS代理成功(' + issues.length + '条)';
-          }
-        } catch(e4) { debugMsg += ' ❌ CORS代理失败:' + e4.message; }
-      }
-      }
+
       const debugEl = document.getElementById('apiDebug');
-      if (debugEl) { debugEl.textContent = 'API调试: ' + debugMsg; debugEl.style.display = ''; }
+      if (debugEl) { debugEl.textContent = 'API: ' + debugMsg; debugEl.style.display = ''; }
 
       if (!issues || !issues.length) {
         loadEl.style.display = 'none'; emptyEl.style.display = ''; return;
@@ -1007,7 +1021,7 @@ const App = {
       this.renderPosts(filtered);
     } catch(e) {
       loadEl.style.display = 'none';
-      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-text">⚠️ 加载失败<br><small>' + this.esc(e.message) + '</small></div></div>';
+      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">加载失败，请刷新重试<br><small>' + this.esc(e.message) + '</small></div></div>';
     }
   },
 
@@ -1087,19 +1101,35 @@ const App = {
     const el = document.getElementById('postDetail');
     el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
     try {
-      let issue, comments;
+      let issue = null, comments = null;
+      const issueUrl = GH_API + '/repos/' + REPO + '/issues/' + this.currentIssueNumber;
+      const commentsUrl = issueUrl + '/comments?per_page=100';
+
+      // 1) 直连（超时8秒）
       try {
-        const iRes = await fetch(GH_API + '/repos/' + REPO + '/issues/' + this.currentIssueNumber, {
-          headers: { 'Accept': 'application/vnd.github.v3+json' }
-        });
+        const iRes = await this.fetchWithTimeout(issueUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
         if (iRes.ok) issue = await iRes.json();
-        const cRes = await fetch(GH_API + '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', {
-          headers: { 'Accept': 'application/vnd.github.v3+json' }
-        });
+        const cRes = await this.fetchWithTimeout(commentsUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
         if (cRes.ok) comments = await cRes.json();
-      } catch(e) { console.log('Public detail fetch failed:', e.message); }
-      if (!issue) issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber, null, true);
-      if (!comments) comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', null, true);
+      } catch(e) { /* try next */ }
+
+      // 2) PAT
+      if (!issue) {
+        try { issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber, null, true); } catch(e) {}
+      }
+      if (!comments) {
+        try { comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', null, true); } catch(e) {}
+      }
+
+      // 3) CORS代理
+      if (!issue) { issue = await this.fetchViaProxy(issueUrl, 8000); }
+      if (!comments) { comments = await this.fetchViaProxy(commentsUrl, 8000) || []; }
+
+      if (!issue) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">帖子加载失败，请返回重试</div><button class="btn btn-primary btn-sm" onclick="App.navigate(\'home\')" style="margin-top:12px;">返回首页</button></div>';
+        return;
+      }
+      if (!comments) comments = [];
 
       const isPinned = issue.labels.some(l => l.name === 'pinned');
       const cats = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
