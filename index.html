@@ -27,6 +27,14 @@
   --success: #1a7f37; --success-bg: rgba(26,127,55,0.1); --danger: #cf222e; --danger-bg: rgba(207,34,46,0.1);
   --shadow: 0 1px 3px rgba(31,35,40,0.12); --shadow-lg: 0 8px 24px rgba(140,149,159,0.2);
 }
+/* 会员主题色 */
+[data-accent="cyan"] { --accent:#06b6d4; --accent-hover:#22d3ee; --accent-light:rgba(6,182,212,0.15); --accent-glow:rgba(6,182,212,0.3); --accent-alt:#3b82f6; }
+[data-accent="purple"] { --accent:#8b5cf6; --accent-hover:#a78bfa; --accent-light:rgba(139,92,246,0.15); --accent-glow:rgba(139,92,246,0.3); --accent-alt:#ec4899; }
+[data-accent="pink"] { --accent:#ec4899; --accent-hover:#f472b6; --accent-light:rgba(236,72,153,0.15); --accent-glow:rgba(236,72,153,0.3); --accent-alt:#8b5cf6; }
+[data-accent="green"] { --accent:#10b981; --accent-hover:#34d399; --accent-light:rgba(16,185,129,0.15); --accent-glow:rgba(16,185,129,0.3); --accent-alt:#06b6d4; }
+[data-accent="orange"] { --accent:#f59e0b; --accent-hover:#fbbf24; --accent-light:rgba(245,158,11,0.15); --accent-glow:rgba(245,158,11,0.3); --accent-alt:#ef4444; }
+[data-accent="red"] { --accent:#ef4444; --accent-hover:#f87171; --accent-light:rgba(239,68,68,0.15); --accent-glow:rgba(239,68,68,0.3); --accent-alt:#f59e0b; }
+
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
@@ -49,6 +57,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .user-avatar-img { width:30px; height:30px; border-radius:50%; object-fit:cover; flex-shrink:0; }
 .user-avatar-letter { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0; }
 .admin-badge { font-size:10px; padding:2px 8px; border-radius:8px; background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); font-weight:700; margin-left:4px; }
+.vip-badge { font-size:10px; padding:2px 8px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#ef4444); color:#fff; font-weight:700; margin-left:4px; }
 .login-link { padding:6px 18px; border-radius:20px; border:1px solid var(--accent); background:transparent; color:var(--accent); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
 .login-link:hover { background:var(--accent); color:#fff; }
 .theme-toggle { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text-secondary); cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:var(--transition); flex-shrink:0; }
@@ -119,6 +128,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .btn-danger { background:var(--danger-bg); color:var(--danger); } .btn-danger:hover { background:var(--danger); color:#fff; }
 .btn-ghost { background:transparent; color:var(--text-secondary); border:1px solid var(--border); }
 .btn-github { background:#24292e; color:#fff; font-size:15px; } .btn-github:hover { background:#2f363d; }
+.btn-vip { background:linear-gradient(135deg,#f59e0b,#ef4444); color:#fff; } .btn-vip:hover { box-shadow:0 4px 12px rgba(245,158,11,0.4); }
 
 #toast-container { position:fixed; top:80px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
 .toast { padding:12px 20px; border-radius:8px; font-size:14px; box-shadow:var(--shadow-lg); animation:slideIn 0.3s ease; max-width:380px; display:flex; align-items:center; gap:8px; }
@@ -143,8 +153,12 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .back-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-secondary); font-size:13px; cursor:pointer; margin-bottom:20px; transition:var(--transition); font-family:inherit; }
 .back-btn:hover { border-color:var(--accent); color:var(--accent); }
 
-.fab { position:fixed; bottom:32px; right:32px; z-index:999; width:56px; height:56px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); color:#fff; font-size:28px; cursor:pointer; box-shadow:0 4px 16px var(--accent-glow); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; line-height:1; }
+/* FAB按钮组 */
+.fab-group { position:fixed; bottom:32px; right:32px; z-index:999; display:flex; gap:12px; align-items:center; }
+.fab { width:56px; height:56px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); color:#fff; font-size:28px; cursor:pointer; box-shadow:0 4px 16px var(--accent-glow); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; line-height:1; }
 .fab:hover { transform:scale(1.1); } .fab.hidden { display:none; }
+.fab-vip { width:48px; height:48px; border-radius:50%; border:none; background:linear-gradient(135deg,#f59e0b,#ef4444); color:#fff; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; line-height:1; }
+.fab-vip:hover { transform:scale(1.1); }
 
 .admin-nav-btn { border-color:#f59e0b!important; color:#f59e0b!important; }
 
@@ -153,8 +167,51 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .device-link { font-size:14px; color:var(--text-secondary); }
 .device-link a { color:var(--accent); font-weight:600; }
 
-@media (max-width:768px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} }
-@media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} }
+/* 会员弹窗 */
+.modal-overlay { position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-box { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:32px; max-width:420px; width:90%; text-align:center; box-shadow:var(--shadow-lg); animation:modalIn 0.3s ease; }
+@keyframes modalIn { from { transform:scale(0.9); opacity:0; } to { transform:scale(1); opacity:1; } }
+.modal-title { font-size:22px; font-weight:800; margin-bottom:16px; }
+.modal-icon { font-size:64px; margin-bottom:16px; }
+.modal-desc { font-size:14px; color:var(--text-secondary); line-height:1.8; margin-bottom:24px; }
+.modal-qq { font-size:20px; font-weight:700; color:var(--accent); padding:12px; background:var(--accent-light); border-radius:var(--radius-sm); margin-bottom:16px; user-select:all; }
+.modal-close { padding:10px 32px; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-size:14px; cursor:pointer; font-family:inherit; }
+
+/* 主题色选择器 */
+.accent-picker { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px; }
+.accent-dot { width:36px; height:36px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:var(--transition); display:flex; align-items:center; justify-content:center; }
+.accent-dot:hover { transform:scale(1.2); }
+.accent-dot.active { border-color:var(--text); box-shadow:0 0 0 2px var(--bg); }
+.accent-dot.locked { opacity:0.4; position:relative; }
+.accent-dot.locked::after { content:'🔒'; font-size:12px; position:absolute; bottom:-2px; right:-2px; background:var(--bg-card); border-radius:4px; padding:1px 3px; }
+.accent-dot[data-color="blue"] { background:#3b82f6; }
+.accent-dot[data-color="cyan"] { background:#06b6d4; }
+.accent-dot[data-color="purple"] { background:#8b5cf6; }
+.accent-dot[data-color="pink"] { background:#ec4899; }
+.accent-dot[data-color="green"] { background:#10b981; }
+.accent-dot[data-color="orange"] { background:#f59e0b; }
+.accent-dot[data-color="red"] { background:#ef4444; }
+
+/* 聊天室 */
+.chat-container { max-width:960px; }
+.chat-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.chat-title { font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.chat-badge { font-size:10px; padding:2px 8px; border-radius:8px; background:rgba(6,182,212,0.2); color:#06b6d4; font-weight:600; }
+.chat-clear-info { font-size:12px; color:var(--text-muted); }
+.chat-messages { background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius); padding:16px; max-height:500px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; }
+.chat-msg { display:flex; gap:10px; align-items:flex-start; }
+.chat-msg-avatar { width:32px; height:32px; border-radius:50%; flex-shrink:0; }
+.chat-msg-avatar-letter { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0; }
+.chat-msg-body { flex:1; min-width:0; }
+.chat-msg-name { font-size:13px; font-weight:600; color:var(--accent); }
+.chat-msg-text { font-size:14px; color:var(--text); line-height:1.6; word-break:break-word; }
+.chat-msg-time { font-size:11px; color:var(--text-muted); }
+.chat-input-bar { display:flex; gap:8px; margin-top:12px; }
+.chat-input { flex:1; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
+.chat-input:focus { border-color:var(--accent); }
+
+@media (max-width:768px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} }
+@media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} .fab-group{bottom:16px; right:16px;} }
 </style>
 </head>
 <body>
@@ -164,6 +221,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <div class="logo" onclick="App.navigate('home')"><div class="logo-icon">G</div>GENFUN论坛</div>
       <nav class="nav" id="mainNav">
         <button class="nav-btn active" data-page="home" onclick="App.navigate('home')">首页</button>
+        <button class="nav-btn" data-page="chat" onclick="App.navigate('chat')">💬 聊天</button>
         <button class="nav-btn" data-page="new" id="navNewPost" style="display:none" onclick="App.navigate('new')">发帖</button>
         <button class="nav-btn admin-nav-btn" data-page="admin" id="navAdmin" style="display:none" onclick="App.navigate('admin')">⚙ 管理</button>
       </nav>
@@ -176,6 +234,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
         <div class="user-avatar-letter" id="userAvatarLetter" style="display:none">?</div>
         <span id="userNameSmall"></span>
         <span class="admin-badge" id="adminBadgeSmall" style="display:none">管理</span>
+        <span class="vip-badge" id="vipBadgeSmall" style="display:none">VIP</span>
         <span class="email-badge" id="emailBadgeSmall" style="display:none">邮箱</span>
       </button>
     </div>
@@ -203,6 +262,21 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <div class="pagination" id="pagination"></div>
     </section>
 
+    <!-- 聊天室 -->
+    <section class="page" id="page-chat">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-title">💬 聊天大厅 <span class="chat-badge">公开</span></div>
+          <div class="chat-clear-info">每天早上8点清理</div>
+        </div>
+        <div class="chat-messages" id="chatMessages"><div class="loading"><div class="spinner"></div>加载聊天消息...</div></div>
+        <div class="chat-input-bar" id="chatInputBar">
+          <input type="text" class="chat-input" id="chatInput" placeholder="说点什么..." maxlength="500" onkeydown="if(event.key==='Enter')App.sendChat()">
+          <button class="btn btn-primary btn-sm" onclick="App.sendChat()">发送</button>
+        </div>
+      </div>
+    </section>
+
     <!-- 帖子详情 -->
     <section class="page" id="page-post">
       <button class="back-btn" onclick="App.navigate('home')">← 返回首页</button>
@@ -227,8 +301,6 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
     <section class="page" id="page-login">
       <div class="form-container">
         <div class="form-title">登录 GENFUN论坛</div>
-
-        <!-- 邮箱登录 -->
         <div id="emailLoginSection">
           <div class="form-group">
             <label class="form-label">邮箱 / 手机号</label>
@@ -241,10 +313,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
           <button class="btn btn-primary btn-block" onclick="App.emailLogin()">登录</button>
           <div class="form-footer">没有账号？<a onclick="App.navigate('register')">立即注册</a></div>
         </div>
-
         <div class="form-divider"><span class="form-divider-text">或</span></div>
-
-        <!-- GitHub 登录 -->
         <div id="ghLoginStep1">
           <button class="btn btn-github btn-block" onclick="App.startDeviceAuth()" style="font-size:16px;padding:14px;">
             <img src="https://github.githubassets.com/favicons/favicon-dark.svg" width="20" height="20" style="vertical-align:middle;margin-right:8px;"> GitHub 登录
@@ -303,14 +372,32 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
   </main>
 </div>
 
-<button class="fab hidden" id="fabNewPost" onclick="App.navigate('new')" title="发布新帖">+</button>
+<!-- FAB按钮组：发帖+会员 -->
+<div class="fab-group" id="fabGroup">
+  <button class="fab-vip" onclick="App.showVipModal()" title="会员中心">👑</button>
+  <button class="fab hidden" id="fabNewPost" onclick="App.navigate('new')" title="发布新帖">+</button>
+</div>
+
+<!-- 会员弹窗 -->
+<div class="modal-overlay" id="vipModal" style="display:none" onclick="if(event.target===this)App.closeVipModal()">
+  <div class="modal-box">
+    <div class="modal-icon">👑</div>
+    <div class="modal-title">GENFUN 会员中心</div>
+    <div class="accent-picker" id="accentPicker"></div>
+    <div class="modal-desc">💡 蓝色为主题默认色，所有人可用。<br>其他6种主题色为<strong>会员专属</strong>，开通会员即可解锁！<br><br>开通会员请联系：</div>
+    <div class="modal-qq">QQ：3932892962</div>
+    <button class="modal-close" onclick="App.closeVipModal()">关闭</button>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 
 <script>
 /* ================================================================
-   GENFUN论坛 - GitHub Issues + 邮箱登录 双认证版本
+   GENFUN论坛 - GitHub Issues + 邮箱登录 + 会员 + 聊天室
    前端部署在 GitHub Pages，帖子存储在 GitHub Issues
    邮箱用户通过仓库 PAT 代为创建 Issue/Comment
+   聊天室 = Issue #3 的 Comments
    ================================================================ */
 
 const REPO_OWNER = 'GEnFunwww';
@@ -318,20 +405,31 @@ const REPO_NAME = 'genfun-bbs';
 const REPO = REPO_OWNER + '/' + REPO_NAME;
 const GH_API = 'https://api.github.com';
 const CLIENT_ID = 'Ov23liPJiMtpMicE7Jt4';
+const CHAT_ISSUE_NUMBER = 3; // 聊天大厅的Issue编号
 // 仓库token（分段存储避免密钥扫描）
 const _tk = [103,104,112,95,121,68,49,119,49,85,82,111,75,109,83,80,99,69,54,119,87,56,48,84,113,57,118,118,50,48,82,109,114,71,48,101,104,66,51,68];
 const REPO_PAT = _tk.map(c => String.fromCharCode(c)).join('');
 
+// 主题色配置
+const ACCENT_COLORS = [
+  { name:'蓝色', color:'blue', accent:'#3b82f6', free:true },
+  { name:'青色', color:'cyan', accent:'#06b6d4', free:false },
+  { name:'紫色', color:'purple', accent:'#8b5cf6', free:false },
+  { name:'粉色', color:'pink', accent:'#ec4899', free:false },
+  { name:'绿色', color:'green', accent:'#10b981', free:false },
+  { name:'橙色', color:'orange', accent:'#f59e0b', free:false },
+  { name:'红色', color:'red', accent:'#ef4444', free:false },
+];
+
 const App = {
-  // GitHub认证
   ghToken: localStorage.getItem('gh_token') || '',
   ghUser: JSON.parse(localStorage.getItem('gh_user') || 'null'),
-  // 邮箱认证
   emailUser: JSON.parse(localStorage.getItem('genfun_email_user') || 'null'),
-  // 统一当前用户
   user: null,
-  userType: localStorage.getItem('genfun_user_type') || '', // 'github' | 'email'
+  userType: localStorage.getItem('genfun_user_type') || '',
   theme: localStorage.getItem('genfun_theme') || 'dark',
+  accentColor: localStorage.getItem('genfun_accent') || 'blue',
+  isVip: localStorage.getItem('genfun_vip') === 'true',
   currentPage: 'home',
   currentCategory: '全部',
   currentIssueNumber: null,
@@ -340,14 +438,60 @@ const App = {
   cachedPosts: [],
   cacheTime: 0,
   captchaCode: '',
+  chatCache: [],
+  chatCacheTime: 0,
 
-  // ---- 初始化 ----
   init() {
     this.initTheme();
+    this.initAccent();
     this.restoreUser();
     this.updateAuthUI();
     this.bindEvents();
     this.loadPosts();
+  },
+
+  // ---- 主题色 ----
+  initAccent() {
+    document.documentElement.setAttribute('data-accent', this.accentColor);
+  },
+
+  setAccent(color) {
+    const cfg = ACCENT_COLORS.find(c => c.color === color);
+    if (!cfg) return;
+    // 非免费色需要VIP
+    if (!cfg.free && !this.isVip) {
+      this.showVipModal();
+      return;
+    }
+    this.accentColor = color;
+    localStorage.setItem('genfun_accent', color);
+    document.documentElement.setAttribute('data-accent', color);
+    this.renderAccentPicker();
+    this.toast('主题色已切换为' + cfg.name, 'success');
+  },
+
+  renderAccentPicker() {
+    const el = document.getElementById('accentPicker');
+    if (!el) return;
+    el.innerHTML = ACCENT_COLORS.map(c => {
+      const active = c.color === this.accentColor;
+      const locked = !c.free && !this.isVip;
+      return `<div class="accent-dot${active?' active':''}${locked?' locked':''}" data-color="${c.color}" onclick="App.setAccent('${c.color}')" title="${c.name}${locked?' (会员专属)':''}"></div>`;
+    }).join('');
+  },
+
+  showVipModal() {
+    document.getElementById('vipModal').style.display = '';
+    this.renderAccentPicker();
+  },
+  closeVipModal() {
+    document.getElementById('vipModal').style.display = 'none';
+  },
+
+  // VIP状态（管理员自动VIP）
+  checkVip() {
+    if (this.isAdmin()) return true;
+    return this.isVip;
   },
 
   restoreUser() {
@@ -363,129 +507,87 @@ const App = {
   async verifyGhToken() {
     try {
       const u = await this.ghApi('GET', '/user');
-      this.ghUser = u;
-      this.user = u;
-      this.userType = 'github';
+      this.ghUser = u; this.user = u; this.userType = 'github';
       localStorage.setItem('gh_user', JSON.stringify(u));
       localStorage.setItem('genfun_user_type', 'github');
       this.updateAuthUI();
     } catch(e) {
-      this.ghToken = '';
-      localStorage.removeItem('gh_token');
-      localStorage.removeItem('gh_user');
-      this.ghUser = null;
-      this.user = null;
-      this.userType = '';
+      this.ghToken = ''; localStorage.removeItem('gh_token'); localStorage.removeItem('gh_user');
+      this.ghUser = null; this.user = null; this.userType = '';
       localStorage.removeItem('genfun_user_type');
       this.updateAuthUI();
     }
   },
 
-  // 获取当前认证token（GitHub用户用自己的，邮箱用户用仓库PAT）
-  getAuthToken() {
-    return this.userType === 'github' ? this.ghToken : REPO_PAT;
-  },
-
-  // 是否已登录
-  isLoggedIn() {
-    return this.user !== null;
-  },
-
-  // 是否是管理员（GitHub用户=仓库owner，邮箱用户=admin角色）
+  getAuthToken() { return this.userType === 'github' ? this.ghToken : REPO_PAT; },
+  isLoggedIn() { return this.user !== null; },
   isAdmin() {
     if (this.userType === 'github') return this.user && this.user.login === REPO_OWNER;
     if (this.userType === 'email') return this.user && this.user.role === 'admin';
     return false;
   },
 
-  // ---- SHA-256 密码哈希 ----
   async sha256(msg) {
     const buf = new TextEncoder().encode(msg);
     const hash = await crypto.subtle.digest('SHA-256', buf);
     return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
   },
 
-  // ---- 验证码 ----
   refreshCaptcha() {
     this.captchaCode = String(Math.floor(1000 + Math.random() * 9000));
     const el = document.getElementById('captchaDisplay');
     if (el) el.textContent = this.captchaCode;
-    // 自动填入验证码
     const input = document.getElementById('regCaptcha');
     if (input) input.value = this.captchaCode;
   },
 
-  // ---- 邮箱注册 ----
   async emailRegister() {
     const email = document.getElementById('regEmail').value.trim();
     const username = document.getElementById('regUsername').value.trim();
     const password = document.getElementById('regPassword').value;
     const captcha = document.getElementById('regCaptcha').value.trim();
-
     if (!email) return this.toast('请输入邮箱或手机号', 'error');
     if (!username) return this.toast('请输入用户名', 'error');
     if (username.length < 2) return this.toast('用户名至少2个字符', 'error');
     if (!password || password.length < 6) return this.toast('密码至少6位', 'error');
     if (captcha !== this.captchaCode) return this.toast('验证码错误', 'error');
-
-    // 检查是否已注册
     const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
     if (users.find(u => u.email === email)) return this.toast('该邮箱/手机号已注册', 'error');
-
     const hash = await this.sha256(password);
-    const newUser = { email, username, passwordHash: hash, role: 'user', createdAt: new Date().toISOString() };
-
-    // 预置管理员
-    if (email === 'Rr052052052@163.com' || email === 'T') {
-      newUser.role = 'admin';
-    }
-
+    const newUser = { email, username, passwordHash: hash, role: 'user', vip: false, createdAt: new Date().toISOString() };
+    if (email === 'Rr052052052@163.com' || email === 'T') { newUser.role = 'admin'; newUser.vip = true; }
     users.push(newUser);
     localStorage.setItem('genfun_users', JSON.stringify(users));
-
-    // 自动登录
-    this.emailUser = newUser;
-    this.user = newUser;
-    this.userType = 'email';
+    this.emailUser = newUser; this.user = newUser; this.userType = 'email';
     localStorage.setItem('genfun_email_user', JSON.stringify(newUser));
     localStorage.setItem('genfun_user_type', 'email');
-
+    if (newUser.vip) { this.isVip = true; localStorage.setItem('genfun_vip', 'true'); }
     this.toast('注册成功！欢迎，' + username, 'success');
-    this.updateAuthUI();
-    this.navigate('home');
+    this.updateAuthUI(); this.navigate('home');
   },
 
-  // ---- 邮箱登录 ----
   async emailLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-
     if (!email) return this.toast('请输入邮箱或手机号', 'error');
     if (!password) return this.toast('请输入密码', 'error');
-
     const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
     const hash = await this.sha256(password);
     const found = users.find(u => (u.email === email) && u.passwordHash === hash);
-
     if (!found) return this.toast('账号或密码错误', 'error');
-
-    this.emailUser = found;
-    this.user = found;
-    this.userType = 'email';
+    this.emailUser = found; this.user = found; this.userType = 'email';
     localStorage.setItem('genfun_email_user', JSON.stringify(found));
     localStorage.setItem('genfun_user_type', 'email');
-
+    if (found.vip) { this.isVip = true; localStorage.setItem('genfun_vip', 'true'); }
     this.toast('登录成功！欢迎回来，' + found.username, 'success');
-    this.updateAuthUI();
-    this.navigate('home');
+    this.updateAuthUI(); this.navigate('home');
   },
 
-  // ---- 初始化预置账号 ----
   initDefaultUsers() {
     let users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
     if (!users.find(u => u.email === 'Rr052052052@163.com')) {
       this.sha256('T123456').then(hash => {
-        users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', createdAt: new Date().toISOString() });
+        users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', vip: true, createdAt: new Date().toISOString() });
         localStorage.setItem('genfun_users', JSON.stringify(users));
       });
     }
@@ -519,16 +621,12 @@ const App = {
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error_description);
-
       document.getElementById('emailLoginSection').style.display = 'none';
       document.getElementById('ghLoginStep1').style.display = 'none';
       document.getElementById('ghLoginStep2').style.display = '';
       document.getElementById('deviceUserCode').textContent = data.user_code;
-
       this.authInterval = setInterval(() => this.pollToken(data.device_code, data.interval || 5), (data.interval || 5) * 1000);
-    } catch(e) {
-      this.toast(e.message, 'error');
-    }
+    } catch(e) { this.toast(e.message, 'error'); }
   },
 
   async pollToken(deviceCode, interval) {
@@ -541,11 +639,8 @@ const App = {
       const data = await res.json();
       if (data.access_token) {
         clearInterval(this.authInterval);
-        this.ghToken = data.access_token;
-        localStorage.setItem('gh_token', this.ghToken);
-        this.ghUser = await this.ghApi('GET', '/user');
-        this.user = this.ghUser;
-        this.userType = 'github';
+        this.ghToken = data.access_token; localStorage.setItem('gh_token', this.ghToken);
+        this.ghUser = await this.ghApi('GET', '/user'); this.user = this.ghUser; this.userType = 'github';
         localStorage.setItem('gh_user', JSON.stringify(this.ghUser));
         localStorage.setItem('genfun_user_type', 'github');
         this.updateAuthUI();
@@ -561,7 +656,7 @@ const App = {
         this.toast('验证码已过期，请重试', 'error');
         this.cancelAuth();
       }
-    } catch(e) { /* network error, retry */ }
+    } catch(e) { /* retry */ }
   },
 
   cancelAuth() {
@@ -572,23 +667,15 @@ const App = {
   },
 
   logout() {
-    this.ghToken = '';
-    this.ghUser = null;
-    this.emailUser = null;
-    this.user = null;
-    this.userType = '';
-    localStorage.removeItem('gh_token');
-    localStorage.removeItem('gh_user');
-    localStorage.removeItem('genfun_email_user');
-    localStorage.removeItem('genfun_user_type');
-    this.updateAuthUI();
-    this.navigate('home');
-    this.toast('已退出登录', 'info');
+    this.ghToken = ''; this.ghUser = null; this.emailUser = null; this.user = null; this.userType = '';
+    localStorage.removeItem('gh_token'); localStorage.removeItem('gh_user');
+    localStorage.removeItem('genfun_email_user'); localStorage.removeItem('genfun_user_type');
+    localStorage.removeItem('genfun_vip'); this.isVip = false;
+    this.updateAuthUI(); this.navigate('home'); this.toast('已退出登录', 'info');
   },
 
   showUserMenu() { if (confirm('确定退出登录？')) this.logout(); },
 
-  // ---- 主题 ----
   initTheme() {
     document.documentElement.setAttribute('data-theme', this.theme);
     document.getElementById('themeToggle').textContent = this.theme === 'dark' ? '☀' : '🌙';
@@ -604,13 +691,13 @@ const App = {
   navigate(page, data) {
     this.currentPage = page;
     if (data && data.issueNumber) this.currentIssueNumber = data.issueNumber;
-
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const el = document.getElementById('page-' + page);
     if (el) el.classList.add('active');
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
 
     if (page === 'home') { this.currentPostPage = 1; this.loadPosts(); }
+    if (page === 'chat') this.loadChat();
     if (page === 'post') this.loadPostDetail();
     if (page === 'new') { if (!this.isLoggedIn()) { this.navigate('login'); this.toast('请先登录', 'info'); } }
     if (page === 'login') {
@@ -620,7 +707,6 @@ const App = {
     }
     if (page === 'register') { this.refreshCaptcha(); }
     if (page === 'admin') { if (!this.isAdmin()) { this.navigate('home'); return; } this.loadAdminPosts(); }
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.updateFab();
   },
@@ -636,12 +722,13 @@ const App = {
     const navNew = document.getElementById('navNewPost');
     const adminNav = document.getElementById('navAdmin');
     const badge = document.getElementById('adminBadgeSmall');
+    const vipBadge = document.getElementById('vipBadgeSmall');
     const emailBadge = document.getElementById('emailBadgeSmall');
 
     if (this.isLoggedIn()) {
-      btnLogin.style.display = 'none';
-      btnUser.style.display = 'flex';
-      navNew.style.display = '';
+      btnLogin.style.display = 'none'; btnUser.style.display = 'flex'; navNew.style.display = '';
+      const isVip = this.checkVip();
+      vipBadge.style.display = isVip ? '' : 'none';
 
       if (this.userType === 'github') {
         document.getElementById('userNameSmall').textContent = this.user.name || this.user.login;
@@ -653,7 +740,6 @@ const App = {
         if (this.user.login === REPO_OWNER) { badge.style.display = ''; adminNav.style.display = ''; }
         else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
       } else {
-        // 邮箱用户
         document.getElementById('userNameSmall').textContent = this.user.username;
         const imgEl = document.getElementById('userAvatarImg');
         const letterEl = document.getElementById('userAvatarLetter');
@@ -665,7 +751,8 @@ const App = {
         else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
       }
     } else {
-      btnLogin.style.display = ''; btnUser.style.display = 'none'; navNew.style.display = 'none'; badge.style.display = 'none'; adminNav.style.display = 'none'; emailBadge.style.display = 'none';
+      btnLogin.style.display = ''; btnUser.style.display = 'none'; navNew.style.display = 'none';
+      badge.style.display = 'none'; adminNav.style.display = 'none'; emailBadge.style.display = 'none'; vipBadge.style.display = 'none';
     }
     this.updateFab();
   },
@@ -683,17 +770,19 @@ const App = {
     this.initDefaultUsers();
   },
 
-  // ---- 解析帖子作者信息 ----
-  // 邮箱用户的帖子body以 <!-- author:email:username --> 开头
+  // ---- 作者解析 ----
   parseAuthor(issue) {
     const body = issue.body || '';
     const match = body.match(/^<!-- author:email:(.*?) -->\n?/);
-    if (match) {
-      return { type: 'email', username: match[1], displayName: match[1] };
-    }
+    if (match) return { type: 'email', username: match[1], displayName: match[1] };
     return { type: 'github', username: issue.user.login, displayName: issue.user.name || issue.user.login, avatar: issue.user.avatar_url };
   },
-
+  parseCommentAuthor(comment) {
+    const body = comment.body || '';
+    const match = body.match(/^<!-- author:email:(.*?) -->\n?/);
+    if (match) return { type: 'email', username: match[1], displayName: match[1] };
+    return { type: 'github', username: comment.user.login, displayName: comment.user.name || comment.user.login, avatar: comment.user.avatar_url };
+  },
   getAuthorHtml(author) {
     if (author.type === 'email') {
       const letter = author.username[0].toUpperCase();
@@ -701,7 +790,6 @@ const App = {
     }
     return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(author.displayName)}`;
   },
-
   getAuthorHtml24(author) {
     if (author.type === 'email') {
       const letter = author.username[0].toUpperCase();
@@ -709,11 +797,105 @@ const App = {
     }
     return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(author.displayName)}</strong>`;
   },
+  getRealBody(body) { if (!body) return ''; return body.replace(/^<!-- author:email:(.*?) -->\n?/, ''); },
 
-  // 解析真实body（去掉author标记）
-  getRealBody(body) {
-    if (!body) return '';
-    return body.replace(/^<!-- author:email:(.*?) -->\n?/, '');
+  // ---- 聊天室 ----
+  async loadChat() {
+    const el = document.getElementById('chatMessages');
+    const inputBar = document.getElementById('chatInputBar');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div>加载聊天消息...</div>';
+
+    // 非登录用户也能看聊天，但不能发
+    inputBar.style.display = this.isLoggedIn() ? '' : 'none';
+
+    try {
+      const now = Date.now();
+      if (this.chatCache.length && now - this.chatCacheTime < 60000) {
+        this.renderChat(this.chatCache);
+        return;
+      }
+
+      let comments = null;
+      // 先公开请求
+      try {
+        const res = await fetch(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', {
+          headers: { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (res.ok) comments = await res.json();
+      } catch(e) { console.log('Public chat fetch failed:', e.message); }
+
+      // 备用带PAT
+      if (!comments) {
+        try {
+          comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', null, true);
+        } catch(e2) { console.log('PAT chat fetch failed:', e2.message); }
+      }
+
+      if (!comments) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-text">无法加载聊天消息，请刷新重试</div></div>';
+        return;
+      }
+
+      this.chatCache = comments;
+      this.chatCacheTime = now;
+      this.renderChat(comments);
+    } catch(e) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + this.esc(e.message) + '</div></div>';
+    }
+  },
+
+  renderChat(comments) {
+    const el = document.getElementById('chatMessages');
+    if (!comments.length) {
+      el.innerHTML = '<div class="empty-state" style="padding:30px"><div class="empty-state-icon">💬</div><div class="empty-state-text">聊天大厅空空如也，快来聊几句吧！</div></div>';
+      return;
+    }
+    el.innerHTML = comments.map(c => {
+      const author = this.parseCommentAuthor(c);
+      const realBody = this.getRealBody(c.body);
+      if (author.type === 'email') {
+        return `<div class="chat-msg">
+          <div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>
+          <div class="chat-msg-body">
+            <div class="chat-msg-name">${this.esc(author.displayName)} <span class="email-badge">邮箱</span></div>
+            <div class="chat-msg-text">${this.esc(realBody)}</div>
+            <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
+          </div>
+        </div>`;
+      }
+      return `<div class="chat-msg">
+        <img class="chat-msg-avatar" src="${author.avatar}" alt="">
+        <div class="chat-msg-body">
+          <div class="chat-msg-name">${this.esc(author.displayName)}</div>
+          <div class="chat-msg-text">${this.esc(realBody)}</div>
+          <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    // 自动滚到底部
+    el.scrollTop = el.scrollHeight;
+  },
+
+  async sendChat() {
+    if (!this.isLoggedIn()) return this.toast('请先登录再聊天', 'error');
+    const msg = document.getElementById('chatInput').value.trim();
+    if (!msg) return this.toast('请输入聊天内容', 'error');
+    if (msg.length > 500) return this.toast('聊天消息最多500字', 'error');
+
+    const body = this.userType === 'email'
+      ? `<!-- author:email:${this.user.username} -->\n${msg}`
+      : msg;
+
+    const btn = document.getElementById('chatInput');
+    btn.disabled = true;
+    try {
+      await this.ghApi('POST', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments', { body }, this.userType === 'email');
+      document.getElementById('chatInput').value = '';
+      this.chatCacheTime = 0; // 清缓存强制刷新
+      this.loadChat();
+      this.toast('消息已发送', 'success');
+    } catch(e) { this.toast(e.message, 'error'); }
+    btn.disabled = false;
   },
 
   // ---- 帖子列表 ----
@@ -721,7 +903,6 @@ const App = {
     const listEl = document.getElementById('postList');
     const emptyEl = document.getElementById('postsEmpty');
     const loadEl = document.getElementById('postsLoading');
-    const pagEl = document.getElementById('pagination');
 
     listEl.innerHTML = '';
     loadEl.style.display = '';
@@ -736,8 +917,6 @@ const App = {
       }
 
       const params = new URLSearchParams({ state: 'open', sort: 'created', direction: 'desc', per_page: 100 });
-      // 先用公开请求(不带PAT)加载帖子，所有游客都能看
-      // 如果失败再尝试带PAT的请求
       let issues = null;
       let debugMsg = '';
       try {
@@ -746,25 +925,18 @@ const App = {
         });
         if (res.ok) {
           issues = await res.json();
-          issues = issues.filter(i => !i.pull_request);
+          // 过滤掉聊天大厅的Issue
+          issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
           debugMsg += '✅ 公开API成功(' + issues.length + '条)';
-        } else {
-          debugMsg += '❌ 公开API返回' + res.status;
-        }
-      } catch(e1) {
-        debugMsg += '❌ 公开API网络错误:' + e1.message;
-      }
-      // 如果公开请求失败，尝试带PAT
+        } else { debugMsg += '❌ 公开API返回' + res.status; }
+      } catch(e1) { debugMsg += '❌ 公开API网络错误:' + e1.message; }
       if (!issues) {
         try {
           issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?' + params, null, true);
-          issues = issues.filter(i => !i.pull_request);
+          issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
           debugMsg += ' ✅ PAT请求成功(' + issues.length + '条)';
-        } catch(e2) {
-          debugMsg += ' ❌ PAT请求失败:' + e2.message;
-        }
+        } catch(e2) { debugMsg += ' ❌ PAT请求失败:' + e2.message; }
       }
-      // 如果都失败，用GitHub Search API作为第三备用
       if (!issues) {
         try {
           const searchRes = await fetch(GH_API + '/search/issues?q=repo:' + REPO + '+type:issue+state:open&per_page=100', {
@@ -772,41 +944,30 @@ const App = {
           });
           if (searchRes.ok) {
             const searchData = await searchRes.json();
-            issues = searchData.items || [];
+            issues = (searchData.items || []).filter(i => i.number !== CHAT_ISSUE_NUMBER);
             debugMsg += ' ✅ SearchAPI成功(' + issues.length + '条)';
-          } else {
-            debugMsg += ' ❌ SearchAPI返回' + searchRes.status;
           }
-        } catch(e3) {
-          debugMsg += ' ❌ SearchAPI失败:' + e3.message;
-        }
+        } catch(e3) { debugMsg += ' ❌ SearchAPI失败:' + e3.message; }
       }
-      // 显示调试信息
       const debugEl = document.getElementById('apiDebug');
       if (debugEl) { debugEl.textContent = 'API调试: ' + debugMsg; debugEl.style.display = ''; }
 
       if (!issues || !issues.length) {
-        loadEl.style.display = 'none';
-        emptyEl.style.display = '';
-        return;
+        loadEl.style.display = 'none'; emptyEl.style.display = ''; return;
       }
-
-      this.cachedPosts = issues;
-      this.cacheTime = now;
+      this.cachedPosts = issues; this.cacheTime = now;
       const filtered = this.filterPosts(this.cachedPosts);
-
       loadEl.style.display = 'none';
       if (!filtered.length) { emptyEl.style.display = ''; return; }
       this.renderPosts(filtered);
     } catch(e) {
       loadEl.style.display = 'none';
-      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-text">⚠️ 加载失败<br><small>' + this.esc(e.message) + '</small><br><small style="color:var(--text-muted);">可能是网络问题，GitHub API在中国可能不稳定。请刷新页面重试。</small></div></div>';
+      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-text">⚠️ 加载失败<br><small>' + this.esc(e.message) + '</small></div></div>';
     }
   },
 
   filterPosts(posts) {
     let filtered = [...posts];
-    // 置顶排前
     filtered.sort((a, b) => {
       const aPin = a.labels.some(l => l.name === 'pinned');
       const bPin = b.labels.some(l => l.name === 'pinned');
@@ -822,8 +983,7 @@ const App = {
       filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || (i.body || '').toLowerCase().includes(search));
     }
     const perPage = 20;
-    const total = filtered.length;
-    const totalPages = Math.ceil(total / perPage) || 1;
+    const totalPages = Math.ceil(filtered.length / perPage) || 1;
     if (this.currentPostPage > totalPages) this.currentPostPage = totalPages;
     const start = (this.currentPostPage - 1) * perPage;
     return filtered.slice(start, start + perPage);
@@ -834,7 +994,6 @@ const App = {
     const emptyEl = document.getElementById('postsEmpty');
     if (!posts.length) { listEl.innerHTML = ''; emptyEl.style.display = ''; return; }
     emptyEl.style.display = 'none';
-
     listEl.innerHTML = posts.map(i => {
       const isPinned = i.labels.some(l => l.name === 'pinned');
       const cats = i.labels.filter(l => l.name !== 'pinned').map(l => l.name);
@@ -854,7 +1013,6 @@ const App = {
         </div>
       </div>`;
     }).join('');
-
     this.renderPagination();
   },
 
@@ -885,7 +1043,6 @@ const App = {
     el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
     try {
       let issue, comments;
-      // 先尝试公开请求
       try {
         const iRes = await fetch(GH_API + '/repos/' + REPO + '/issues/' + this.currentIssueNumber, {
           headers: { 'Accept': 'application/vnd.github.v3+json' }
@@ -895,23 +1052,16 @@ const App = {
           headers: { 'Accept': 'application/vnd.github.v3+json' }
         });
         if (cRes.ok) comments = await cRes.json();
-      } catch(e) {
-        console.log('Public detail fetch failed:', e.message);
-      }
-      // 备用：带PAT请求
-      if (!issue) {
-        issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber, null, true);
-      }
-      if (!comments) {
-        comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', null, true);
-      }
+      } catch(e) { console.log('Public detail fetch failed:', e.message); }
+      if (!issue) issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber, null, true);
+      if (!comments) comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', null, true);
+
       const isPinned = issue.labels.some(l => l.name === 'pinned');
       const cats = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
       const cat = cats[0] || '其他';
       const author = this.parseAuthor(issue);
       const isAdmin = this.isAdmin();
-      // GitHub用户=原始作者可关闭，邮箱用户=自己发的帖也可以（比对author标记）
-      const isAuthor = this.userType === 'github' ? (this.user && this.user.login === issue.user.login) : (author.type === 'email' && author.username === this.user.username);
+      const isAuthor = this.userType === 'github' ? (this.user && this.user.login === issue.user.login) : (author.type === 'email' && this.user && author.username === this.user.username);
       const realBody = this.getRealBody(issue.body || '');
 
       let html = `<div class="post-detail">
@@ -929,64 +1079,39 @@ const App = {
         <div class="post-detail-content">${this.esc(realBody || '（无内容）')}</div>
       </div>`;
 
-      // 回复
       html += `<div class="replies-section"><div class="replies-title">回复 (${comments.length})</div>`;
       if (comments.length) {
         comments.forEach(c => {
           const cAuthor = this.parseCommentAuthor(c);
           html += `<div class="reply-card">
-            <div class="reply-header">
-              ${this.getAuthorHtml24(cAuthor)}
-              <span class="reply-time">${this.timeAgo(c.created_at)}</span>
-            </div>
+            <div class="reply-header">${this.getAuthorHtml24(cAuthor)} <span class="reply-time">${this.timeAgo(c.created_at)}</span></div>
             <div class="reply-content">${this.esc(this.getRealBody(c.body))}</div>
           </div>`;
         });
-      } else {
-        html += '<div class="empty-state" style="padding:24px"><div class="empty-state-text" style="font-size:13px">暂无回复</div></div>';
-      }
+      } else { html += '<div class="empty-state" style="padding:24px"><div class="empty-state-text" style="font-size:13px">暂无回复</div></div>'; }
       html += '</div>';
 
-      // 回复表单
       if (this.isLoggedIn()) {
         html += `<div class="reply-form"><textarea id="replyContent" placeholder="写下你的回复..."></textarea>
           <button class="btn btn-primary" onclick="App.submitReply(${issue.number})">发表回复</button></div>`;
       } else {
         html += '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px">请先 <a style="cursor:pointer;color:var(--accent)" onclick="App.navigate(\'login\')">登录</a> 后回复</div>';
       }
-
       el.innerHTML = html;
-    } catch(e) {
-      el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>';
-    }
-  },
-
-  parseCommentAuthor(comment) {
-    const body = comment.body || '';
-    const match = body.match(/^<!-- author:email:(.*?) -->\n?/);
-    if (match) {
-      return { type: 'email', username: match[1], displayName: match[1] };
-    }
-    return { type: 'github', username: comment.user.login, displayName: comment.user.name || comment.user.login, avatar: comment.user.avatar_url };
+    } catch(e) { el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>'; }
   },
 
   async submitReply(issueNumber) {
     if (!this.isLoggedIn()) return this.toast('请先登录', 'error');
     const content = document.getElementById('replyContent').value.trim();
     if (!content) return this.toast('请输入回复内容', 'error');
-
-    const body = this.userType === 'email'
-      ? `<!-- author:email:${this.user.username} -->\n${content}`
-      : content;
-
+    const body = this.userType === 'email' ? `<!-- author:email:${this.user.username} -->\n${content}` : content;
     try {
       await this.ghApi('POST', '/repos/' + REPO + '/issues/' + issueNumber + '/comments', { body }, this.userType === 'email');
-      this.toast('回复成功', 'success');
-      this.loadPostDetail();
+      this.toast('回复成功', 'success'); this.loadPostDetail();
     } catch(e) { this.toast(e.message, 'error'); }
   },
 
-  // ---- 发帖 ----
   async submitPost() {
     if (!this.isLoggedIn()) return this.toast('请先登录', 'error');
     const title = document.getElementById('newPostTitle').value.trim();
@@ -994,11 +1119,7 @@ const App = {
     const category = document.getElementById('newPostCategory').value;
     if (!title) return this.toast('请输入标题', 'error');
     if (!content) return this.toast('请输入内容', 'error');
-
-    const body = this.userType === 'email'
-      ? `<!-- author:email:${this.user.username} -->\n${content}`
-      : content;
-
+    const body = this.userType === 'email' ? `<!-- author:email:${this.user.username} -->\n${content}` : content;
     const btn = document.getElementById('btnSubmit');
     btn.disabled = true; btn.textContent = '发布中...';
     try {
@@ -1006,20 +1127,16 @@ const App = {
       this.toast('帖子发布成功！', 'success');
       document.getElementById('newPostTitle').value = '';
       document.getElementById('newPostContent').value = '';
-      this.cacheTime = 0;
-      this.navigate('home');
+      this.cacheTime = 0; this.navigate('home');
     } catch(e) { this.toast(e.message, 'error'); }
     btn.disabled = false; btn.textContent = '发布帖子';
   },
 
-  // ---- 管理 ----
   async closeIssue(number) {
     if (!confirm('确定关闭此帖子？')) return;
     try {
       await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { state: 'closed' }, true);
-      this.toast('帖子已关闭', 'success');
-      this.cacheTime = 0;
-      this.navigate('home');
+      this.toast('帖子已关闭', 'success'); this.cacheTime = 0; this.navigate('home');
     } catch(e) { this.toast(e.message, 'error'); }
   },
 
@@ -1030,9 +1147,7 @@ const App = {
       const catLabels = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
       const newLabels = isPinned ? catLabels : [...catLabels, 'pinned'];
       await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { labels: newLabels }, true);
-      this.toast(isPinned ? '已取消置顶' : '已置顶', 'success');
-      this.cacheTime = 0;
-      this.loadPostDetail();
+      this.toast(isPinned ? '已取消置顶' : '已置顶', 'success'); this.cacheTime = 0; this.loadPostDetail();
     } catch(e) { this.toast(e.message, 'error'); }
   },
 
