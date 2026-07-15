@@ -460,7 +460,7 @@ const App = {
     const cfg = ACCENT_COLORS.find(c => c.color === color);
     if (!cfg) return;
     // 非免费色需要VIP
-    if (!cfg.free && !this.isVip) {
+    if (!cfg.free && !this.checkVip()) {
       this.showVipModal();
       return;
     }
@@ -476,7 +476,7 @@ const App = {
     if (!el) return;
     el.innerHTML = ACCENT_COLORS.map(c => {
       const active = c.color === this.accentColor;
-      const locked = !c.free && !this.isVip;
+      const locked = !c.free && !this.checkVip();
       return `<div class="accent-dot${active?' active':''}${locked?' locked':''}" data-color="${c.color}" onclick="App.setAccent('${c.color}')" title="${c.name}${locked?' (会员专属)':''}"></div>`;
     }).join('');
   },
@@ -586,7 +586,20 @@ const App = {
 
   initDefaultUsers() {
     let users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
-    if (!users.find(u => u.email === 'Rr052052052@163.com')) {
+    // 确保T管理员存在且VIP
+    const tUser = users.find(u => u.email === 'Rr052052052@163.com' || u.username === 'T');
+    if (tUser) {
+      tUser.role = 'admin';
+      tUser.vip = true;
+      localStorage.setItem('genfun_users', JSON.stringify(users));
+      // 如果当前是T用户，更新VIP状态
+      if (this.emailUser && this.emailUser.email === 'Rr052052052@163.com') {
+        this.emailUser.vip = true;
+        this.isVip = true;
+        localStorage.setItem('genfun_vip', 'true');
+        localStorage.setItem('genfun_email_user', JSON.stringify(this.emailUser));
+      }
+    } else {
       this.sha256('T123456').then(hash => {
         users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', vip: true, createdAt: new Date().toISOString() });
         localStorage.setItem('genfun_users', JSON.stringify(users));
