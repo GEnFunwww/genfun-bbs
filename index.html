@@ -270,6 +270,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
           <div class="chat-clear-info">每天早上8点清理</div>
         </div>
         <div class="chat-messages" id="chatMessages"><div class="loading"><div class="spinner"></div>加载聊天消息...</div></div>
+        <div id="chatDebug" style="display:none;font-size:12px;color:var(--text-muted);padding:8px 12px;border-top:1px solid var(--border);"></div>
         <div class="chat-input-bar" id="chatInputBar">
           <input type="text" class="chat-input" id="chatInput" placeholder="说点什么..." maxlength="500" onkeydown="if(event.key==='Enter')App.sendChat()">
           <button class="btn btn-primary btn-sm" onclick="App.sendChat()">发送</button>
@@ -803,6 +804,7 @@ const App = {
   async loadChat() {
     const el = document.getElementById('chatMessages');
     const inputBar = document.getElementById('chatInputBar');
+    const debugEl = document.getElementById('chatDebug');
     el.innerHTML = '<div class="loading"><div class="spinner"></div>加载聊天消息...</div>';
 
     // 非登录用户也能看聊天，但不能发
@@ -816,23 +818,40 @@ const App = {
       }
 
       let comments = null;
+      let debugMsg = '';
       // 先公开请求
       try {
         const res = await fetch(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', {
           headers: { 'Accept': 'application/vnd.github.v3+json' }
         });
-        if (res.ok) comments = await res.json();
-      } catch(e) { console.log('Public chat fetch failed:', e.message); }
+        if (res.ok) { comments = await res.json(); debugMsg += '✅ 公开API成功(' + comments.length + '条)'; }
+        else { debugMsg += '❌ 公开API返回' + res.status; }
+      } catch(e) { debugMsg += '❌ 公开API网络错误:' + e.message; }
 
       // 备用带PAT
       if (!comments) {
         try {
           comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', null, true);
-        } catch(e2) { console.log('PAT chat fetch failed:', e2.message); }
+          debugMsg += ' ✅ PAT请求成功(' + comments.length + '条)';
+        } catch(e2) { debugMsg += ' ❌ PAT请求失败:' + e2.message; }
       }
 
+      // 第三备用：用JSONP式请求绕过（通过script标签）
       if (!comments) {
-        el.innerHTML = '<div class="empty-state"><div class="empty-state-text">无法加载聊天消息，请刷新重试</div></div>';
+        try {
+          // 用cors代理（https://corsproxy.io 是免费的CORS代理）
+          const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc');
+          const proxyRes = await fetch(proxyUrl, { headers: { 'Accept': 'application/json' } });
+          if (proxyRes.ok) { comments = await proxyRes.json(); debugMsg += ' ✅ CORS代理成功(' + comments.length + '条)'; }
+          else { debugMsg += ' ❌ CORS代理返回' + proxyRes.status; }
+        } catch(e3) { debugMsg += ' ❌ CORS代理失败:' + e3.message; }
+      }
+
+      // 显示调试信息
+      if (debugEl) { debugEl.textContent = '聊天API: ' + debugMsg; debugEl.style.display = ''; }
+
+      if (!comments) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">无法加载聊天消息</div><div style="font-size:12px;color:var(--text-muted);margin-top:8px;">' + this.esc(debugMsg) + '</div></div>';
         return;
       }
 
@@ -948,6 +967,19 @@ const App = {
             debugMsg += ' ✅ SearchAPI成功(' + issues.length + '条)';
           }
         } catch(e3) { debugMsg += ' ❌ SearchAPI失败:' + e3.message; }
+      }
+      // 第四备用：CORS代理
+      if (!issues) {
+        try {
+          const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(GH_API + '/repos/' + REPO + '/issues?' + params);
+          const proxyRes = await fetch(proxyUrl, { headers: { 'Accept': 'application/json' } });
+          if (proxyRes.ok) {
+            issues = await proxyRes.json();
+            issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
+            debugMsg += ' ✅ CORS代理成功(' + issues.length + '条)';
+          }
+        } catch(e4) { debugMsg += ' ❌ CORS代理失败:' + e4.message; }
+      }
       }
       const debugEl = document.getElementById('apiDebug');
       if (debugEl) { debugEl.textContent = 'API调试: ' + debugMsg; debugEl.style.display = ''; }
