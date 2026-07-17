@@ -236,6 +236,9 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .profile-btn-logout:hover { opacity:0.85; }
 .profile-divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
 .profile-type-tag { font-size:12px; padding:4px 12px; border-radius:12px; }
+/* 称号标签 */
+.title-tag { font-size:11px; padding:2px 8px; border-radius:10px; background:linear-gradient(135deg,#ffd700,#ffaa00); color:#1a1a1a; font-weight:600; margin-left:4px; display:inline-block; white-space:nowrap; letter-spacing:0.5px; }
+.title-tag-dark { background:linear-gradient(135deg,#ffd700,#e6a800); color:#222; }
 
 @media (max-width:768px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} }
 @media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} .fab-group{bottom:16px; right:16px;} }
@@ -290,6 +293,10 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <div class="profile-field">
         <label>上传头像图片（可选）</label>
         <input type="file" accept="image/*" id="profileAvatarFile" onchange="App.handleAvatarFile(event)" style="font-size:14px;color:var(--text-secondary);">
+      </div>
+      <div class="profile-field" id="profileTitleField">
+        <label>自定义称号（VIP专属）</label>
+        <input type="text" class="profile-input" id="profileTitleInput" placeholder="输入你的专属称号" maxlength="10">
       </div>
       <div class="profile-btn-row">
         <button class="profile-btn-save" onclick="App.saveProfile()">保存修改</button>
@@ -605,6 +612,19 @@ const App = {
   },
 
   async emailRegister() {
+    // 检查每月注册限制（同一设备每月只能注册一次）
+    const lastRegTime = localStorage.getItem('genfun_last_register_time');
+    if (lastRegTime) {
+      const lastDate = new Date(lastRegTime);
+      const now = new Date();
+      const sameMonth = lastDate.getFullYear() === now.getFullYear() && lastDate.getMonth() === now.getMonth();
+      if (sameMonth) {
+        const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 1).getTime() - now.getTime();
+        const daysRemaining = Math.ceil(daysLeft / (1000 * 60 * 60 * 24));
+        return this.toast(`本月已注册过账号，请${daysRemaining}天后再试`, 'error');
+      }
+    }
+
     const email = document.getElementById('regEmail').value.trim();
     const username = document.getElementById('regUsername').value.trim();
     const password = document.getElementById('regPassword').value;
@@ -616,11 +636,17 @@ const App = {
     if (captcha !== this.captchaCode) return this.toast('验证码错误', 'error');
     const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
     if (users.find(u => u.email === email)) return this.toast('该邮箱/手机号已注册', 'error');
+
     const hash = await this.sha256(password);
-    const newUser = { email, username, passwordHash: hash, role: 'user', vip: false, createdAt: new Date().toISOString() };
-    if (email === 'Rr052052052@163.com' || email === 'T') { newUser.role = 'admin'; newUser.vip = true; }
+    const newUser = { email, username, passwordHash: hash, role: 'user', vip: false, title: '', createdAt: new Date().toISOString() };
+    if (email === 'Rr052052052@163.com' || email === 'T') { newUser.role = 'admin'; newUser.vip = true; newUser.title = '管理员'; }
+    // VIP预设用户
+    if (username === '是P' || email === '是P') { newUser.vip = true; }
+    if (username === 'Kyle' || email === 'Kyle') { newUser.vip = true; }
+
     users.push(newUser);
     localStorage.setItem('genfun_users', JSON.stringify(users));
+    localStorage.setItem('genfun_last_register_time', new Date().toISOString());
     this.emailUser = newUser; this.user = newUser; this.userType = 'email';
     localStorage.setItem('genfun_email_user', JSON.stringify(newUser));
     localStorage.setItem('genfun_user_type', 'email');
@@ -663,10 +689,24 @@ const App = {
       }
     } else {
       this.sha256('T123456').then(hash => {
-        users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', vip: true, createdAt: new Date().toISOString() });
+        users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', vip: true, title: '管理员', createdAt: new Date().toISOString() });
         localStorage.setItem('genfun_users', JSON.stringify(users));
       });
     }
+    // 给是P和Kyle用户加VIP
+    const vipUsers = users.filter(u => u.username === '是P' || u.username === 'Kyle');
+    for (const vu of vipUsers) {
+      vu.vip = true;
+      if (!vu.title) vu.title = '';
+      // 如果当前登录的是VIP预设用户，更新状态
+      if (this.emailUser && this.emailUser.email === vu.email) {
+        this.emailUser.vip = true;
+        this.isVip = true;
+        localStorage.setItem('genfun_vip', 'true');
+        localStorage.setItem('genfun_email_user', JSON.stringify(this.emailUser));
+      }
+    }
+    if (vipUsers.length > 0) localStorage.setItem('genfun_users', JSON.stringify(users));
   },
 
   // ---- 带超时的fetch + 多CORS代理备用 ----
@@ -818,6 +858,18 @@ const App = {
     if (isGithub) badgeHtml += `<span class="profile-type-tag" style="background:var(--accent-light);color:var(--accent);">GitHub用户</span>`;
     else badgeHtml += `<span class="profile-type-tag email-badge">邮箱用户</span>`;
     if (this.checkVip()) badgeHtml += `<span class="vip-badge">VIP</span>`;
+    // 称号显示
+    const title = this.getTitle();
+    if (title) badgeHtml += `<span class="title-tag">${this.esc(title)}</span>`;
+    // 称号输入框（VIP可见）
+    const titleField = document.getElementById('profileTitleField');
+    const titleInput = document.getElementById('profileTitleInput');
+    if (this.checkVip()) {
+      titleField.style.display = '';
+      titleInput.value = title || '';
+    } else {
+      titleField.style.display = 'none';
+    }
     if (this.isAdmin()) badgeHtml += `<span class="admin-badge">管理</span>`;
     badges.innerHTML = badgeHtml;
     overlay.style.display = 'flex';
@@ -825,6 +877,30 @@ const App = {
 
   closeProfile() {
     document.getElementById('profileOverlay').style.display = 'none';
+  },
+
+  // 获取称号（VIP专属）
+  getTitle() {
+    // 邮箱用户从users数组中读取title字段
+    if (this.userType === 'email' && this.emailUser) {
+      return this.emailUser.title || '';
+    }
+    // GitHub用户从localStorage覆盖
+    return localStorage.getItem('genfun_title_override') || '';
+  },
+
+  // 获取指定用户的称号（用于帖子/回复显示）
+  getTitleForUser(username, type) {
+    if (type === 'email') {
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      return found ? (found.title || '') : '';
+    }
+    // GitHub用户只有当前登录用户自己能设置称号
+    if (this.userType === 'github' && this.user && (this.user.login === username)) {
+      return localStorage.getItem('genfun_title_override') || '';
+    }
+    return '';
   },
 
   // 获取显示名称（支持覆盖）
@@ -900,6 +976,22 @@ const App = {
       }
     }
 
+    // 保存称号（VIP专属）
+    if (this.checkVip()) {
+      const titleInput = document.getElementById('profileTitleInput');
+      const newTitle = titleInput ? titleInput.value.trim() : '';
+      if (newTitle.length > 10) return this.toast('称号最多10个字符', 'error');
+      if (this.userType === 'email') {
+        this.user.title = newTitle;
+        const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+        const idx = users.findIndex(u => u.email === this.user.email);
+        if (idx >= 0) { users[idx].title = newTitle; localStorage.setItem('genfun_users', JSON.stringify(users)); }
+        localStorage.setItem('genfun_email_user', JSON.stringify(this.user));
+      } else {
+        localStorage.setItem('genfun_title_override', newTitle);
+      }
+    }
+
     // 对于邮箱用户，也更新localStorage中的username和avatarUrl
     if (this.userType === 'email') {
       this.user.username = newName;
@@ -909,6 +1001,7 @@ const App = {
       if (idx >= 0) {
         users[idx].username = newName;
         users[idx].avatarUrl = this.user.avatarUrl;
+        users[idx].title = this.user.title || '';
         localStorage.setItem('genfun_users', JSON.stringify(users));
       }
       localStorage.setItem('genfun_email_user', JSON.stringify(this.user));
@@ -1047,24 +1140,28 @@ const App = {
     return { type: 'github', username: comment.user.login, displayName: comment.user.name || comment.user.login, avatar: comment.user.avatar_url };
   },
   getAuthorHtml(author) {
+    const title = this.getTitleForUser(author.username, author.type);
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
     if (author.type === 'email') {
       if (author.avatar) {
-        return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> ${this.esc(author.displayName)} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
+        return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> ${this.esc(author.displayName)}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
       }
       const letter = author.username[0].toUpperCase();
-      return `<div class="user-avatar-letter" style="width:20px;height:20px;font-size:10px;display:inline-flex;vertical-align:middle;">${letter}</div> ${this.esc(author.displayName)} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
+      return `<div class="user-avatar-letter" style="width:20px;height:20px;font-size:10px;display:inline-flex;vertical-align:middle;">${letter}</div> ${this.esc(author.displayName)}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
     }
-    return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(author.displayName)}`;
+    return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(author.displayName)}${titleHtml}`;
   },
   getAuthorHtml24(author) {
+    const title = this.getTitleForUser(author.username, author.type);
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
     if (author.type === 'email') {
       if (author.avatar) {
-        return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> <strong>${this.esc(author.displayName)}</strong> <span class="email-badge">邮箱</span>`;
+        return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> <strong>${this.esc(author.displayName)}</strong>${titleHtml} <span class="email-badge">邮箱</span>`;
       }
       const letter = author.username[0].toUpperCase();
-      return `<div class="user-avatar-letter" style="width:24px;height:24px;font-size:11px;display:inline-flex;vertical-align:middle;">${letter}</div> <strong>${this.esc(author.displayName)}</strong> <span class="email-badge">邮箱</span>`;
+      return `<div class="user-avatar-letter" style="width:24px;height:24px;font-size:11px;display:inline-flex;vertical-align:middle;">${letter}</div> <strong>${this.esc(author.displayName)}</strong>${titleHtml} <span class="email-badge">邮箱</span>`;
     }
-    return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(author.displayName)}</strong>`;
+    return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(author.displayName)}</strong>${titleHtml}`;
   },
   getRealBody(body) { if (!body) return ''; return body.replace(/^<!-- author:email:(.*?) -->\n?/, ''); },
 
@@ -1136,20 +1233,24 @@ const App = {
       const author = this.parseCommentAuthor(c);
       const realBody = this.getRealBody(c.body);
       if (author.type === 'email') {
+        const title = this.getTitleForUser(author.username, author.type);
+        const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
         const avatarHtml = author.avatar ? `<img class="chat-msg-avatar" src="${author.avatar}" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="chat-msg-avatar-letter" style="display:none">${author.username[0].toUpperCase()}</div>` : `<div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>`;
         return `<div class="chat-msg">
           ${avatarHtml}
           <div class="chat-msg-body">
-            <div class="chat-msg-name">${this.esc(author.displayName)} <span class="email-badge">邮箱</span></div>
+            <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml} <span class="email-badge">邮箱</span></div>
             <div class="chat-msg-text">${this.esc(realBody)}</div>
             <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
           </div>
         </div>`;
       }
+      const title2 = this.getTitleForUser(author.username, author.type);
+      const titleHtml2 = title2 ? ` <span class="title-tag">${this.esc(title2)}</span>` : '';
       return `<div class="chat-msg">
         <img class="chat-msg-avatar" src="${author.avatar}" alt="">
         <div class="chat-msg-body">
-          <div class="chat-msg-name">${this.esc(author.displayName)}</div>
+          <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml2}</div>
           <div class="chat-msg-text">${this.esc(realBody)}</div>
           <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
         </div>
