@@ -210,6 +210,33 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .chat-input { flex:1; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
 .chat-input:focus { border-color:var(--accent); }
 
+/* 个人资料弹窗 */
+.profile-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.profile-modal { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:28px; width:380px; max-width:90vw; box-shadow:var(--shadow-lg); }
+.profile-avatar-area { display:flex; justify-content:center; margin-bottom:16px; }
+.profile-avatar-large { width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid var(--accent); cursor:pointer; transition:var(--transition); }
+.profile-avatar-large:hover { border-color:var(--accent-hover); transform:scale(1.05); }
+.profile-avatar-letter-large { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:32px; font-weight:700; border:3px solid var(--accent); cursor:pointer; transition:var(--transition); }
+.profile-avatar-letter-large:hover { transform:scale(1.05); }
+.profile-avatar-hint { text-align:center; font-size:12px; color:var(--text-muted); margin-top:8px; }
+.profile-name-display { text-align:center; font-size:20px; font-weight:700; margin-bottom:4px; }
+.profile-badges { display:flex; justify-content:center; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+.profile-field { margin-bottom:16px; }
+.profile-field label { display:block; font-size:13px; color:var(--text-secondary); margin-bottom:6px; font-weight:600; }
+.profile-input { width:100%; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; transition:var(--transition); }
+.profile-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.profile-avatar-url-row { display:flex; gap:8px; }
+.profile-avatar-url-row input { flex:1; }
+.profile-btn-row { display:flex; gap:10px; margin-top:20px; }
+.profile-btn-save { flex:1; padding:10px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-size:14px; font-weight:600; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.profile-btn-save:hover { background:var(--accent-hover); }
+.profile-btn-cancel { padding:10px 20px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.profile-btn-cancel:hover { background:var(--bg-hover); }
+.profile-btn-logout { flex:1; padding:10px; border-radius:var(--radius-sm); border:none; background:var(--danger); color:#fff; font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.profile-btn-logout:hover { opacity:0.85; }
+.profile-divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+.profile-type-tag { font-size:12px; padding:4px 12px; border-radius:12px; }
+
 @media (max-width:768px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} }
 @media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} .fab-group{bottom:16px; right:16px;} }
 </style>
@@ -239,6 +266,41 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       </button>
     </div>
   </header>
+
+  <!-- 个人资料弹窗 -->
+  <div class="profile-overlay" id="profileOverlay" style="display:none" onclick="if(event.target===this)App.closeProfile()">
+    <div class="profile-modal">
+      <div class="profile-avatar-area">
+        <div id="profileAvatarDisplay"></div>
+      </div>
+      <div class="profile-avatar-hint" id="profileAvatarHint">点击头像更换图片 / 输入头像URL</div>
+      <div class="profile-name-display" id="profileNameDisplay"></div>
+      <div class="profile-badges" id="profileBadges"></div>
+      <div class="profile-field">
+        <label>修改名称</label>
+        <input type="text" class="profile-input" id="profileNameInput" placeholder="输入新名称" maxlength="20">
+      </div>
+      <div class="profile-field">
+        <label>头像URL（可选）</label>
+        <div class="profile-avatar-url-row">
+          <input type="text" class="profile-input" id="profileAvatarInput" placeholder="粘贴图片链接">
+          <button class="btn btn-sm" onclick="App.previewAvatarUrl()" style="padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-secondary);color:var(--text);cursor:pointer;font-family:inherit;">预览</button>
+        </div>
+      </div>
+      <div class="profile-field">
+        <label>上传头像图片（可选）</label>
+        <input type="file" accept="image/*" id="profileAvatarFile" onchange="App.handleAvatarFile(event)" style="font-size:14px;color:var(--text-secondary);">
+      </div>
+      <div class="profile-btn-row">
+        <button class="profile-btn-save" onclick="App.saveProfile()">保存修改</button>
+        <button class="profile-btn-cancel" onclick="App.closeProfile()">取消</button>
+      </div>
+      <hr class="profile-divider">
+      <div class="profile-btn-row">
+        <button class="profile-btn-logout" onclick="App.logout()">退出登录</button>
+      </div>
+    </div>
+  </div>
 
   <main class="main">
     <!-- 首页 -->
@@ -720,7 +782,142 @@ const App = {
     this.updateAuthUI(); this.navigate('home'); this.toast('已退出登录', 'info');
   },
 
-  showUserMenu() { if (confirm('确定退出登录？')) this.logout(); },
+  showUserMenu() {
+    if (!this.isLoggedIn()) return;
+    // 填充弹窗数据
+    const overlay = document.getElementById('profileOverlay');
+    let displayName, avatarSrc, isGithub;
+    if (this.userType === 'github') {
+      displayName = this.getDisplayName();
+      avatarSrc = this.getAvatarUrl();
+      isGithub = true;
+    } else {
+      displayName = this.getDisplayName();
+      avatarSrc = this.getAvatarUrl();
+      isGithub = false;
+    }
+    // 头像显示
+    const avatarArea = document.getElementById('profileAvatarDisplay');
+    if (avatarSrc) {
+      avatarArea.innerHTML = `<img class="profile-avatar-large" src="${avatarSrc}" onclick="document.getElementById('profileAvatarFile').click()" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="profile-avatar-letter-large" style="display:none" onclick="document.getElementById('profileAvatarFile').click()">${displayName[0].toUpperCase()}</div>`;
+    } else {
+      avatarArea.innerHTML = `<div class="profile-avatar-letter-large" onclick="document.getElementById('profileAvatarFile').click()">${displayName[0].toUpperCase()}</div>`;
+    }
+    // 名称显示
+    document.getElementById('profileNameDisplay').textContent = displayName;
+    document.getElementById('profileNameInput').value = displayName;
+    // 头像URL输入（预填当前URL）
+    document.getElementById('profileAvatarInput').value = (this.userType === 'github' ? (this.user.avatar_url || '') : (this.user.avatarUrl || '')) || '';
+    // 清空文件输入
+    document.getElementById('profileAvatarFile').value = '';
+    // 提示文字
+    document.getElementById('profileAvatarHint').textContent = isGithub ? 'GitHub用户可覆盖头像和昵称' : '点击头像更换图片 / 输入头像URL';
+    // 徽章
+    const badges = document.getElementById('profileBadges');
+    let badgeHtml = '';
+    if (isGithub) badgeHtml += `<span class="profile-type-tag" style="background:var(--accent-light);color:var(--accent);">GitHub用户</span>`;
+    else badgeHtml += `<span class="profile-type-tag email-badge">邮箱用户</span>`;
+    if (this.checkVip()) badgeHtml += `<span class="vip-badge">VIP</span>`;
+    if (this.isAdmin()) badgeHtml += `<span class="admin-badge">管理</span>`;
+    badges.innerHTML = badgeHtml;
+    overlay.style.display = 'flex';
+  },
+
+  closeProfile() {
+    document.getElementById('profileOverlay').style.display = 'none';
+  },
+
+  // 获取显示名称（支持覆盖）
+  getDisplayName() {
+    const override = localStorage.getItem('genfun_display_name_override');
+    if (override) return override;
+    if (this.userType === 'github') return this.user.name || this.user.login;
+    return this.user.username;
+  },
+
+  // 获取头像URL（支持覆盖）
+  getAvatarUrl() {
+    const override = localStorage.getItem('genfun_avatar_override');
+    if (override) return override;
+    if (this.userType === 'github') return this.user.avatar_url || '';
+    return this.user.avatarUrl || '';
+  },
+
+  // 判断是否管理员
+  isAdmin() {
+    if (this.userType === 'github') return this.user.login === REPO_OWNER;
+    return this.user.role === 'admin';
+  },
+
+  // 预览头像URL
+  previewAvatarUrl() {
+    const url = document.getElementById('profileAvatarInput').value.trim();
+    if (!url) return this.toast('请输入头像URL', 'error');
+    const avatarArea = document.getElementById('profileAvatarDisplay');
+    const letter = this.getDisplayName()[0].toUpperCase();
+    avatarArea.innerHTML = `<img class="profile-avatar-large" src="${url}" onclick="document.getElementById('profileAvatarFile').click()" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="profile-avatar-letter-large" style="display:none" onclick="document.getElementById('profileAvatarFile').click()">${letter}</div>`;
+    this.toast('头像预览已更新，点击保存确认', 'info');
+  },
+
+  // 处理头像文件上传（转base64）
+  handleAvatarFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.size > 512 * 1024) return this.toast('图片不能超过512KB', 'error');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result;
+      const avatarArea = document.getElementById('profileAvatarDisplay');
+      const letter = this.getDisplayName()[0].toUpperCase();
+      avatarArea.innerHTML = `<img class="profile-avatar-large" src="${base64}" onclick="document.getElementById('profileAvatarFile').click()" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="profile-avatar-letter-large" style="display:none" onclick="document.getElementById('profileAvatarFile').click()">${letter}</div>`;
+      // 存到临时变量，保存时一起写入
+      this._pendingAvatarBase64 = base64;
+      this.toast('头像预览已更新，点击保存确认', 'info');
+    };
+    reader.readAsDataURL(file);
+  },
+
+  // 保存个人资料修改
+  saveProfile() {
+    const newName = document.getElementById('profileNameInput').value.trim();
+    if (!newName) return this.toast('名称不能为空', 'error');
+    if (newName.length < 2) return this.toast('名称至少2个字符', 'error');
+
+    // 保存名称覆盖
+    localStorage.setItem('genfun_display_name_override', newName);
+
+    // 保存头像覆盖
+    if (this._pendingAvatarBase64) {
+      localStorage.setItem('genfun_avatar_override', this._pendingAvatarBase64);
+      this._pendingAvatarBase64 = null;
+    } else {
+      const avatarUrl = document.getElementById('profileAvatarInput').value.trim();
+      if (avatarUrl) {
+        localStorage.setItem('genfun_avatar_override', avatarUrl);
+      } else {
+        // 如果URL输入框为空且没有新上传文件，清除覆盖（恢复默认）
+        localStorage.removeItem('genfun_avatar_override');
+      }
+    }
+
+    // 对于邮箱用户，也更新localStorage中的username和avatarUrl
+    if (this.userType === 'email') {
+      this.user.username = newName;
+      this.user.avatarUrl = localStorage.getItem('genfun_avatar_override') || '';
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const idx = users.findIndex(u => u.email === this.user.email);
+      if (idx >= 0) {
+        users[idx].username = newName;
+        users[idx].avatarUrl = this.user.avatarUrl;
+        localStorage.setItem('genfun_users', JSON.stringify(users));
+      }
+      localStorage.setItem('genfun_email_user', JSON.stringify(this.user));
+    }
+
+    this.updateAuthUI();
+    this.closeProfile();
+    this.toast('资料已更新！', 'success');
+  },
 
   initTheme() {
     document.documentElement.setAttribute('data-theme', this.theme);
@@ -777,21 +974,22 @@ const App = {
       vipBadge.style.display = isVip ? '' : 'none';
 
       if (this.userType === 'github') {
-        document.getElementById('userNameSmall').textContent = this.user.name || this.user.login;
+        document.getElementById('userNameSmall').textContent = this.getDisplayName();
         const imgEl = document.getElementById('userAvatarImg');
         const letterEl = document.getElementById('userAvatarLetter');
-        if (this.user.avatar_url) { imgEl.src = this.user.avatar_url; imgEl.style.display = ''; letterEl.style.display = 'none'; }
-        else { letterEl.textContent = (this.user.login || '?')[0].toUpperCase(); letterEl.style.display = ''; imgEl.style.display = 'none'; }
+        const avatarUrl = this.getAvatarUrl();
+        if (avatarUrl) { imgEl.src = avatarUrl; imgEl.style.display = ''; letterEl.style.display = 'none'; }
+        else { letterEl.textContent = (this.getDisplayName() || '?')[0].toUpperCase(); letterEl.style.display = ''; imgEl.style.display = 'none'; }
         emailBadge.style.display = 'none';
         if (this.user.login === REPO_OWNER) { badge.style.display = ''; adminNav.style.display = ''; }
         else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
       } else {
-        document.getElementById('userNameSmall').textContent = this.user.username;
+        document.getElementById('userNameSmall').textContent = this.getDisplayName();
         const imgEl = document.getElementById('userAvatarImg');
         const letterEl = document.getElementById('userAvatarLetter');
-        imgEl.style.display = 'none';
-        letterEl.textContent = (this.user.username || '?')[0].toUpperCase();
-        letterEl.style.display = '';
+        const avatarUrl = this.getAvatarUrl();
+        if (avatarUrl) { imgEl.src = avatarUrl; imgEl.style.display = ''; letterEl.style.display = 'none'; }
+        else { imgEl.style.display = 'none'; letterEl.textContent = (this.getDisplayName() || '?')[0].toUpperCase(); letterEl.style.display = ''; }
         emailBadge.style.display = '';
         if (this.user.role === 'admin') { badge.style.display = ''; adminNav.style.display = ''; }
         else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
@@ -820,17 +1018,39 @@ const App = {
   parseAuthor(issue) {
     const body = issue.body || '';
     const match = body.match(/^<!-- author:email:(.*?) -->\n?/);
-    if (match) return { type: 'email', username: match[1], displayName: match[1] };
+    if (match) {
+      const username = match[1];
+      // 查找localStorage中的用户数据以获取自定义头像和名称
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      const displayNameOverride = localStorage.getItem('genfun_display_name_override');
+      const avatarOverride = localStorage.getItem('genfun_avatar_override');
+      const displayName = (found && found.email === (this.emailUser && this.emailUser.email) && displayNameOverride) ? displayNameOverride : (found ? found.username : username);
+      const avatar = (found && found.email === (this.emailUser && this.emailUser.email) && avatarOverride) ? avatarOverride : (found ? (found.avatarUrl || '') : '');
+      return { type: 'email', username, displayName, avatar };
+    }
     return { type: 'github', username: issue.user.login, displayName: issue.user.name || issue.user.login, avatar: issue.user.avatar_url };
   },
   parseCommentAuthor(comment) {
     const body = comment.body || '';
     const match = body.match(/^<!-- author:email:(.*?) -->\n?/);
-    if (match) return { type: 'email', username: match[1], displayName: match[1] };
+    if (match) {
+      const username = match[1];
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      const displayNameOverride = localStorage.getItem('genfun_display_name_override');
+      const avatarOverride = localStorage.getItem('genfun_avatar_override');
+      const displayName = (found && found.email === (this.emailUser && this.emailUser.email) && displayNameOverride) ? displayNameOverride : (found ? found.username : username);
+      const avatar = (found && found.email === (this.emailUser && this.emailUser.email) && avatarOverride) ? avatarOverride : (found ? (found.avatarUrl || '') : '');
+      return { type: 'email', username, displayName, avatar };
+    }
     return { type: 'github', username: comment.user.login, displayName: comment.user.name || comment.user.login, avatar: comment.user.avatar_url };
   },
   getAuthorHtml(author) {
     if (author.type === 'email') {
+      if (author.avatar) {
+        return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> ${this.esc(author.displayName)} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
+      }
       const letter = author.username[0].toUpperCase();
       return `<div class="user-avatar-letter" style="width:20px;height:20px;font-size:10px;display:inline-flex;vertical-align:middle;">${letter}</div> ${this.esc(author.displayName)} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
     }
@@ -838,6 +1058,9 @@ const App = {
   },
   getAuthorHtml24(author) {
     if (author.type === 'email') {
+      if (author.avatar) {
+        return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> <strong>${this.esc(author.displayName)}</strong> <span class="email-badge">邮箱</span>`;
+      }
       const letter = author.username[0].toUpperCase();
       return `<div class="user-avatar-letter" style="width:24px;height:24px;font-size:11px;display:inline-flex;vertical-align:middle;">${letter}</div> <strong>${this.esc(author.displayName)}</strong> <span class="email-badge">邮箱</span>`;
     }
@@ -913,8 +1136,9 @@ const App = {
       const author = this.parseCommentAuthor(c);
       const realBody = this.getRealBody(c.body);
       if (author.type === 'email') {
+        const avatarHtml = author.avatar ? `<img class="chat-msg-avatar" src="${author.avatar}" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="chat-msg-avatar-letter" style="display:none">${author.username[0].toUpperCase()}</div>` : `<div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>`;
         return `<div class="chat-msg">
-          <div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>
+          ${avatarHtml}
           <div class="chat-msg-body">
             <div class="chat-msg-name">${this.esc(author.displayName)} <span class="email-badge">邮箱</span></div>
             <div class="chat-msg-text">${this.esc(realBody)}</div>
