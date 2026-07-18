@@ -1170,25 +1170,28 @@ const App = {
     const el = document.getElementById('chatMessages');
     const inputBar = document.getElementById('chatInputBar');
     const debugEl = document.getElementById('chatDebug');
-    el.innerHTML = '<div class="loading"><div class="spinner"></div>加载聊天消息...</div>';
 
     // 非登录用户也能看聊天，但不能发
     inputBar.style.display = this.isLoggedIn() ? '' : 'none';
 
-    try {
-      const now = Date.now();
-      if (this.chatCache.length && now - this.chatCacheTime < 60000) {
-        this.renderChat(this.chatCache);
-        return;
-      }
+    // 如果已有缓存且未过期，静默增量刷新（不清空页面）
+    const now = Date.now();
+    if (this.chatCache.length && now - this.chatCacheTime < 60000) {
+      this.renderChat(this.chatCache);
+      // 后台静默增量刷新
+      this.silentRefreshChat();
+      return;
+    }
 
-      const apiUrl = GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc';
+    el.innerHTML = '<div class="loading"><div class="spinner"></div>加载聊天消息...</div>';
+
+    try {
       let comments = null;
       let debugMsg = '';
 
       // 1) 直连（8秒超时）
       try {
-        const res = await this.fetchWithTimeout(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
+        const res = await this.fetchWithTimeout(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
         if (res.ok) { comments = await res.json(); debugMsg += '✅ 直连(' + comments.length + '条)'; }
         else { debugMsg += '❌ API返回' + res.status; }
       } catch(e) { debugMsg += '❌ 直连超时:' + e.message; }
@@ -1203,7 +1206,7 @@ const App = {
 
       // 3) CORS代理
       if (!comments) {
-        const proxyResult = await this.fetchViaProxy(apiUrl, 8000);
+        const proxyResult = await this.fetchViaProxy(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', 8000);
         if (proxyResult) { comments = proxyResult; debugMsg += ' ✅ 代理(' + comments.length + '条)'; }
         else { debugMsg += ' ❌ 所有代理失败'; }
       }
@@ -1221,6 +1224,37 @@ const App = {
     } catch(e) {
       el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + this.esc(e.message) + '</div><button class="btn btn-primary btn-sm" onclick="App.loadChat()" style="margin-top:12px;">重新加载</button></div>';
     }
+  },
+
+  // 静默增量刷新聊天（不清空页面）
+  async silentRefreshChat() {
+    try {
+      let comments = null;
+      // 1) 直连
+      try {
+        const res = await this.fetchWithTimeout(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 5000);
+        if (res.ok) comments = await res.json();
+      } catch(e) {}
+
+      // 2) PAT
+      if (!comments) {
+        try { comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', null, true); } catch(e2) {}
+      }
+
+      if (comments && comments.length > this.chatCache.length) {
+        // 有新消息，追加渲染
+        const newComments = comments.slice(this.chatCache.length);
+        const el = document.getElementById('chatMessages');
+        for (const c of newComments) {
+          const author = this.parseCommentAuthor(c);
+          const realBody = this.getRealBody(c.body);
+          el.insertAdjacentHTML('beforeend', this.buildChatMsgHtml(author, realBody, this.timeAgo(c.created_at)));
+        }
+        el.scrollTop = el.scrollHeight;
+        this.chatCache = comments;
+        this.chatCacheTime = Date.now();
+      }
+    } catch(e) {}
   },
 
   renderChat(comments) {
@@ -1262,24 +1296,83 @@ const App = {
 
   async sendChat() {
     if (!this.isLoggedIn()) return this.toast('请先登录再聊天', 'error');
-    const msg = document.getElementById('chatInput').value.trim();
+    const inputEl = document.getElementById('chatInput');
+    const msg = inputEl.value.trim();
     if (!msg) return this.toast('请输入聊天内容', 'error');
     if (msg.length > 500) return this.toast('聊天消息最多500字', 'error');
 
-    const body = this.userType === 'email'
-      ? `<!-- author:email:${this.user.username} -->\n${msg}`
-      : msg;
+    // 乐观更新：立即在本地显示消息，不等API响应
+    const author = this.userType === 'email'
+      ? { type: 'email', username: this.user.username, displayName: this.getDisplayName(), avatar: this.getAvatarUrl() }
+      : { type: 'github', username: this.user.login, displayName: this.getDisplayName(), avatar: this.user.avatar_url };
 
-    const btn = document.getElementById('chatInput');
-    btn.disabled = true;
+    const title = this.getTitle();
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+
+    // 生成临时消息HTML
+    const tempMsgHtml = this.buildChatMsgHtml(author, msg, '刚刚');
+    const el = document.getElementById('chatMessages');
+
+    // 先移除空状态提示（如果有的话）
+    const emptyState = el.querySelector('.empty-state');
+    if (emptyState) emptyState.remove();
+
+    // 立即追加到聊天区域
+    el.insertAdjacentHTML('beforeend', tempMsgHtml);
+    el.scrollTop = el.scrollHeight;
+    inputEl.value = '';
+
+    // 后台发送到API
+    inputEl.disabled = true;
     try {
+      const body = this.userType === 'email'
+        ? `<!-- author:email:${this.user.username} -->\n${msg}`
+        : msg;
+
       await this.ghApi('POST', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments', { body }, this.userType === 'email');
-      document.getElementById('chatInput').value = '';
-      this.chatCacheTime = 0; // 清缓存强制刷新
-      this.loadChat();
-      this.toast('消息已发送', 'success');
-    } catch(e) { this.toast(e.message, 'error'); }
-    btn.disabled = false;
+
+      // 发送成功后延迟3秒静默刷新（获取服务器真实数据，替换临时消息）
+      setTimeout(() => {
+        this.chatCacheTime = 0;
+        this.loadChat();
+      }, 3000);
+    } catch(e) {
+      // 发送失败：标记临时消息为失败
+      const lastMsg = el.querySelector('.chat-msg:last-child');
+      if (lastMsg) {
+        const textEl = lastMsg.querySelector('.chat-msg-text');
+        if (textEl) textEl.innerHTML = this.esc(msg) + ' <span style="color:var(--danger);font-size:12px;">（发送失败）</span>';
+      }
+      this.toast('消息发送失败: ' + e.message, 'error');
+    }
+    inputEl.disabled = false;
+  },
+
+  // 构建单条聊天消息HTML
+  buildChatMsgHtml(author, text, time) {
+    const title = this.getTitleForUser(author.username, author.type);
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+    if (author.type === 'email') {
+      const avatarHtml = author.avatar
+        ? `<img class="chat-msg-avatar" src="${author.avatar}" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="chat-msg-avatar-letter" style="display:none">${author.username[0].toUpperCase()}</div>`
+        : `<div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>`;
+      return `<div class="chat-msg">
+        ${avatarHtml}
+        <div class="chat-msg-body">
+          <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml} <span class="email-badge">邮箱</span></div>
+          <div class="chat-msg-text">${this.esc(text)}</div>
+          <div class="chat-msg-time">${time}</div>
+        </div>
+      </div>`;
+    }
+    return `<div class="chat-msg">
+      <img class="chat-msg-avatar" src="${author.avatar}" alt="">
+      <div class="chat-msg-body">
+        <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml}</div>
+        <div class="chat-msg-text">${this.esc(text)}</div>
+        <div class="chat-msg-time">${time}</div>
+      </div>
+    </div>`;
   },
 
   // ---- 帖子列表 ----
