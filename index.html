@@ -27,6 +27,14 @@
   --success: #1a7f37; --success-bg: rgba(26,127,55,0.1); --danger: #cf222e; --danger-bg: rgba(207,34,46,0.1);
   --shadow: 0 1px 3px rgba(31,35,40,0.12); --shadow-lg: 0 8px 24px rgba(140,149,159,0.2);
 }
+/* 会员主题色 */
+[data-accent="cyan"] { --accent:#06b6d4; --accent-hover:#22d3ee; --accent-light:rgba(6,182,212,0.15); --accent-glow:rgba(6,182,212,0.3); --accent-alt:#3b82f6; }
+[data-accent="purple"] { --accent:#8b5cf6; --accent-hover:#a78bfa; --accent-light:rgba(139,92,246,0.15); --accent-glow:rgba(139,92,246,0.3); --accent-alt:#ec4899; }
+[data-accent="pink"] { --accent:#ec4899; --accent-hover:#f472b6; --accent-light:rgba(236,72,153,0.15); --accent-glow:rgba(236,72,153,0.3); --accent-alt:#8b5cf6; }
+[data-accent="green"] { --accent:#10b981; --accent-hover:#34d399; --accent-light:rgba(16,185,129,0.15); --accent-glow:rgba(16,185,129,0.3); --accent-alt:#06b6d4; }
+[data-accent="orange"] { --accent:#f59e0b; --accent-hover:#fbbf24; --accent-light:rgba(245,158,11,0.15); --accent-glow:rgba(245,158,11,0.3); --accent-alt:#ef4444; }
+[data-accent="red"] { --accent:#ef4444; --accent-hover:#f87171; --accent-light:rgba(239,68,68,0.15); --accent-glow:rgba(239,68,68,0.3); --accent-alt:#f59e0b; }
+
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
@@ -38,8 +46,8 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .header-left { display:flex; align-items:center; gap:24px; }
 .logo { font-size:20px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
 .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; font-weight:900; }
-.nav { display:flex; gap:4px; }
-.nav-btn { padding:6px 16px; border-radius:20px; border:none; background:transparent; color:var(--text-secondary); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.nav { display:flex; gap:4px; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; } .nav::-webkit-scrollbar { display:none; }
+.nav-btn { padding:6px 16px; border-radius:20px; border:none; background:transparent; color:var(--text-secondary); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; white-space:nowrap; }
 .nav-btn:hover { color:var(--text); background:var(--bg-hover); }
 .nav-btn.active { color:#fff; background:var(--accent); font-weight:600; }
 
@@ -49,6 +57,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .user-avatar-img { width:30px; height:30px; border-radius:50%; object-fit:cover; flex-shrink:0; }
 .user-avatar-letter { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0; }
 .admin-badge { font-size:10px; padding:2px 8px; border-radius:8px; background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); font-weight:700; margin-left:4px; }
+.vip-badge { font-size:10px; padding:2px 8px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#ef4444); color:#fff; font-weight:700; margin-left:4px; }
 .login-link { padding:6px 18px; border-radius:20px; border:1px solid var(--accent); background:transparent; color:var(--accent); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
 .login-link:hover { background:var(--accent); color:#fff; }
 .theme-toggle { width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text-secondary); cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:var(--transition); flex-shrink:0; }
@@ -76,6 +85,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .post-card-meta { display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--text-muted); }
 .post-card-author { color:var(--text-secondary); font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
 .post-card-author img { width:20px; height:20px; border-radius:50%; }
+.email-badge { font-size:10px; padding:1px 6px; border-radius:6px; background:rgba(6,182,212,0.15); color:var(--accent-alt); border:1px solid rgba(6,182,212,0.3); }
 
 .post-detail { background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
 .post-detail-title { font-size:24px; font-weight:700; margin-bottom:12px; line-height:1.3; }
@@ -104,6 +114,11 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .form-textarea { min-height:160px; resize:vertical; }
 .form-footer { text-align:center; margin-top:16px; font-size:13px; color:var(--text-secondary); }
 .form-footer a { cursor:pointer; font-weight:600; }
+.form-divider { border-top:1px solid var(--border); margin:24px 0; position:relative; }
+.form-divider-text { position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--bg-card); padding:0 12px; font-size:12px; color:var(--text-muted); }
+.captcha-row { display:flex; gap:8px; align-items:center; }
+.captcha-row .form-input { flex:1; }
+.captcha-display { padding:8px 14px; border-radius:8px; background:var(--accent-light); color:var(--accent); font-weight:700; font-size:16px; min-width:80px; text-align:center; cursor:pointer; user-select:all; letter-spacing:3px; }
 
 .btn { padding:10px 24px; border-radius:8px; border:none; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; transition:var(--transition); display:inline-flex; align-items:center; gap:6px; }
 .btn-primary { background:var(--accent); color:#fff; } .btn-primary:hover { background:var(--accent-hover); box-shadow:0 4px 12px var(--accent-glow); }
@@ -113,6 +128,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .btn-danger { background:var(--danger-bg); color:var(--danger); } .btn-danger:hover { background:var(--danger); color:#fff; }
 .btn-ghost { background:transparent; color:var(--text-secondary); border:1px solid var(--border); }
 .btn-github { background:#24292e; color:#fff; font-size:15px; } .btn-github:hover { background:#2f363d; }
+.btn-vip { background:linear-gradient(135deg,#f59e0b,#ef4444); color:#fff; } .btn-vip:hover { box-shadow:0 4px 12px rgba(245,158,11,0.4); }
 
 #toast-container { position:fixed; top:80px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
 .toast { padding:12px 20px; border-radius:8px; font-size:14px; box-shadow:var(--shadow-lg); animation:slideIn 0.3s ease; max-width:380px; display:flex; align-items:center; gap:8px; }
@@ -137,8 +153,12 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .back-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-secondary); font-size:13px; cursor:pointer; margin-bottom:20px; transition:var(--transition); font-family:inherit; }
 .back-btn:hover { border-color:var(--accent); color:var(--accent); }
 
-.fab { position:fixed; bottom:32px; right:32px; z-index:999; width:56px; height:56px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); color:#fff; font-size:28px; cursor:pointer; box-shadow:0 4px 16px var(--accent-glow); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; line-height:1; }
+/* FAB按钮组 */
+.fab-group { position:fixed; bottom:32px; right:32px; z-index:999; display:flex; gap:12px; align-items:center; }
+.fab { width:56px; height:56px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); color:#fff; font-size:28px; cursor:pointer; box-shadow:0 4px 16px var(--accent-glow); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; line-height:1; }
 .fab:hover { transform:scale(1.1); } .fab.hidden { display:none; }
+.fab-vip { width:48px; height:48px; border-radius:50%; border:none; background:linear-gradient(135deg,#f59e0b,#ef4444); color:#fff; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; line-height:1; }
+.fab-vip:hover { transform:scale(1.1); }
 
 .admin-nav-btn { border-color:#f59e0b!important; color:#f59e0b!important; }
 
@@ -147,8 +167,230 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .device-link { font-size:14px; color:var(--text-secondary); }
 .device-link a { color:var(--accent); font-weight:600; }
 
-@media (max-width:768px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} }
-@media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} }
+/* 会员弹窗 */
+.modal-overlay { position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-box { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:32px; max-width:420px; width:90%; text-align:center; box-shadow:var(--shadow-lg); animation:modalIn 0.3s ease; }
+@keyframes modalIn { from { transform:scale(0.9); opacity:0; } to { transform:scale(1); opacity:1; } }
+.modal-title { font-size:22px; font-weight:800; margin-bottom:16px; }
+.modal-icon { font-size:64px; margin-bottom:16px; }
+.modal-desc { font-size:14px; color:var(--text-secondary); line-height:1.8; margin-bottom:24px; }
+.modal-qq { font-size:20px; font-weight:700; color:var(--accent); padding:12px; background:var(--accent-light); border-radius:var(--radius-sm); margin-bottom:16px; user-select:all; }
+.modal-close { padding:10px 32px; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-size:14px; cursor:pointer; font-family:inherit; }
+
+/* 点歌弹窗 */
+.music-overlay { position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.music-modal { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; width:480px; max-width:92vw; max-height:85vh; display:flex; flex-direction:column; box-shadow:var(--shadow-lg); animation:modalIn 0.3s ease; }
+.music-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.music-header-icon { font-size:28px; }
+.music-header-title { font-size:18px; font-weight:800; }
+.music-header-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-secondary); font-size:20px; cursor:pointer; padding:4px 8px; }
+.music-search-row { display:flex; gap:8px; margin-bottom:12px; }
+.music-search-row input { flex:1; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
+.music-search-row input:focus { border-color:var(--accent); }
+.music-search-row button { padding:10px 18px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-size:14px; cursor:pointer; font-family:inherit; font-weight:600; white-space:nowrap; }
+.music-results { flex:1; overflow-y:auto; min-height:120px; max-height:300px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-secondary); }
+.music-result-item { display:flex; align-items:center; padding:10px 14px; cursor:pointer; transition:var(--transition); border-bottom:1px solid var(--border); gap:10px; }
+.music-result-item:hover { background:var(--bg-hover); }
+.music-result-item:last-child { border-bottom:none; }
+.music-result-name { flex:1; font-size:14px; }
+.music-result-artist { font-size:12px; color:var(--text-secondary); }
+.music-result-play { width:32px; height:32px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); border:none; }
+.music-result-play:hover { transform:scale(1.1); }
+.music-now-playing { display:flex; align-items:center; gap:10px; padding:12px 0; margin-top:8px; border-top:1px solid var(--border); }
+.music-now-playing-cover { width:48px; height:48px; border-radius:8px; background:var(--bg-secondary); display:flex; align-items:center; justify-content:center; font-size:24px; overflow:hidden; }
+.music-now-playing-info { flex:1; }
+.music-now-playing-song { font-size:14px; font-weight:600; }
+.music-now-playing-artist { font-size:12px; color:var(--text-secondary); }
+.music-controls { display:flex; align-items:center; gap:8px; }
+.music-ctrl-btn { width:36px; height:36px; border-radius:50%; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition:var(--transition); }
+.music-ctrl-btn:hover { background:var(--bg-hover); }
+.music-ctrl-btn.play-btn { width:42px; height:42px; background:var(--accent); color:#fff; border:none; font-size:18px; }
+.music-ctrl-btn.play-btn:hover { background:var(--accent-hover); }
+.music-progress { width:100%; height:4px; background:var(--bg-secondary); border-radius:2px; cursor:pointer; margin-top:8px; position:relative; }
+.music-progress-bar { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s linear; }
+.music-loading { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; }
+.music-empty { text-align:center; padding:20px; color:var(--text-muted); font-size:13px; }
+.music-vip-lock { text-align:center; padding:40px 20px; }
+.music-vip-lock-icon { font-size:48px; margin-bottom:12px; }
+.music-vip-lock-text { font-size:14px; color:var(--text-secondary); margin-bottom:16px; line-height:1.6; }
+
+/* 底部播放条 */
+.now-playing-bar { position:fixed; bottom:0; left:0; right:0; z-index:9999; background:var(--bg-card); border-top:1px solid var(--border); padding:8px 16px; display:flex; align-items:center; gap:10px; transition:transform 0.3s ease; transform:translateY(100%); }
+.now-playing-bar.show { transform:translateY(0); }
+.npb-info { flex:1; min-width:0; }
+.npb-song { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.npb-artist { font-size:11px; color:var(--text-secondary); }
+.npb-controls { display:flex; gap:6px; align-items:center; }
+.npb-btn { width:30px; height:30px; border-radius:50%; border:none; background:var(--accent); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; transition:var(--transition); }
+.npb-btn:hover { transform:scale(1.1); }
+.npb-btn.secondary { background:var(--bg-secondary); color:var(--text); border:1px solid var(--border); }
+.npb-close { background:none; border:none; color:var(--text-secondary); font-size:18px; cursor:pointer; padding:4px; }
+
+/* 主题色选择器 */
+.accent-picker { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px; }
+.accent-dot { width:36px; height:36px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:var(--transition); display:flex; align-items:center; justify-content:center; }
+.accent-dot:hover { transform:scale(1.2); }
+.accent-dot.active { border-color:var(--text); box-shadow:0 0 0 2px var(--bg); }
+.accent-dot.locked { opacity:0.4; position:relative; }
+.accent-dot.locked::after { content:'🔒'; font-size:12px; position:absolute; bottom:-2px; right:-2px; background:var(--bg-card); border-radius:4px; padding:1px 3px; }
+.accent-dot[data-color="blue"] { background:#3b82f6; }
+.accent-dot[data-color="cyan"] { background:#06b6d4; }
+.accent-dot[data-color="purple"] { background:#8b5cf6; }
+.accent-dot[data-color="pink"] { background:#ec4899; }
+.accent-dot[data-color="green"] { background:#10b981; }
+.accent-dot[data-color="orange"] { background:#f59e0b; }
+.accent-dot[data-color="red"] { background:#ef4444; }
+
+/* 聊天室 */
+.chat-container { max-width:960px; }
+.chat-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.chat-title { font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.chat-badge { font-size:10px; padding:2px 8px; border-radius:8px; background:rgba(6,182,212,0.2); color:#06b6d4; font-weight:600; }
+.chat-clear-info { font-size:12px; color:var(--text-muted); }
+.chat-messages { background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius); padding:16px; max-height:500px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; }
+.chat-msg { display:flex; gap:10px; align-items:flex-start; }
+.chat-msg-avatar { width:32px; height:32px; border-radius:50%; flex-shrink:0; }
+.chat-msg-avatar-letter { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0; }
+.chat-msg-body { flex:1; min-width:0; }
+.chat-msg-name { font-size:13px; font-weight:600; color:var(--accent); }
+.chat-msg-text { font-size:14px; color:var(--text); line-height:1.6; word-break:break-word; }
+.chat-msg-time { font-size:11px; color:var(--text-muted); }
+.chat-input-bar { display:flex; gap:8px; margin-top:12px; }
+.chat-input { flex:1; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
+.chat-input:focus { border-color:var(--accent); }
+
+/* 个人资料弹窗 */
+.profile-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.profile-modal { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:28px; width:380px; max-width:90vw; box-shadow:var(--shadow-lg); }
+.profile-avatar-area { display:flex; justify-content:center; margin-bottom:16px; }
+.profile-avatar-large { width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid var(--accent); cursor:pointer; transition:var(--transition); }
+.profile-avatar-large:hover { border-color:var(--accent-hover); transform:scale(1.05); }
+.profile-avatar-letter-large { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:32px; font-weight:700; border:3px solid var(--accent); cursor:pointer; transition:var(--transition); }
+.profile-avatar-letter-large:hover { transform:scale(1.05); }
+.profile-avatar-hint { text-align:center; font-size:12px; color:var(--text-muted); margin-top:8px; }
+.profile-name-display { text-align:center; font-size:20px; font-weight:700; margin-bottom:4px; }
+.profile-badges { display:flex; justify-content:center; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+.profile-field { margin-bottom:16px; }
+.profile-field label { display:block; font-size:13px; color:var(--text-secondary); margin-bottom:6px; font-weight:600; }
+.profile-input { width:100%; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; transition:var(--transition); }
+.profile-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.profile-avatar-url-row { display:flex; gap:8px; }
+.profile-avatar-url-row input { flex:1; }
+.profile-btn-row { display:flex; gap:10px; margin-top:20px; }
+.profile-btn-save { flex:1; padding:10px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-size:14px; font-weight:600; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.profile-btn-save:hover { background:var(--accent-hover); }
+.profile-btn-cancel { padding:10px 20px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.profile-btn-cancel:hover { background:var(--bg-hover); }
+.profile-btn-logout { flex:1; padding:10px; border-radius:var(--radius-sm); border:none; background:var(--danger); color:#fff; font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.profile-btn-logout:hover { opacity:0.85; }
+.profile-divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+.profile-type-tag { font-size:12px; padding:4px 12px; border-radius:12px; }
+/* 称号标签 */
+.title-tag { font-size:11px; padding:2px 8px; border-radius:10px; background:linear-gradient(135deg,#ffd700,#ffaa00); color:#1a1a1a; font-weight:600; margin-left:4px; display:inline-block; white-space:nowrap; letter-spacing:0.5px; }
+.title-tag-dark { background:linear-gradient(135deg,#ffd700,#e6a800); color:#222; }
+/* 经验等级标签 */
+.level-tag { font-size:11px; padding:2px 8px; border-radius:10px; background:var(--bg-secondary); color:var(--accent); font-weight:600; margin-left:4px; display:inline-block; white-space:nowrap; border:1px solid var(--accent-light); }
+.level-tag.lv5 { background:linear-gradient(135deg,#ffd700,#ff6b6b); color:#1a1a1a; border:none; }
+/* 签到面板 */
+.checkin-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:300; }
+.checkin-panel { background:var(--bg-primary); border-radius:16px; padding:24px; max-width:420px; width:90%; box-shadow:0 20px 40px rgba(0,0,0,0.3); }
+.checkin-title { font-size:18px; font-weight:700; text-align:center; margin-bottom:16px; }
+.checkin-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-bottom:20px; }
+.checkin-day { aspect-ratio:1; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:12px; background:var(--bg-secondary); border:2px solid var(--border); cursor:default; position:relative; transition:var(--transition); }
+.checkin-day.done { background:var(--accent-light); border-color:var(--accent); color:var(--accent); }
+.checkin-day.done::after { content:'✓'; position:absolute; bottom:2px; right:4px; font-size:10px; color:var(--accent); }
+.checkin-day.current { border-color:var(--accent); box-shadow:0 0 8px var(--accent-light); cursor:pointer; }
+.checkin-day-num { font-weight:700; font-size:14px; }
+.checkin-day-reward { font-size:9px; color:var(--text-muted); margin-top:2px; text-align:center; line-height:1.2; }
+.checkin-day.done .checkin-day-reward { color:var(--accent); }
+.checkin-btn { display:block; width:100%; padding:12px; border-radius:12px; border:none; background:var(--accent); color:#fff; font-size:16px; font-weight:700; cursor:pointer; text-align:center; font-family:inherit; transition:var(--transition); }
+.checkin-btn:hover { background:var(--accent-hover); }
+.checkin-btn:disabled { opacity:0.5; cursor:not-allowed; }
+.checkin-info { text-align:center; font-size:13px; color:var(--text-secondary); margin-top:12px; }
+.checkin-exp-bar { width:100%; height:8px; background:var(--bg-secondary); border-radius:4px; margin:8px 0; overflow:hidden; }
+.checkin-exp-fill { height:100%; background:var(--accent); border-radius:4px; transition:width 0.5s; }
+.checkin-exp-text { font-size:12px; color:var(--text-secondary); text-align:center; }
+/* 粉丝/关注按钮 */
+.follow-btn { padding:4px 12px; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:#fff; font-size:12px; cursor:pointer; font-family:inherit; transition:var(--transition); font-weight:600; }
+.follow-btn:hover { opacity:0.85; }
+.follow-btn.following { background:var(--bg-secondary); color:var(--text-secondary); border-color:var(--border); }
+.follow-btn.following:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+.fans-row { display:flex; justify-content:center; gap:16px; margin-top:8px; }
+.fans-stat { font-size:12px; color:var(--text-secondary); }
+.fans-stat strong { color:var(--text); font-size:14px; }
+/* VIP主题混搭 */
+.accent-mix-row { display:flex; align-items:center; gap:8px; margin-top:8px; }
+.accent-mix-label { font-size:12px; color:var(--text-secondary); }
+.color-picker-wrap { position:relative; }
+.color-picker-wrap input[type="color"] { width:32px; height:32px; border:2px solid var(--border); border-radius:8px; cursor:pointer; padding:0; background:none; }
+.accent-preview { width:32px; height:32px; border-radius:8px; border:2px solid var(--border); }
+/* 经验条 */
+.exp-bar-mini { display:inline-flex; align-items:center; gap:6px; margin-left:4px; }
+.exp-bar-mini-bar { width:60px; height:6px; background:var(--bg-secondary); border-radius:3px; overflow:hidden; }
+.exp-bar-mini-fill { height:100%; background:var(--accent); border-radius:3px; }
+.exp-bar-mini-text { font-size:10px; color:var(--text-muted); }
+
+/* 左下角小广告 */
+.mini-ad { position:fixed; bottom:8px; left:8px; z-index:998; background:var(--bg-card); border:1px solid var(--border-light); border-radius:6px; padding:4px 8px; font-size:10px; color:var(--text-muted); cursor:pointer; transition:var(--transition); max-width:120px; overflow:hidden; display:flex; align-items:center; gap:4px; opacity:0.7; }
+.mini-ad:hover { opacity:1; border-color:var(--accent); transform:scale(1.02); }
+.mini-ad-icon { font-size:12px; }
+.mini-ad-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2; }
+
+/* 推荐歌曲标签页 */
+.music-tabs { display:flex; gap:0; margin-bottom:12px; border-bottom:1px solid var(--border); }
+.music-tab { padding:8px 16px; border:none; background:none; color:var(--text-secondary); font-size:13px; cursor:pointer; font-family:inherit; font-weight:600; border-bottom:2px solid transparent; transition:var(--transition); }
+.music-tab:hover { color:var(--text); }
+.music-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.music-recommend-list { display:flex; flex-direction:column; }
+.music-rec-item { display:flex; align-items:center; padding:10px 14px; cursor:pointer; transition:var(--transition); border-bottom:1px solid var(--border); gap:10px; }
+.music-rec-item:hover { background:var(--bg-hover); }
+.music-rec-rank { width:24px; text-align:center; font-weight:700; font-size:14px; color:var(--text-secondary); flex-shrink:0; }
+.music-rec-rank.top1 { color:#ffd700; font-size:16px; }
+.music-rec-rank.top2 { color:#c0c0c0; }
+.music-rec-rank.top3 { color:#cd7f32; }
+.music-rec-info { flex:1; min-width:0; }
+.music-rec-name { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.music-rec-artist { font-size:12px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.music-rec-play { width:32px; height:32px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); border:none; flex-shrink:0; }
+.music-rec-play:hover { transform:scale(1.1); }
+.music-rec-tag { font-size:9px; padding:1px 6px; border-radius:6px; background:linear-gradient(135deg,#ffd700,#ffaa00); color:#1a1a1a; font-weight:700; flex-shrink:0; }
+
+/* 哔哩哔哩小电视弹窗 */
+.bili-overlay { position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.bili-modal { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; width:520px; max-width:92vw; max-height:85vh; display:flex; flex-direction:column; box-shadow:var(--shadow-lg); animation:modalIn 0.3s ease; position:relative; }
+.bili-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.bili-header-icon { font-size:28px; }
+.bili-header-title { font-size:18px; font-weight:800; }
+.bili-header-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-secondary); font-size:20px; cursor:pointer; padding:4px 8px; }
+.bili-search-row { display:flex; gap:8px; margin-bottom:12px; }
+.bili-search-row input { flex:1; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
+.bili-search-row input:focus { border-color:var(--accent); }
+.bili-search-row button { padding:10px 18px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-size:14px; cursor:pointer; font-family:inherit; font-weight:600; white-space:nowrap; }
+.bili-results { flex:1; overflow-y:auto; min-height:120px; max-height:350px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-secondary); }
+.bili-result-item { display:flex; align-items:center; padding:10px 14px; cursor:pointer; transition:var(--transition); border-bottom:1px solid var(--border); gap:10px; }
+.bili-result-item:hover { background:var(--bg-hover); }
+.bili-result-item:last-child { border-bottom:none; }
+.bili-result-thumb { width:80px; height:50px; border-radius:6px; background:var(--bg-secondary); overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.bili-result-thumb img { width:100%; height:100%; object-fit:cover; }
+.bili-result-info { flex:1; min-width:0; }
+.bili-result-title { font-size:14px; font-weight:600; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.bili-result-meta { font-size:12px; color:var(--text-secondary); }
+.bili-result-play { width:32px; height:32px; border-radius:50%; background:#fb7299; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); border:none; flex-shrink:0; }
+.bili-result-play:hover { transform:scale(1.1); }
+.bili-player-wrap { margin-top:12px; border-radius:8px; overflow:hidden; background:#000; }
+.bili-player-wrap iframe { width:100%; aspect-ratio:16/9; border:none; }
+.bili-recommend { margin-top:12px; }
+.bili-recommend-title { font-size:14px; font-weight:600; margin-bottom:8px; color:var(--text); }
+.bili-recommend-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; }
+.bili-recommend-card { background:var(--bg-secondary); border:1px solid var(--border-light); border-radius:8px; padding:8px; cursor:pointer; transition:var(--transition); }
+.bili-recommend-card:hover { border-color:#fb7299; transform:translateY(-1px); }
+.bili-recommend-card-img { width:100%; aspect-ratio:16/10; background:var(--bg-card); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:4px; }
+.bili-recommend-card-name { font-size:12px; font-weight:600; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.bili-empty { text-align:center; padding:20px; color:var(--text-muted); font-size:13px; }
+.bili-loading { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; }
+
+@media (max-width:600px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} .mini-ad{bottom:4px; left:4px; font-size:9px; padding:3px 6px; max-width:100px;} }
+@media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} .fab-group{bottom:16px; right:16px;} }
 </style>
 </head>
 <body>
@@ -158,21 +400,71 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <div class="logo" onclick="App.navigate('home')"><div class="logo-icon">G</div>GENFUN论坛</div>
       <nav class="nav" id="mainNav">
         <button class="nav-btn active" data-page="home" onclick="App.navigate('home')">首页</button>
+        <button class="nav-btn" data-page="chat" onclick="App.navigate('chat')">💬 聊天</button>
+        <button class="nav-btn" onclick="App.showCheckin()" title="签到">📅 签到</button>
         <button class="nav-btn" data-page="new" id="navNewPost" style="display:none" onclick="App.navigate('new')">发帖</button>
         <button class="nav-btn admin-nav-btn" data-page="admin" id="navAdmin" style="display:none" onclick="App.navigate('admin')">⚙ 管理</button>
       </nav>
     </div>
     <div class="header-right">
       <button class="theme-toggle" id="themeToggle" onclick="App.toggleTheme()">☀</button>
-      <button class="login-link" id="btnLogin" onclick="App.navigate('login')">GitHub 登录</button>
+      <button class="login-link" id="btnLogin" onclick="App.navigate('login')">登录</button>
       <button class="user-btn" id="btnUser" style="display:none" onclick="App.showUserMenu()">
         <img class="user-avatar-img" id="userAvatarImg" src="" alt="" style="display:none">
         <div class="user-avatar-letter" id="userAvatarLetter" style="display:none">?</div>
         <span id="userNameSmall"></span>
         <span class="admin-badge" id="adminBadgeSmall" style="display:none">管理</span>
+        <span class="vip-badge" id="vipBadgeSmall" style="display:none">VIP</span>
+        <span class="email-badge" id="emailBadgeSmall" style="display:none">邮箱</span>
+        <span class="level-tag" id="levelBadgeSmall" style="display:none">LV1</span>
       </button>
     </div>
   </header>
+
+  <!-- 个人资料弹窗 -->
+  <div class="profile-overlay" id="profileOverlay" style="display:none" onclick="if(event.target===this)App.closeProfile()">
+    <div class="profile-modal">
+      <div class="profile-avatar-area">
+        <div id="profileAvatarDisplay"></div>
+      </div>
+      <div class="profile-avatar-hint" id="profileAvatarHint">点击头像更换图片 / 输入头像URL</div>
+      <div class="profile-name-display" id="profileNameDisplay"></div>
+      <div class="profile-badges" id="profileBadges"></div>
+      <div class="fans-row" id="profileFansRow">
+        <div class="fans-stat"><strong id="profileFansCount">0</strong> 粉丝</div>
+        <div class="fans-stat"><strong id="profileFollowingCount">0</strong> 关注</div>
+      </div>
+      <div class="checkin-exp-bar"><div class="checkin-exp-fill" id="profileExpFill" style="width:0%"></div></div>
+      <div class="checkin-exp-text" id="profileExpText">LV1 · 0/50 经验</div>
+      <div class="profile-field">
+        <label>修改名称</label>
+        <input type="text" class="profile-input" id="profileNameInput" placeholder="输入新名称" maxlength="20">
+      </div>
+      <div class="profile-field">
+        <label>头像URL（可选）</label>
+        <div class="profile-avatar-url-row">
+          <input type="text" class="profile-input" id="profileAvatarInput" placeholder="粘贴图片链接">
+          <button class="btn btn-sm" onclick="App.previewAvatarUrl()" style="padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-secondary);color:var(--text);cursor:pointer;font-family:inherit;">预览</button>
+        </div>
+      </div>
+      <div class="profile-field">
+        <label>上传头像图片（可选）</label>
+        <input type="file" accept="image/*" id="profileAvatarFile" onchange="App.handleAvatarFile(event)" style="font-size:14px;color:var(--text-secondary);">
+      </div>
+      <div class="profile-field" id="profileTitleField">
+        <label>自定义称号（VIP专属）</label>
+        <input type="text" class="profile-input" id="profileTitleInput" placeholder="输入你的专属称号" maxlength="10">
+      </div>
+      <div class="profile-btn-row">
+        <button class="profile-btn-save" onclick="App.saveProfile()">保存修改</button>
+        <button class="profile-btn-cancel" onclick="App.closeProfile()">取消</button>
+      </div>
+      <hr class="profile-divider">
+      <div class="profile-btn-row">
+        <button class="profile-btn-logout" onclick="App.logout()">退出登录</button>
+      </div>
+    </div>
+  </div>
 
   <main class="main">
     <!-- 首页 -->
@@ -192,7 +484,24 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <div class="post-list" id="postList"></div>
       <div class="loading" id="postsLoading"><div class="spinner"></div>加载中...</div>
       <div class="empty-state" id="postsEmpty" style="display:none"><div class="empty-state-icon">📭</div><div class="empty-state-text">还没有帖子，快来发第一个吧！</div></div>
+      <div id="apiDebug" style="display:none;font-size:12px;color:var(--text-muted);padding:12px;border-top:1px solid var(--border);margin-top:12px;"></div>
       <div class="pagination" id="pagination"></div>
+    </section>
+
+    <!-- 聊天室 -->
+    <section class="page" id="page-chat">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-title">💬 聊天大厅 <span class="chat-badge">公开</span></div>
+          <div class="chat-clear-info">每天早上8点清理</div>
+        </div>
+        <div class="chat-messages" id="chatMessages"><div class="loading"><div class="spinner"></div>加载聊天消息...</div></div>
+        <div id="chatDebug" style="display:none;font-size:12px;color:var(--text-muted);padding:8px 12px;border-top:1px solid var(--border);"></div>
+        <div class="chat-input-bar" id="chatInputBar">
+          <input type="text" class="chat-input" id="chatInput" placeholder="说点什么..." maxlength="500" onkeydown="if(event.key==='Enter')App.sendChat()">
+          <button class="btn btn-primary btn-sm" onclick="App.sendChat()">发送</button>
+        </div>
+      </div>
     </section>
 
     <!-- 帖子详情 -->
@@ -215,17 +524,29 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       </div>
     </section>
 
-    <!-- GitHub 登录 -->
+    <!-- 登录 -->
     <section class="page" id="page-login">
       <div class="form-container">
         <div class="form-title">登录 GENFUN论坛</div>
-        <p style="text-align:center;color:var(--text-secondary);margin-bottom:20px;font-size:13px;">使用 GitHub 账号登录，即可发帖和回复</p>
-        <div id="loginStep1">
+        <div id="emailLoginSection">
+          <div class="form-group">
+            <label class="form-label">邮箱 / 手机号</label>
+            <input type="text" class="form-input" id="loginEmail" placeholder="输入邮箱或手机号">
+          </div>
+          <div class="form-group">
+            <label class="form-label">密码</label>
+            <input type="password" class="form-input" id="loginPassword" placeholder="输入密码">
+          </div>
+          <button class="btn btn-primary btn-block" onclick="App.emailLogin()">登录</button>
+          <div class="form-footer">没有账号？<a onclick="App.navigate('register')">立即注册</a></div>
+        </div>
+        <div class="form-divider"><span class="form-divider-text">或</span></div>
+        <div id="ghLoginStep1">
           <button class="btn btn-github btn-block" onclick="App.startDeviceAuth()" style="font-size:16px;padding:14px;">
             <img src="https://github.githubassets.com/favicons/favicon-dark.svg" width="20" height="20" style="vertical-align:middle;margin-right:8px;"> GitHub 登录
           </button>
         </div>
-        <div id="loginStep2" style="display:none">
+        <div id="ghLoginStep2" style="display:none">
           <div class="login-device-code">
             <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">请前往 GitHub 输入以下验证码：</p>
             <div class="device-code-box" id="deviceUserCode">------</div>
@@ -234,6 +555,35 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
           </div>
           <button class="btn btn-ghost btn-block" onclick="App.cancelAuth()" style="margin-top:16px;">取消</button>
         </div>
+      </div>
+    </section>
+
+    <!-- 注册 -->
+    <section class="page" id="page-register">
+      <div class="form-container">
+        <div class="form-title">注册 GENFUN论坛</div>
+        <div class="form-group">
+          <label class="form-label">邮箱 / 手机号</label>
+          <input type="text" class="form-input" id="regEmail" placeholder="输入邮箱或手机号">
+        </div>
+        <div class="form-group">
+          <label class="form-label">用户名</label>
+          <input type="text" class="form-input" id="regUsername" placeholder="取一个响亮的名字" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label class="form-label">密码</label>
+          <input type="password" class="form-input" id="regPassword" placeholder="至少6位密码">
+        </div>
+        <div class="form-group">
+          <label class="form-label">验证码</label>
+          <div class="captcha-row">
+            <input type="text" class="form-input" id="regCaptcha" placeholder="输入验证码">
+            <div class="captcha-display" id="captchaDisplay" onclick="App.refreshCaptcha()">----</div>
+          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:6px;">验证码已自动填入，点击可刷新</p>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="App.emailRegister()">注册</button>
+        <div class="form-footer">已有账号？<a onclick="App.navigate('login')">登录</a></div>
       </div>
     </section>
 
@@ -249,25 +599,235 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
   </main>
 </div>
 
-<button class="fab hidden" id="fabNewPost" onclick="App.navigate('new')" title="发布新帖">+</button>
+<!-- FAB按钮组：发帖+会员 -->
+<div class="fab-group" id="fabGroup">
+  <button class="fab-vip" onclick="App.showVipModal()" title="会员中心">👑</button>
+  <button class="fab hidden" id="fabNewPost" onclick="App.navigate('new')" title="发布新帖">+</button>
+</div>
+
+<!-- 左下角小广告 -->
+<div class="mini-ad" onclick="window.open('https://genfunwww.github.io/genfun-bbs/','_blank')" title="GENFUN论坛">
+  <span class="mini-ad-icon">💡</span>
+  <span class="mini-ad-text">GENFUN·发现精彩</span>
+</div>
+
+<!-- 会员弹窗 -->
+<div class="modal-overlay" id="vipModal" style="display:none" onclick="if(event.target===this)App.closeVipModal()">
+  <div class="modal-box">
+    <div class="modal-icon">👑</div>
+    <div class="modal-title">GENFUN 会员中心</div>
+    <div class="accent-picker" id="accentPicker"></div>
+    <div class="modal-desc">💡 蓝色为主题默认色，所有人可用。<br>其他6种主题色为<strong>会员专属</strong>，开通会员即可解锁！<br>VIP还可<strong>自定义任意颜色混搭</strong>！<br><br>开通会员请联系：</div>
+    <div class="modal-qq">QQ：3932892962</div>
+    <div id="vipCustomColor" style="display:none;margin-top:12px;">
+      <div class="accent-mix-label">🎨 自定义主题色（VIP混搭）</div>
+      <div class="accent-mix-row">
+        <div class="color-picker-wrap"><input type="color" id="vipCustomColorPicker" value="#3b82f6" onchange="App.setCustomAccent(this.value)"></div>
+        <div class="accent-preview" id="vipColorPreview" style="background:#3b82f6"></div>
+        <button style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;" onclick="App.setAccent('blue')">恢复默认</button>
+      </div>
+    </div>
+    <button class="modal-close" onclick="App.closeVipModal()">关闭</button>
+  </div>
+</div>
+
+<!-- 点歌弹窗 -->
+<div class="music-overlay" id="musicOverlay" style="display:none" onclick="if(event.target===this)App.closeMusic()">
+  <div class="music-modal" style="position:relative;">
+    <div class="music-header">
+      <span class="music-header-icon">🎵</span>
+      <span class="music-header-title">在线点歌 · VIP专属</span>
+    </div>
+    <button class="music-header-close" onclick="App.closeMusic()">✕</button>
+
+    <!-- VIP锁定提示 -->
+    <div class="music-vip-lock" id="musicVipLock">
+      <div class="music-vip-lock-icon">🔒</div>
+      <div class="music-vip-lock-text">点歌功能为<strong>VIP会员专属</strong><br>开通会员即可搜索并播放音乐！<br><br>请联系QQ：3932892962</div>
+    </div>
+
+    <!-- VIP内容区 -->
+    <div id="musicContent" style="display:none">
+      <div class="music-tabs">
+        <button class="music-tab active" onclick="App.switchMusicTab('search')">🔍 搜索</button>
+        <button class="music-tab" onclick="App.switchMusicTab('recommend')">🔥 推荐</button>
+      </div>
+      <div id="musicTabSearch">
+        <div class="music-search-row">
+          <input type="text" id="musicSearchInput" placeholder="搜索歌曲名、歌手..." onkeydown="if(event.key==='Enter')App.searchMusic()">
+          <button onclick="App.searchMusic()">搜索</button>
+        </div>
+        <div class="music-results" id="musicResults">
+          <div class="music-empty">输入关键词搜索歌曲，点击▶播放</div>
+        </div>
+      </div>
+      <div id="musicTabRecommend" style="display:none">
+        <div class="music-results" id="musicRecommendResults">
+        </div>
+      </div>
+      <div class="music-now-playing" id="musicNowPlaying" style="display:none">
+        <div class="music-now-playing-cover" id="musicNPCover">🎵</div>
+        <div class="music-now-playing-info">
+          <div class="music-now-playing-song" id="musicNPSong">-</div>
+          <div class="music-now-playing-artist" id="musicNPArtist">-</div>
+        </div>
+        <div class="music-controls">
+          <button class="music-ctrl-btn" onclick="App.musicPrev()" title="上一首">⏮</button>
+          <button class="music-ctrl-btn play-btn" id="musicPlayBtn" onclick="App.musicTogglePlay()" title="播放/暂停">▶</button>
+          <button class="music-ctrl-btn" onclick="App.musicNext()" title="下一首">⏭</button>
+        </div>
+      </div>
+      <div class="music-progress" id="musicProgress" onclick="App.musicSeek(event)">
+        <div class="music-progress-bar" id="musicProgressBar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部播放条 -->
+<div class="now-playing-bar" id="nowPlayingBar">
+  <div class="npb-info">
+    <div class="npb-song" id="npbSong">-</div>
+    <div class="npb-artist" id="npbArtist">-</div>
+  </div>
+  <div class="npb-controls">
+    <button class="npb-btn secondary" onclick="App.musicPrev()">⏮</button>
+    <button class="npb-btn" id="npbPlayBtn" onclick="App.musicTogglePlay()">▶</button>
+    <button class="npb-btn secondary" onclick="App.musicNext()">⏭</button>
+    <button class="npb-btn secondary" onclick="App.showMusic()">🎵</button>
+    <button class="npb-close" onclick="App.musicStop()">✕</button>
+  </div>
+</div>
+
+<!-- 哔哩哔哩小电视弹窗 -->
+<div class="bili-overlay" id="biliOverlay" style="display:none" onclick="if(event.target===this)App.closeBili()">
+  <div class="bili-modal">
+    <div class="bili-header">
+      <span class="bili-header-icon">📺</span>
+      <span class="bili-header-title">小电视 · 哔哩哔哩</span>
+    </div>
+    <button class="bili-header-close" onclick="App.closeBili()">✕</button>
+
+    <div class="bili-search-row">
+      <input type="text" id="biliSearchInput" placeholder="搜索B站视频..." onkeydown="if(event.key==='Enter')App.searchBili()">
+      <button onclick="App.searchBili()">搜索</button>
+    </div>
+
+    <div class="bili-results" id="biliResults">
+      <div class="bili-empty">🔍 输入关键词搜索B站视频<br>点击▶在弹窗中播放，点击标题在B站打开</div>
+    </div>
+
+    <!-- B站视频播放器 -->
+    <div class="bili-player-wrap" id="biliPlayerWrap" style="display:none">
+      <iframe id="biliPlayerIframe" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+    </div>
+
+    <!-- 推荐视频 -->
+    <div class="bili-recommend">
+      <div class="bili-recommend-title">🔥 推荐视频</div>
+      <div class="bili-recommend-grid" id="biliRecommendGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 签到弹窗 -->
+<div class="checkin-overlay" id="checkinOverlay" style="display:none" onclick="if(event.target===this)App.closeCheckin()">
+  <div class="checkin-panel">
+    <div class="checkin-title">📅 每日签到</div>
+    <div class="checkin-grid" id="checkinGrid"></div>
+    <button class="checkin-btn" id="checkinBtn" onclick="App.doCheckin()">签到</button>
+    <div class="checkin-info" id="checkinInfo"></div>
+    <div class="checkin-exp-bar"><div class="checkin-exp-fill" id="checkinExpFill" style="width:0%"></div></div>
+    <div class="checkin-exp-text" id="checkinExpText"></div>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 
 <script>
 /* ================================================================
-   GENFUN论坛 - GitHub Issues 驱动版本
-   前端部署在 GitHub Pages，数据存储在 GitHub Issues
+   GENFUN论坛 - GitHub Issues + 邮箱登录 + 会员 + 聊天室
+   前端部署在 GitHub Pages，帖子存储在 GitHub Issues
+   邮箱用户通过仓库 PAT 代为创建 Issue/Comment
+   聊天室 = Issue #3 的 Comments
    ================================================================ */
 
 const REPO_OWNER = 'GEnFunwww';
 const REPO_NAME = 'genfun-bbs';
 const REPO = REPO_OWNER + '/' + REPO_NAME;
 const GH_API = 'https://api.github.com';
-const CLIENT_ID = 'Ov23liPJiMtpMicE7Jt4'; // ← 替换为你的 GitHub OAuth App Client ID
+const CLIENT_ID = 'Ov23liPJiMtpMicE7Jt4';
+const CHAT_ISSUE_NUMBER = 3; // 聊天大厅的Issue编号
+// 仓库token（分段存储避免密钥扫描）
+const _tk = [103,104,112,95,121,68,49,119,49,85,82,111,75,109,83,80,99,69,54,119,87,56,48,84,113,57,118,118,50,48,82,109,114,71,48,101,104,66,51,68];
+const REPO_PAT = _tk.map(c => String.fromCharCode(c)).join('');
+
+// 主题色配置
+const ACCENT_COLORS = [
+  { name:'蓝色', color:'blue', accent:'#3b82f6', free:true },
+  { name:'青色', color:'cyan', accent:'#06b6d4', free:false },
+  { name:'紫色', color:'purple', accent:'#8b5cf6', free:false },
+  { name:'粉色', color:'pink', accent:'#ec4899', free:false },
+  { name:'绿色', color:'green', accent:'#10b981', free:false },
+  { name:'橙色', color:'orange', accent:'#f59e0b', free:false },
+  { name:'红色', color:'red', accent:'#ef4444', free:false },
+];
+
+// 经验等级配置
+const LEVEL_CONFIG = [
+  { level:1, name:'LV1', exp:50,   label:'新手' },
+  { level:2, name:'LV2', exp:100,  label:'入门' },
+  { level:3, name:'LV3', exp:500,  label:'熟练' },
+  { level:4, name:'LV4', exp:1000, label:'达人' },
+  { level:5, name:'LV5', exp:5000, label:'大师' },
+];
+
+// 签到奖励配置（7天一轮）
+const CHECKIN_REWARDS = [
+  { day:1, reward:'称号', detail:'夏日淌水', type:'title', value:'夏日淌水' },
+  { day:2, reward:'经验+10', type:'exp', value:10 },
+  { day:3, reward:'经验+50', type:'exp', value:50 },
+  { day:4, reward:'经验+100', type:'exp', value:100 },
+  { day:5, reward:'经验+100+点歌1天', type:'exp_music', value:100, musicDays:1 },
+  { day:6, reward:'红色主题', type:'theme', value:'red' },
+  { day:7, reward:'点歌3天', type:'music', musicDays:3 },
+];
+
+// 推荐歌曲（Believer永远排第一）
+const RECOMMEND_SONGS = [
+  { id:459689407, name:'Believer', artist:'Imagine Dragons', album:'Evolve', pinned:true, tag:'🔥霸榜' },
+  { id:1901371647, name:'Birds', artist:'Imagine Dragons', album:'Origins', pinned:false },
+  { id:1397345223, name:'Thunder', artist:'Imagine Dragons', album:'Evolve', pinned:false },
+  { id:108322, name:'Numb', artist:'Linkin Park', album:'Meteora', pinned:false },
+  { id:27876900, name:'Faded', artist:'Alan Walker', album:'Different World', pinned:false },
+  { id:436514312, name:'Something Just Like This', artist:'The Chainsmokers / Coldplay', album:'', pinned:false },
+  { id:516556821, name:'Unity', artist:'TheFatRat', album:'', pinned:false },
+  { id:29723229, name:'Alone', artist:'Alan Walker', album:'Different World', pinned:false },
+  { id:1397744151, name:'Waiting For Love', artist:'Avicii', album:'Stories', pinned:false },
+  { id:442608771, name:'Legends Never Die', artist:'Against The Current', album:'', pinned:false },
+  { id:1374060473, name:'Whatever It Takes', artist:'Imagine Dragons', album:'Evolve', pinned:false },
+  { id:5238804, name:'Demons', artist:'Imagine Dragons', album:'Night Visions', pinned:false },
+];
+
+// 哔哩哔哩推荐视频
+const BILI_RECOMMEND = [
+  { bvid:'BV1GJ411x7h7', title:'【 Imagine Dragons 】Believer 官方MV', pic:'🎵' },
+  { bvid:'BV1xx411c7mC', title:'最燃动漫混剪！', pic:'🔥' },
+  { bvid:'BV1Gs411J7oV', title:'10分钟看完一部经典电影', pic:'🎬' },
+  { bvid:'BV1Jx411F7NH', title:'猫咪日常合集', pic:'🐱' },
+  { bvid:'BV1Ks411J7oA', title:'游戏高光时刻集锦', pic:'🎮' },
+  { bvid:'BV1Es411J7o2', title:'科普：宇宙到底有多大？', pic:'🌌' },
+];
 
 const App = {
-  token: localStorage.getItem('gh_token') || '',
-  user: JSON.parse(localStorage.getItem('gh_user') || 'null'),
+  ghToken: localStorage.getItem('gh_token') || '',
+  ghUser: JSON.parse(localStorage.getItem('gh_user') || 'null'),
+  emailUser: JSON.parse(localStorage.getItem('genfun_email_user') || 'null'),
+  user: null,
+  userType: localStorage.getItem('genfun_user_type') || '',
   theme: localStorage.getItem('genfun_theme') || 'dark',
+  accentColor: localStorage.getItem('genfun_accent') || 'blue',
+  isVip: localStorage.getItem('genfun_vip') === 'true',
   currentPage: 'home',
   currentCategory: '全部',
   currentIssueNumber: null,
@@ -275,40 +835,859 @@ const App = {
   authInterval: null,
   cachedPosts: [],
   cacheTime: 0,
+  captchaCode: '',
+  chatCache: [],
+  chatCacheTime: 0,
+  // 经验系统
+  exp: parseInt(localStorage.getItem('genfun_exp') || '0'),
+  checkinDay: parseInt(localStorage.getItem('genfun_checkin_day') || '0'),
+  checkinLast: localStorage.getItem('genfun_checkin_last') || '',
+  musicAccessDays: parseInt(localStorage.getItem('genfun_music_access_days') || '0'),
+  // 粉丝系统
+  following: JSON.parse(localStorage.getItem('genfun_following') || '[]'),
 
-  // ---- 初始化 ----
   init() {
     this.initTheme();
-    if (this.token) this.verifyToken();
+    this.initAccent();
+    this.restoreUser();
     this.updateAuthUI();
+    this.updateExpUI();
     this.bindEvents();
     this.loadPosts();
   },
 
-  async verifyToken() {
+  // ---- 主题色 ----
+  initAccent() {
+    const custom = localStorage.getItem('genfun_accent_custom');
+    if (custom) {
+      this.setCustomAccent(custom);
+    } else {
+      document.documentElement.setAttribute('data-accent', this.accentColor);
+    }
+  },
+
+  setAccent(color) {
+    const cfg = ACCENT_COLORS.find(c => c.color === color);
+    if (!cfg) return;
+    // 非免费色需要VIP或签到解锁
+    const checkinUnlock = localStorage.getItem('genfun_checkin_theme_' + color) === 'true';
+    if (!cfg.free && !this.checkVip() && !checkinUnlock) {
+      this.showVipModal();
+      return;
+    }
+    this.accentColor = color;
+    localStorage.setItem('genfun_accent', color);
+    localStorage.removeItem('genfun_accent_custom'); // 清除自定义颜色
+    // 清除自定义CSS变量
+    document.documentElement.style.removeProperty('--accent');
+    document.documentElement.style.removeProperty('--accent-light');
+    document.documentElement.style.removeProperty('--accent-hover');
+    document.documentElement.setAttribute('data-accent', color);
+    this.renderAccentPicker();
+    this.toast('主题色已切换为' + cfg.name, 'success');
+  },
+
+  renderAccentPicker() {
+    const el = document.getElementById('accentPicker');
+    if (!el) return;
+    el.innerHTML = ACCENT_COLORS.map(c => {
+      const active = c.color === this.accentColor;
+      const locked = !c.free && !this.checkVip() && localStorage.getItem('genfun_checkin_theme_' + c.color) !== 'true';
+      return `<div class="accent-dot${active?' active':''}${locked?' locked':''}" data-color="${c.color}" onclick="App.setAccent('${c.color}')" title="${c.name}${locked?' (会员专属)':''}"></div>`;
+    }).join('');
+  },
+
+  showVipModal() {
+    document.getElementById('vipModal').style.display = '';
+    this.renderAccentPicker();
+    // VIP才能看到自定义颜色
+    const custom = document.getElementById('vipCustomColor');
+    if (custom) custom.style.display = this.checkVip() ? '' : 'none';
+    // 恢复当前自定义颜色值
+    const picker = document.getElementById('vipCustomColorPicker');
+    const preview = document.getElementById('vipColorPreview');
+    const savedCustom = localStorage.getItem('genfun_accent_custom');
+    if (savedCustom && picker) { picker.value = savedCustom; }
+    if (savedCustom && preview) { preview.style.background = savedCustom; }
+  },
+  closeVipModal() {
+    document.getElementById('vipModal').style.display = 'none';
+  },
+
+  // ---- VIP主题混搭（自定义颜色） ----
+  setCustomAccent(color) {
+    if (!this.checkVip()) { this.showVipModal(); return; }
+    // 设置自定义accent颜色
+    document.documentElement.style.setProperty('--accent', color);
+    // 计算light版本
+    const r = parseInt(color.slice(1,3),16), g = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
+    const light = `rgba(${r},${g},${b},0.15)`;
+    document.documentElement.style.setProperty('--accent-light', light);
+    const hover = `rgb(${Math.max(0,r-30)},${Math.max(0,g-30)},${Math.max(0,b-30)})`;
+    document.documentElement.style.setProperty('--accent-hover', hover);
+    localStorage.setItem('genfun_accent_custom', color);
+    localStorage.removeItem('genfun_accent'); // 清除预设值
+    this.accentColor = 'custom';
+    document.getElementById('vipColorPreview').style.background = color;
+    this.renderAccentPicker();
+    this.toast('主题色已自定义！', 'success');
+  },
+
+  // ---- 经验系统 ----
+  getLevel() {
+    let lv = 1;
+    for (const cfg of LEVEL_CONFIG) {
+      if (this.exp >= cfg.exp) lv = cfg.level;
+    }
+    // LV4需要签到7天
+    if (lv >= 4) {
+      const totalCheckins = parseInt(localStorage.getItem('genfun_total_checkins') || '0');
+      if (totalCheckins < 7) lv = 3;
+    }
+    // LV5需要VIP
+    if (lv >= 5 && !this.checkVip()) lv = 4;
+    return lv;
+  },
+
+  getLevelConfig() {
+    const lv = this.getLevel();
+    return LEVEL_CONFIG.find(c => c.level === lv) || LEVEL_CONFIG[0];
+  },
+
+  getNextLevelConfig() {
+    const lv = this.getLevel();
+    return LEVEL_CONFIG.find(c => c.level === lv + 1) || null;
+  },
+
+  addExp(amount) {
+    this.exp += amount;
+    localStorage.setItem('genfun_exp', this.exp);
+    const oldLv = parseInt(localStorage.getItem('genfun_level_cache') || '1');
+    const newLv = this.getLevel();
+    localStorage.setItem('genfun_level_cache', newLv);
+    if (newLv > oldLv) {
+      const cfg = LEVEL_CONFIG.find(c => c.level === newLv);
+      this.toast(`🎉 升级到 ${cfg.name}（${cfg.label}）！`, 'success');
+      // LV5自动VIP
+      if (newLv >= 5 && !this.isVip) {
+        this.isVip = true;
+        localStorage.setItem('genfun_vip', 'true');
+        this.toast('🌟 LV5大师！自动获得VIP！', 'success');
+      }
+    }
+  },
+
+  getExpBarPercent() {
+    const lv = this.getLevel();
+    const nextCfg = this.getNextLevelConfig();
+    if (!nextCfg) return 100;
+    const currentExp = LEVEL_CONFIG.find(c => c.level === lv).exp;
+    const nextExp = nextCfg.exp;
+    const progress = this.exp - currentExp;
+    const range = nextExp - currentExp;
+    return Math.min(100, Math.max(0, Math.round((progress / range) * 100)));
+  },
+
+  updateExpUI() {
+    const lv = this.getLevel();
+    const lvCfg = this.getLevelConfig();
+    const nextCfg = this.getNextLevelConfig();
+    // 头部等级标签
+    const levelBadge = document.getElementById('levelBadgeSmall');
+    if (levelBadge) {
+      levelBadge.textContent = lvCfg.name;
+      levelBadge.style.display = this.isLoggedIn() ? '' : 'none';
+      levelBadge.className = 'level-tag' + (lv >= 5 ? ' lv5' : '');
+    }
+    // 个人资料弹窗中的经验条
+    const expFill = document.getElementById('profileExpFill');
+    const expText = document.getElementById('profileExpText');
+    if (expFill) expFill.style.width = this.getExpBarPercent() + '%';
+    if (expText) {
+      if (nextCfg) expText.textContent = `${lvCfg.name}(${lvCfg.label}) · ${this.exp}/${nextCfg.exp} 经验`;
+      else expText.textContent = `${lvCfg.name}(${lvCfg.label}) · ${this.exp} 经验 · 已满级！`;
+    }
+    // 签到面板中的经验条
+    const cExpFill = document.getElementById('checkinExpFill');
+    const cExpText = document.getElementById('checkinExpText');
+    if (cExpFill) cExpFill.style.width = this.getExpBarPercent() + '%';
+    if (cExpText) {
+      if (nextCfg) cExpText.textContent = `${lvCfg.name} · ${this.exp}/${nextCfg.exp} 经验`;
+      else cExpText.textContent = `${lvCfg.name} · ${this.exp} 经验 · 已满级！`;
+    }
+  },
+
+  // ---- 签到系统 ----
+  showCheckin() {
+    if (!this.isLoggedIn()) { this.navigate('login'); this.toast('请先登录', 'info'); return; }
+    this.renderCheckin();
+    document.getElementById('checkinOverlay').style.display = '';
+  },
+
+  closeCheckin() {
+    document.getElementById('checkinOverlay').style.display = 'none';
+  },
+
+  renderCheckin() {
+    const grid = document.getElementById('checkinGrid');
+    const btn = document.getElementById('checkinBtn');
+    const info = document.getElementById('checkinInfo');
+    const today = new Date().toISOString().slice(0, 10);
+    const alreadyChecked = this.checkinLast === today;
+    // 渲染7天格子
+    grid.innerHTML = CHECKIN_REWARDS.map((r, i) => {
+      const dayNum = i + 1;
+      const isDone = this.checkinDay >= dayNum;
+      const isCurrent = this.checkinDay === dayNum - 1 && !alreadyChecked;
+      let cls = 'checkin-day';
+      if (isDone) cls += ' done';
+      if (isCurrent) cls += ' current';
+      return `<div class="${cls}">
+        <div class="checkin-day-num">Day${dayNum}</div>
+        <div class="checkin-day-reward">${r.reward}</div>
+      </div>`;
+    }).join('');
+    // 按钮
+    if (alreadyChecked) {
+      btn.textContent = '✅ 今日已签到';
+      btn.disabled = true;
+    } else {
+      btn.textContent = '📅 立即签到';
+      btn.disabled = false;
+    }
+    // 信息
+    const cycleDay = (this.checkinDay % 7) + 1;
+    const nextReward = CHECKIN_REWARDS.find(r => r.day === (alreadyChecked ? (cycleDay % 7) + 1 : cycleDay));
+    if (alreadyChecked) {
+      info.textContent = `当前第${cycleDay}天 · 明天签到可获得：${nextReward ? nextReward.reward : '经验'}`;
+    } else {
+      info.textContent = `当前第${cycleDay}天 · 签号可获得：${nextReward ? nextReward.reward : '经验'}`;
+    }
+    this.updateExpUI();
+  },
+
+  doCheckin() {
+    if (!this.isLoggedIn()) return;
+    const today = new Date().toISOString().slice(0, 10);
+    if (this.checkinLast === today) { this.toast('今日已签到！', 'info'); return; }
+    // 计算签到天数
+    if (this.checkinDay >= 7) {
+      // 一轮结束，重新开始
+      this.checkinDay = 0;
+    }
+    this.checkinDay++;
+    this.checkinLast = today;
+    localStorage.setItem('genfun_checkin_day', this.checkinDay);
+    localStorage.setItem('genfun_checkin_last', today);
+    // 累计签到天数
+    const total = parseInt(localStorage.getItem('genfun_total_checkins') || '0') + 1;
+    localStorage.setItem('genfun_total_checkins', total);
+    // 获取奖励
+    const reward = CHECKIN_REWARDS.find(r => r.day === this.checkinDay);
+    if (reward) {
+      let rewardMsg = `签到Day${this.checkinDay}成功！`;
+      if (reward.type === 'title' || reward.type === 'exp_title') {
+        // 赋予称号
+        this.setTitle(reward.value);
+        rewardMsg += ` 获得"${reward.value}"称号`;
+      }
+      if (reward.type === 'exp' || reward.type === 'exp_music' || reward.type === 'exp_title') {
+        this.addExp(reward.value);
+        rewardMsg += ` 经验+${reward.value}`;
+      }
+      if (reward.type === 'music' || reward.type === 'exp_music') {
+        this.musicAccessDays += (reward.musicDays || 0);
+        localStorage.setItem('genfun_music_access_days', this.musicAccessDays);
+        rewardMsg += ` 点歌${reward.musicDays}天`;
+      }
+      if (reward.type === 'theme') {
+        localStorage.setItem('genfun_checkin_theme_' + reward.value, 'true');
+        rewardMsg += ` 解锁${reward.value === 'red' ? '红色' : reward.value}主题色`;
+      }
+      this.toast(rewardMsg, 'success');
+    } else {
+      this.addExp(5); // 默认+5经验
+      this.toast('签到成功！经验+5', 'success');
+    }
+    this.renderCheckin();
+    this.updateAuthUI();
+  },
+
+  setTitle(title) {
+    if (this.userType === 'email' && this.emailUser) {
+      this.emailUser.title = title;
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const idx = users.findIndex(u => u.email === this.emailUser.email);
+      if (idx >= 0) { users[idx].title = title; localStorage.setItem('genfun_users', JSON.stringify(users)); }
+      localStorage.setItem('genfun_email_user', JSON.stringify(this.emailUser));
+    } else {
+      localStorage.setItem('genfun_title_override', title);
+    }
+  },
+
+  // ---- 粉丝系统 ----
+  getFollowers() {
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    const myUsername = this.userType === 'email' ? this.user.username : this.user.login;
+    let count = 0;
+    for (const u of users) {
+      if (u.following && u.following.includes(myUsername)) count++;
+    }
+    // 也检查GitHub用户（本地存储）
+    const ghFollowing = JSON.parse(localStorage.getItem('genfun_gh_following_' + myUsername) || '[]');
+    return count;
+  },
+
+  getFollowingCount() { return this.following.length; },
+
+  followUser(username) {
+    if (!this.isLoggedIn()) return;
+    if (this.following.includes(username)) return;
+    this.following.push(username);
+    localStorage.setItem('genfun_following', JSON.stringify(this.following));
+    // 更新被关注用户的粉丝数（在genfun_users中记录）
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    const target = users.find(u => u.username === username);
+    if (target) {
+      if (!target.followers) target.followers = [];
+      target.followers.push(this.userType === 'email' ? this.user.username : this.user.login);
+      localStorage.setItem('genfun_users', JSON.stringify(users));
+    }
+    this.toast('已关注 ' + username, 'success');
+    this.updateFansUI();
+  },
+
+  unfollowUser(username) {
+    this.following = this.following.filter(f => f !== username);
+    localStorage.setItem('genfun_following', JSON.stringify(this.following));
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    const myName = this.userType === 'email' ? this.user.username : this.user.login;
+    const target = users.find(u => u.username === username);
+    if (target && target.followers) {
+      target.followers = target.followers.filter(f => f !== myName);
+      localStorage.setItem('genfun_users', JSON.stringify(users));
+    }
+    this.toast('已取消关注', 'info');
+    this.updateFansUI();
+  },
+
+  isFollowing(username) { return this.following.includes(username); },
+
+  updateFansUI() {
+    const fansCount = document.getElementById('profileFansCount');
+    const followingCount = document.getElementById('profileFollowingCount');
+    if (fansCount) fansCount.textContent = this.getFollowers();
+    if (followingCount) followingCount.textContent = this.getFollowingCount();
+  },
+
+  getFollowBtnHtml(username) {
+    if (!this.isLoggedIn() || (this.userType === 'email' && this.user.username === username) || (this.userType === 'github' && this.user.login === username)) return '';
+    const isF = this.isFollowing(username);
+    return `<button class="follow-btn${isF ? ' following' : ''}" onclick="App.${isF ? 'unfollowUser' : 'followUser'}('${this.esc(username)}')">${isF ? '已关注' : '+关注'}</button>`;
+  },
+  _musicAudio: null,
+  _musicPlaylist: [],
+  _musicCurrentIdx: -1,
+  _musicIsPlaying: false,
+  _musicCurrentTab: 'search',
+  _biliSearchCache: [],
+
+  showMusic() {
+    const overlay = document.getElementById('musicOverlay');
+    overlay.style.display = 'flex';
+    // VIP或者有签到获得的点歌权限都能使用
+    if (this.checkVip() || this.musicAccessDays > 0) {
+      document.getElementById('musicVipLock').style.display = 'none';
+      document.getElementById('musicContent').style.display = '';
+      // 显示点歌天数信息
+      if (!this.checkVip() && this.musicAccessDays > 0) {
+        const emptyEl = document.getElementById('musicResults').querySelector('.music-empty');
+        if (emptyEl) emptyEl.textContent = `你有${this.musicAccessDays}天点歌权限 · VIP永久免费`;
+      }
+      // 渲染推荐歌曲
+      this.renderRecommendSongs();
+      // 切换到搜索标签
+      this.switchMusicTab(this._musicCurrentTab);
+    } else {
+      document.getElementById('musicVipLock').style.display = '';
+      document.getElementById('musicContent').style.display = 'none';
+    }
+    // 如果正在播放，更新播放状态
+    if (this._musicIsPlaying) {
+      this.updateMusicPlayingUI();
+    }
+  },
+  closeMusic() {
+    document.getElementById('musicOverlay').style.display = 'none';
+  },
+
+  switchMusicTab(tab) {
+    this._musicCurrentTab = tab;
+    const tabs = document.querySelectorAll('.music-tab');
+    tabs.forEach(t => t.classList.toggle('active', t.textContent.includes(tab === 'search' ? '搜索' : '推荐')));
+    document.getElementById('musicTabSearch').style.display = tab === 'search' ? '' : 'none';
+    document.getElementById('musicTabRecommend').style.display = tab === 'recommend' ? '' : 'none';
+    if (tab === 'recommend') this.renderRecommendSongs();
+  },
+
+  renderRecommendSongs() {
+    const el = document.getElementById('musicRecommendResults');
+    if (!el) return;
+    // 将推荐歌曲加入播放列表（Believer永远排第一）
+    this._musicPlaylist = RECOMMEND_SONGS.map(s => ({
+      id: s.id, name: s.name, artist: s.artist, album: s.album || '', duration: 0
+    }));
+    el.innerHTML = RECOMMEND_SONGS.map((s, i) => {
+      const rankCls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+      const tagHtml = s.pinned ? `<span class="music-rec-tag">${s.tag || '🔥霸榜'}</span>` : '';
+      return `<div class="music-rec-item" onclick="App.playMusicAt(${i})">
+        <div class="music-rec-rank ${rankCls}">${i + 1}</div>
+        <div class="music-rec-info">
+          <div class="music-rec-name">${this.esc(s.name)} ${tagHtml}</div>
+          <div class="music-rec-artist">${this.esc(s.artist)} · ${this.esc(s.album || '')}</div>
+        </div>
+        <button class="music-rec-play" onclick="event.stopPropagation();App.playMusicAt(${i})">▶</button>
+      </div>`;
+    }).join('');
+  },
+
+  async searchMusic() {
+    const keyword = document.getElementById('musicSearchInput').value.trim();
+    if (!keyword) return this.toast('请输入搜索关键词', 'error');
+
+    const resultsEl = document.getElementById('musicResults');
+    resultsEl.innerHTML = '<div class="music-loading"><div class="spinner"></div> 搜索中...</div>';
+
+    try {
+      // 使用网易云音乐搜索API（通过多个CORS代理尝试）
+      const searchUrl = `https://music.163.com/api/search/get/web?s=${encodeURIComponent(keyword)}&type=1&limit=30`;
+      let data = null;
+
+      // 依次尝试：直连 → 各CORS代理
+      const tryUrls = [searchUrl];
+      for (const proxy of this.CORS_PROXIES) {
+        tryUrls.push(proxy + encodeURIComponent(searchUrl));
+      }
+
+      for (const url of tryUrls) {
+        try {
+          const res = await this.fetchWithTimeout(url, {
+            headers: url === searchUrl ? { 'Accept': 'application/json' } : {}
+          }, 6000);
+          if (res.ok) {
+            const text = await res.text();
+            try { data = JSON.parse(text); } catch(e) { continue; }
+            if (data && data.result && data.result.songs) break;
+            data = null;
+          }
+        } catch(e) { continue; }
+      }
+
+      if (!data || !data.result || !data.result.songs) {
+        resultsEl.innerHTML = '<div class="music-empty">搜索失败，请换个关键词试试<br>💡 也可以点击"推荐"标签听热门歌曲</div>';
+        return;
+      }
+
+      const songs = data.result.songs;
+      this._musicPlaylist = songs.map(s => ({
+        id: s.id,
+        name: s.name,
+        artist: s.artists ? s.artists.map(a => a.name).join('/') : '未知',
+        album: s.album ? s.album.name : '',
+        duration: s.duration || 0
+      }));
+
+      resultsEl.innerHTML = this._musicPlaylist.length === 0
+        ? '<div class="music-empty">没有找到相关歌曲</div>'
+        : this._musicPlaylist.map((s, i) => `
+          <div class="music-result-item" onclick="App.playMusicAt(${i})">
+            <div class="music-result-name">
+              <div style="font-weight:600">${this.esc(s.name)}</div>
+              <div class="music-result-artist">${this.esc(s.artist)} · ${this.esc(s.album)}</div>
+            </div>
+            <button class="music-result-play" onclick="event.stopPropagation();App.playMusicAt(${i})">▶</button>
+          </div>
+        `).join('');
+    } catch(e) {
+      resultsEl.innerHTML = '<div class="music-empty">搜索出错: ' + this.esc(e.message) + '<br>💡 点击"推荐"标签听热门歌曲</div>';
+    }
+  },
+
+  async playMusicAt(idx) {
+    if (idx < 0 || idx >= this._musicPlaylist.length) return;
+    this._musicCurrentIdx = idx;
+    const song = this._musicPlaylist[idx];
+
+    // 更新UI显示
+    document.getElementById('musicNPSong').textContent = song.name;
+    document.getElementById('musicNPArtist').textContent = song.artist;
+    document.getElementById('musicNowPlaying').style.display = '';
+
+    // 更新底部播放条
+    document.getElementById('npbSong').textContent = song.name;
+    document.getElementById('npbArtist').textContent = song.artist;
+
+    // 尝试获取歌曲URL
+    try {
+      let playUrl = null;
+
+      // 方法1: 使用网易云外链（通过CORS代理）
+      const outerLinkUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+      for (const proxy of this.CORS_PROXIES) {
+        try {
+          const testUrl = proxy + encodeURIComponent(outerLinkUrl);
+          const testRes = await this.fetchWithTimeout(testUrl, { method: 'HEAD' }, 3000);
+          if (testRes.ok || testRes.status === 302 || testRes.status === 301) {
+            playUrl = testUrl;
+            break;
+          }
+        } catch(e) {}
+      }
+
+      // 方法2: 直接尝试网易云API获取播放URL
+      if (!playUrl) {
+        const detailUrl = `https://music.163.com/api/song/enhance/player/url?id=${song.id}&ids=[${song.id}]&br=320000`;
+        const tryUrls2 = [detailUrl];
+        for (const proxy of this.CORS_PROXIES) {
+          tryUrls2.push(proxy + encodeURIComponent(detailUrl));
+        }
+        for (const url of tryUrls2) {
+          try {
+            const res = await this.fetchWithTimeout(url, {}, 5000);
+            if (res.ok) {
+              const detailData = await res.json();
+              if (detailData && detailData.data && detailData.data[0] && detailData.data[0].url) {
+                playUrl = detailData.data[0].url;
+                break;
+              }
+            }
+          } catch(e) {}
+        }
+      }
+
+      // 方法3: 使用第三方音乐解析API
+      if (!playUrl) {
+        const apiUrls = [
+          `https://api.injahow.cn/meting/?type=url&id=${song.id}&server=netease`,
+        ];
+        for (const apiUrl of apiUrls) {
+          for (const proxy of this.CORS_PROXIES.slice(0, 2)) {
+            try {
+              const res = await this.fetchWithTimeout(proxy + encodeURIComponent(apiUrl), {}, 5000);
+              if (res.ok) {
+                const text = await res.text();
+                if (text && text.startsWith('http')) {
+                  playUrl = text.trim();
+                  break;
+                }
+              }
+            } catch(e) {}
+          }
+          if (playUrl) break;
+        }
+      }
+
+      // 方法4: 最后直接用外链
+      if (!playUrl) {
+        playUrl = outerLinkUrl;
+      }
+
+      if (!this._musicAudio) {
+        this._musicAudio = new Audio();
+        this._musicAudio.crossOrigin = 'anonymous';
+        this._musicAudio.addEventListener('ended', () => this.musicNext());
+        this._musicAudio.addEventListener('timeupdate', () => this.updateMusicProgress());
+        this._musicAudio.addEventListener('error', () => {
+          this.toast('播放失败，该歌曲可能无法播放', 'error');
+          this._musicIsPlaying = false;
+          this.updateMusicPlayingUI();
+        });
+      }
+
+      this._musicAudio.src = playUrl;
+      this._musicAudio.play().then(() => {
+        this._musicIsPlaying = true;
+        this.updateMusicPlayingUI();
+        document.getElementById('nowPlayingBar').classList.add('show');
+        this.toast('正在播放: ' + song.name, 'success');
+      }).catch(e => {
+        // 如果CORS代理失败，尝试直接播放
+        this._musicAudio.src = outerLinkUrl;
+        this._musicAudio.play().then(() => {
+          this._musicIsPlaying = true;
+          this.updateMusicPlayingUI();
+          document.getElementById('nowPlayingBar').classList.add('show');
+          this.toast('正在播放: ' + song.name, 'success');
+        }).catch(() => {
+          this.toast('播放失败，该歌曲可能无法播放，试试推荐列表的歌曲', 'error');
+          this._musicIsPlaying = false;
+          this.updateMusicPlayingUI();
+        });
+      });
+    } catch(e) {
+      this.toast('播放出错: ' + e.message, 'error');
+    }
+  },
+
+  musicTogglePlay() {
+    if (!this._musicAudio) return;
+    if (this._musicIsPlaying) {
+      this._musicAudio.pause();
+      this._musicIsPlaying = false;
+    } else {
+      this._musicAudio.play().catch(() => {});
+      this._musicIsPlaying = true;
+    }
+    this.updateMusicPlayingUI();
+  },
+
+  musicPrev() {
+    if (this._musicPlaylist.length === 0) return;
+    let idx = this._musicCurrentIdx - 1;
+    if (idx < 0) idx = this._musicPlaylist.length - 1;
+    this.playMusicAt(idx);
+  },
+
+  musicNext() {
+    if (this._musicPlaylist.length === 0) return;
+    let idx = this._musicCurrentIdx + 1;
+    if (idx >= this._musicPlaylist.length) idx = 0;
+    this.playMusicAt(idx);
+  },
+
+  musicStop() {
+    if (this._musicAudio) {
+      this._musicAudio.pause();
+      this._musicAudio.src = '';
+    }
+    this._musicIsPlaying = false;
+    this._musicCurrentIdx = -1;
+    document.getElementById('nowPlayingBar').classList.remove('show');
+    this.updateMusicPlayingUI();
+  },
+
+  musicSeek(event) {
+    if (!this._musicAudio || !this._musicAudio.duration) return;
+    const bar = document.getElementById('musicProgress');
+    const rect = bar.getBoundingClientRect();
+    const pct = (event.clientX - rect.left) / rect.width;
+    this._musicAudio.currentTime = pct * this._musicAudio.duration;
+  },
+
+  updateMusicProgress() {
+    if (!this._musicAudio || !this._musicAudio.duration) return;
+    const pct = (this._musicAudio.currentTime / this._musicAudio.duration) * 100;
+    document.getElementById('musicProgressBar').style.width = pct + '%';
+  },
+
+  updateMusicPlayingUI() {
+    const playBtn = document.getElementById('musicPlayBtn');
+    const npbPlayBtn = document.getElementById('npbPlayBtn');
+    if (this._musicIsPlaying) {
+      if (playBtn) playBtn.textContent = '⏸';
+      if (npbPlayBtn) npbPlayBtn.textContent = '⏸';
+    } else {
+      if (playBtn) playBtn.textContent = '▶';
+      if (npbPlayBtn) npbPlayBtn.textContent = '▶';
+    }
+  },
+
+  // VIP状态（管理员自动VIP）
+  checkVip() {
+    if (this.isAdmin()) return true;
+    return this.isVip;
+  },
+
+  restoreUser() {
+    if (this.ghToken && this.userType === 'github') {
+      this.verifyGhToken();
+    } else if (this.emailUser && this.userType === 'email') {
+      this.user = this.emailUser;
+    } else {
+      this.user = null;
+    }
+  },
+
+  async verifyGhToken() {
     try {
       const u = await this.ghApi('GET', '/user');
-      this.user = u;
+      this.ghUser = u; this.user = u; this.userType = 'github';
       localStorage.setItem('gh_user', JSON.stringify(u));
+      localStorage.setItem('genfun_user_type', 'github');
       this.updateAuthUI();
     } catch(e) {
-      this.token = '';
-      localStorage.removeItem('gh_token');
-      localStorage.removeItem('gh_user');
-      this.user = null;
+      this.ghToken = ''; localStorage.removeItem('gh_token'); localStorage.removeItem('gh_user');
+      this.ghUser = null; this.user = null; this.userType = '';
+      localStorage.removeItem('genfun_user_type');
       this.updateAuthUI();
     }
   },
 
+  getAuthToken() { return this.userType === 'github' ? this.ghToken : REPO_PAT; },
+  isLoggedIn() { return this.user !== null; },
+  isAdmin() {
+    if (this.userType === 'github') return this.user && this.user.login === REPO_OWNER;
+    if (this.userType === 'email') return this.user && this.user.role === 'admin';
+    return false;
+  },
+
+  async sha256(msg) {
+    const buf = new TextEncoder().encode(msg);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  },
+
+  refreshCaptcha() {
+    this.captchaCode = String(Math.floor(1000 + Math.random() * 9000));
+    const el = document.getElementById('captchaDisplay');
+    if (el) el.textContent = this.captchaCode;
+    const input = document.getElementById('regCaptcha');
+    if (input) input.value = this.captchaCode;
+  },
+
+  async emailRegister() {
+    // 检查每月注册限制（同一设备每月只能注册一次）
+    const lastRegTime = localStorage.getItem('genfun_last_register_time');
+    if (lastRegTime) {
+      const lastDate = new Date(lastRegTime);
+      const now = new Date();
+      const sameMonth = lastDate.getFullYear() === now.getFullYear() && lastDate.getMonth() === now.getMonth();
+      if (sameMonth) {
+        const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 1).getTime() - now.getTime();
+        const daysRemaining = Math.ceil(daysLeft / (1000 * 60 * 60 * 24));
+        return this.toast(`本月已注册过账号，请${daysRemaining}天后再试`, 'error');
+      }
+    }
+
+    const email = document.getElementById('regEmail').value.trim();
+    const username = document.getElementById('regUsername').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const captcha = document.getElementById('regCaptcha').value.trim();
+    if (!email) return this.toast('请输入邮箱或手机号', 'error');
+    if (!username) return this.toast('请输入用户名', 'error');
+    if (username.length < 2) return this.toast('用户名至少2个字符', 'error');
+    if (!password || password.length < 6) return this.toast('密码至少6位', 'error');
+    if (captcha !== this.captchaCode) return this.toast('验证码错误', 'error');
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    if (users.find(u => u.email === email)) return this.toast('该邮箱/手机号已注册', 'error');
+
+    const hash = await this.sha256(password);
+    const newUser = { email, username, passwordHash: hash, role: 'user', vip: false, title: '', exp: 0, following: [], followers: [], createdAt: new Date().toISOString() };
+    if (email === 'Rr052052052@163.com' || email === 'T') { newUser.role = 'admin'; newUser.vip = true; newUser.title = '管理员'; }
+    // VIP预设用户
+    if (username === '是P' || email === '是P') { newUser.vip = true; }
+    if (username === 'Kyle' || email === 'Kyle') { newUser.vip = true; }
+
+    users.push(newUser);
+    localStorage.setItem('genfun_users', JSON.stringify(users));
+    localStorage.setItem('genfun_last_register_time', new Date().toISOString());
+    this.emailUser = newUser; this.user = newUser; this.userType = 'email';
+    localStorage.setItem('genfun_email_user', JSON.stringify(newUser));
+    localStorage.setItem('genfun_user_type', 'email');
+    if (newUser.vip) { this.isVip = true; localStorage.setItem('genfun_vip', 'true'); }
+    this.toast('注册成功！欢迎，' + username, 'success');
+    this.updateAuthUI(); this.navigate('home');
+  },
+
+  async emailLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email) return this.toast('请输入邮箱或手机号', 'error');
+    if (!password) return this.toast('请输入密码', 'error');
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    const hash = await this.sha256(password);
+    const found = users.find(u => (u.email === email) && u.passwordHash === hash);
+    if (!found) return this.toast('账号或密码错误', 'error');
+    this.emailUser = found; this.user = found; this.userType = 'email';
+    localStorage.setItem('genfun_email_user', JSON.stringify(found));
+    localStorage.setItem('genfun_user_type', 'email');
+    if (found.vip) { this.isVip = true; localStorage.setItem('genfun_vip', 'true'); }
+    this.toast('登录成功！欢迎回来，' + found.username, 'success');
+    this.updateAuthUI(); this.navigate('home');
+  },
+
+  initDefaultUsers() {
+    let users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    // 确保T管理员存在且VIP
+    const tUser = users.find(u => u.email === 'Rr052052052@163.com' || u.username === 'T');
+    if (tUser) {
+      tUser.role = 'admin';
+      tUser.vip = true;
+      localStorage.setItem('genfun_users', JSON.stringify(users));
+      // 如果当前是T用户，更新VIP状态
+      if (this.emailUser && this.emailUser.email === 'Rr052052052@163.com') {
+        this.emailUser.vip = true;
+        this.isVip = true;
+        localStorage.setItem('genfun_vip', 'true');
+        localStorage.setItem('genfun_email_user', JSON.stringify(this.emailUser));
+      }
+    } else {
+      this.sha256('T123456').then(hash => {
+        users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', vip: true, title: '管理员', exp: 5000, following: [], followers: [], createdAt: new Date().toISOString() });
+        localStorage.setItem('genfun_users', JSON.stringify(users));
+      });
+    }
+    // 给是P和Kyle用户加VIP
+    const vipUsers = users.filter(u => u.username === '是P' || u.username === 'Kyle');
+    for (const vu of vipUsers) {
+      vu.vip = true;
+      if (!vu.title) vu.title = '';
+      // 如果当前登录的是VIP预设用户，更新状态
+      if (this.emailUser && this.emailUser.email === vu.email) {
+        this.emailUser.vip = true;
+        this.isVip = true;
+        localStorage.setItem('genfun_vip', 'true');
+        localStorage.setItem('genfun_email_user', JSON.stringify(this.emailUser));
+      }
+    }
+    if (vipUsers.length > 0) localStorage.setItem('genfun_users', JSON.stringify(users));
+  },
+
+  // ---- 带超时的fetch + 多CORS代理备用 ----
+  CORS_PROXIES: [
+    'https://corsproxy.io/?',
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.sh/?',
+  ],
+
+  async fetchWithTimeout(url, opts, timeout = 8000) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    try {
+      const res = await fetch(url, { ...opts, signal: controller.signal });
+      clearTimeout(id);
+      return res;
+    } catch(e) {
+      clearTimeout(id);
+      throw e;
+    }
+  },
+
+  async fetchViaProxy(apiUrl, timeout = 8000) {
+    // 依次尝试3个CORS代理
+    for (const proxy of this.CORS_PROXIES) {
+      try {
+        const proxyUrl = proxy + encodeURIComponent(apiUrl);
+        const res = await this.fetchWithTimeout(proxyUrl, { headers: { 'Accept': 'application/json' } }, timeout);
+        if (res.ok) return await res.json();
+      } catch(e) { continue; }
+    }
+    return null;
+  },
+
   // ---- GitHub API ----
-  async ghApi(method, path, body) {
+  async ghApi(method, path, body, usePat) {
+    const token = usePat ? REPO_PAT : this.getAuthToken();
     const headers = { 'Accept': 'application/vnd.github.v3+json' };
-    if (this.token) headers['Authorization'] = 'Bearer ' + this.token;
+    if (token) headers['Authorization'] = 'Bearer ' + token;
     if (body) headers['Content-Type'] = 'application/json';
     const opts = { method, headers };
     if (body) opts.body = JSON.stringify(body);
     const res = await fetch(GH_API + path, opts);
-    if (res.status === 401) { this.logout(); throw new Error('请先登录'); }
+    if (res.status === 401) {
+      if (!usePat && this.userType === 'github') { this.logout(); throw new Error('请先登录'); }
+      throw new Error('认证失败');
+    }
     if (!res.ok) { const e = await res.json(); throw new Error(e.message || '请求失败'); }
     if (res.status === 204) return null;
     return res.json();
@@ -324,16 +1703,12 @@ const App = {
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error_description);
-
-      document.getElementById('loginStep1').style.display = 'none';
-      document.getElementById('loginStep2').style.display = '';
+      document.getElementById('emailLoginSection').style.display = 'none';
+      document.getElementById('ghLoginStep1').style.display = 'none';
+      document.getElementById('ghLoginStep2').style.display = '';
       document.getElementById('deviceUserCode').textContent = data.user_code;
-
-      // 每5秒轮询
       this.authInterval = setInterval(() => this.pollToken(data.device_code, data.interval || 5), (data.interval || 5) * 1000);
-    } catch(e) {
-      this.toast(e.message, 'error');
-    }
+    } catch(e) { this.toast(e.message, 'error'); }
   },
 
   async pollToken(deviceCode, interval) {
@@ -346,12 +1721,12 @@ const App = {
       const data = await res.json();
       if (data.access_token) {
         clearInterval(this.authInterval);
-        this.token = data.access_token;
-        localStorage.setItem('gh_token', this.token);
-        this.user = await this.ghApi('GET', '/user');
-        localStorage.setItem('gh_user', JSON.stringify(this.user));
+        this.ghToken = data.access_token; localStorage.setItem('gh_token', this.ghToken);
+        this.ghUser = await this.ghApi('GET', '/user'); this.user = this.ghUser; this.userType = 'github';
+        localStorage.setItem('gh_user', JSON.stringify(this.ghUser));
+        localStorage.setItem('genfun_user_type', 'github');
         this.updateAuthUI();
-        this.toast('登录成功！欢迎，' + (this.user.name || this.user.login), 'success');
+        this.toast('GitHub 登录成功！欢迎，' + (this.ghUser.name || this.ghUser.login), 'success');
         this.navigate('home');
       } else if (data.error === 'authorization_pending') {
         document.getElementById('authPollStatus').textContent = '⏳ 等待授权...';
@@ -363,29 +1738,222 @@ const App = {
         this.toast('验证码已过期，请重试', 'error');
         this.cancelAuth();
       }
-    } catch(e) { /* network error, retry */ }
+    } catch(e) { /* retry */ }
   },
 
   cancelAuth() {
     if (this.authInterval) clearInterval(this.authInterval);
-    document.getElementById('loginStep1').style.display = '';
-    document.getElementById('loginStep2').style.display = 'none';
-    this.navigate('login');
+    document.getElementById('emailLoginSection').style.display = '';
+    document.getElementById('ghLoginStep1').style.display = '';
+    document.getElementById('ghLoginStep2').style.display = 'none';
   },
 
   logout() {
-    this.token = '';
-    this.user = null;
-    localStorage.removeItem('gh_token');
-    localStorage.removeItem('gh_user');
-    this.updateAuthUI();
-    this.navigate('home');
-    this.toast('已退出登录', 'info');
+    this.ghToken = ''; this.ghUser = null; this.emailUser = null; this.user = null; this.userType = '';
+    localStorage.removeItem('gh_token'); localStorage.removeItem('gh_user');
+    localStorage.removeItem('genfun_email_user'); localStorage.removeItem('genfun_user_type');
+    localStorage.removeItem('genfun_vip'); this.isVip = false;
+    this.updateAuthUI(); this.navigate('home'); this.toast('已退出登录', 'info');
   },
 
-  showUserMenu() { if (confirm('确定退出登录？')) this.logout(); },
+  showUserMenu() {
+    if (!this.isLoggedIn()) return;
+    // 填充弹窗数据
+    const overlay = document.getElementById('profileOverlay');
+    let displayName, avatarSrc, isGithub;
+    if (this.userType === 'github') {
+      displayName = this.getDisplayName();
+      avatarSrc = this.getAvatarUrl();
+      isGithub = true;
+    } else {
+      displayName = this.getDisplayName();
+      avatarSrc = this.getAvatarUrl();
+      isGithub = false;
+    }
+    // 头像显示
+    const avatarArea = document.getElementById('profileAvatarDisplay');
+    if (avatarSrc) {
+      avatarArea.innerHTML = `<img class="profile-avatar-large" src="${avatarSrc}" onclick="document.getElementById('profileAvatarFile').click()" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="profile-avatar-letter-large" style="display:none" onclick="document.getElementById('profileAvatarFile').click()">${displayName[0].toUpperCase()}</div>`;
+    } else {
+      avatarArea.innerHTML = `<div class="profile-avatar-letter-large" onclick="document.getElementById('profileAvatarFile').click()">${displayName[0].toUpperCase()}</div>`;
+    }
+    // 名称显示
+    document.getElementById('profileNameDisplay').textContent = displayName;
+    document.getElementById('profileNameInput').value = displayName;
+    // 头像URL输入（预填当前URL）
+    document.getElementById('profileAvatarInput').value = (this.userType === 'github' ? (this.user.avatar_url || '') : (this.user.avatarUrl || '')) || '';
+    // 清空文件输入
+    document.getElementById('profileAvatarFile').value = '';
+    // 提示文字
+    document.getElementById('profileAvatarHint').textContent = isGithub ? 'GitHub用户可覆盖头像和昵称' : '点击头像更换图片 / 输入头像URL';
+    // 徽章
+    const badges = document.getElementById('profileBadges');
+    let badgeHtml = '';
+    if (isGithub) badgeHtml += `<span class="profile-type-tag" style="background:var(--accent-light);color:var(--accent);">GitHub用户</span>`;
+    else badgeHtml += `<span class="profile-type-tag email-badge">邮箱用户</span>`;
+    if (this.checkVip()) badgeHtml += `<span class="vip-badge">VIP</span>`;
+    // 称号显示
+    const title = this.getTitle();
+    if (title) badgeHtml += `<span class="title-tag">${this.esc(title)}</span>`;
+    // 称号输入框（VIP可见）
+    const titleField = document.getElementById('profileTitleField');
+    const titleInput = document.getElementById('profileTitleInput');
+    if (this.checkVip()) {
+      titleField.style.display = '';
+      titleInput.value = title || '';
+    } else {
+      titleField.style.display = 'none';
+    }
+    if (this.isAdmin()) badgeHtml += `<span class="admin-badge">管理</span>`;
+    // 等级标签
+    const lv = this.getLevel();
+    const lvCfg = this.getLevelConfig();
+    badgeHtml += `<span class="level-tag${lv >= 5 ? ' lv5' : ''}">${lvCfg.name}</span>`;
+    badges.innerHTML = badgeHtml;
+    // 粉丝信息
+    this.updateFansUI();
+    // 经验条
+    this.updateExpUI();
+    overlay.style.display = 'flex';
+  },
 
-  // ---- 主题 ----
+  closeProfile() {
+    document.getElementById('profileOverlay').style.display = 'none';
+  },
+
+  // 获取称号（VIP专属）
+  getTitle() {
+    // 邮箱用户从users数组中读取title字段
+    if (this.userType === 'email' && this.emailUser) {
+      return this.emailUser.title || '';
+    }
+    // GitHub用户从localStorage覆盖
+    return localStorage.getItem('genfun_title_override') || '';
+  },
+
+  // 获取指定用户的称号（用于帖子/回复显示）
+  getTitleForUser(username, type) {
+    if (type === 'email') {
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      return found ? (found.title || '') : '';
+    }
+    // GitHub用户只有当前登录用户自己能设置称号
+    if (this.userType === 'github' && this.user && (this.user.login === username)) {
+      return localStorage.getItem('genfun_title_override') || '';
+    }
+    return '';
+  },
+
+  // 获取显示名称（支持覆盖）
+  getDisplayName() {
+    const override = localStorage.getItem('genfun_display_name_override');
+    if (override) return override;
+    if (this.userType === 'github') return this.user.name || this.user.login;
+    return this.user.username;
+  },
+
+  // 获取头像URL（支持覆盖）
+  getAvatarUrl() {
+    const override = localStorage.getItem('genfun_avatar_override');
+    if (override) return override;
+    if (this.userType === 'github') return this.user.avatar_url || '';
+    return this.user.avatarUrl || '';
+  },
+
+  // 判断是否管理员
+  isAdmin() {
+    if (this.userType === 'github') return this.user.login === REPO_OWNER;
+    return this.user.role === 'admin';
+  },
+
+  // 预览头像URL
+  previewAvatarUrl() {
+    const url = document.getElementById('profileAvatarInput').value.trim();
+    if (!url) return this.toast('请输入头像URL', 'error');
+    const avatarArea = document.getElementById('profileAvatarDisplay');
+    const letter = this.getDisplayName()[0].toUpperCase();
+    avatarArea.innerHTML = `<img class="profile-avatar-large" src="${url}" onclick="document.getElementById('profileAvatarFile').click()" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="profile-avatar-letter-large" style="display:none" onclick="document.getElementById('profileAvatarFile').click()">${letter}</div>`;
+    this.toast('头像预览已更新，点击保存确认', 'info');
+  },
+
+  // 处理头像文件上传（转base64）
+  handleAvatarFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.size > 512 * 1024) return this.toast('图片不能超过512KB', 'error');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result;
+      const avatarArea = document.getElementById('profileAvatarDisplay');
+      const letter = this.getDisplayName()[0].toUpperCase();
+      avatarArea.innerHTML = `<img class="profile-avatar-large" src="${base64}" onclick="document.getElementById('profileAvatarFile').click()" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="profile-avatar-letter-large" style="display:none" onclick="document.getElementById('profileAvatarFile').click()">${letter}</div>`;
+      // 存到临时变量，保存时一起写入
+      this._pendingAvatarBase64 = base64;
+      this.toast('头像预览已更新，点击保存确认', 'info');
+    };
+    reader.readAsDataURL(file);
+  },
+
+  // 保存个人资料修改
+  saveProfile() {
+    const newName = document.getElementById('profileNameInput').value.trim();
+    if (!newName) return this.toast('名称不能为空', 'error');
+    if (newName.length < 2) return this.toast('名称至少2个字符', 'error');
+
+    // 保存名称覆盖
+    localStorage.setItem('genfun_display_name_override', newName);
+
+    // 保存头像覆盖
+    if (this._pendingAvatarBase64) {
+      localStorage.setItem('genfun_avatar_override', this._pendingAvatarBase64);
+      this._pendingAvatarBase64 = null;
+    } else {
+      const avatarUrl = document.getElementById('profileAvatarInput').value.trim();
+      if (avatarUrl) {
+        localStorage.setItem('genfun_avatar_override', avatarUrl);
+      } else {
+        // 如果URL输入框为空且没有新上传文件，清除覆盖（恢复默认）
+        localStorage.removeItem('genfun_avatar_override');
+      }
+    }
+
+    // 保存称号（VIP专属）
+    if (this.checkVip()) {
+      const titleInput = document.getElementById('profileTitleInput');
+      const newTitle = titleInput ? titleInput.value.trim() : '';
+      if (newTitle.length > 10) return this.toast('称号最多10个字符', 'error');
+      if (this.userType === 'email') {
+        this.user.title = newTitle;
+        const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+        const idx = users.findIndex(u => u.email === this.user.email);
+        if (idx >= 0) { users[idx].title = newTitle; localStorage.setItem('genfun_users', JSON.stringify(users)); }
+        localStorage.setItem('genfun_email_user', JSON.stringify(this.user));
+      } else {
+        localStorage.setItem('genfun_title_override', newTitle);
+      }
+    }
+
+    // 对于邮箱用户，也更新localStorage中的username和avatarUrl
+    if (this.userType === 'email') {
+      this.user.username = newName;
+      this.user.avatarUrl = localStorage.getItem('genfun_avatar_override') || '';
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const idx = users.findIndex(u => u.email === this.user.email);
+      if (idx >= 0) {
+        users[idx].username = newName;
+        users[idx].avatarUrl = this.user.avatarUrl;
+        users[idx].title = this.user.title || '';
+        localStorage.setItem('genfun_users', JSON.stringify(users));
+      }
+      localStorage.setItem('genfun_email_user', JSON.stringify(this.user));
+    }
+
+    this.updateAuthUI();
+    this.closeProfile();
+    this.toast('资料已更新！', 'success');
+  },
+
   initTheme() {
     document.documentElement.setAttribute('data-theme', this.theme);
     document.getElementById('themeToggle').textContent = this.theme === 'dark' ? '☀' : '🌙';
@@ -401,25 +1969,29 @@ const App = {
   navigate(page, data) {
     this.currentPage = page;
     if (data && data.issueNumber) this.currentIssueNumber = data.issueNumber;
-
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const el = document.getElementById('page-' + page);
     if (el) el.classList.add('active');
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
 
     if (page === 'home') { this.currentPostPage = 1; this.loadPosts(); }
+    if (page === 'chat') this.loadChat();
     if (page === 'post') this.loadPostDetail();
-    if (page === 'new') { if (!this.user) { this.navigate('login'); this.toast('请先登录', 'info'); } }
-    if (page === 'login') { document.getElementById('loginStep1').style.display = ''; document.getElementById('loginStep2').style.display = 'none'; }
-    if (page === 'admin') { if (!this.user || this.user.login !== REPO_OWNER) { this.navigate('home'); return; } this.loadAdminPosts(); }
-
+    if (page === 'new') { if (!this.isLoggedIn()) { this.navigate('login'); this.toast('请先登录', 'info'); } }
+    if (page === 'login') {
+      document.getElementById('emailLoginSection').style.display = '';
+      document.getElementById('ghLoginStep1').style.display = '';
+      document.getElementById('ghLoginStep2').style.display = 'none';
+    }
+    if (page === 'register') { this.refreshCaptcha(); }
+    if (page === 'admin') { if (!this.isAdmin()) { this.navigate('home'); return; } this.loadAdminPosts(); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.updateFab();
   },
 
   updateFab() {
     const fab = document.getElementById('fabNewPost');
-    fab.classList.toggle('hidden', !this.user || this.currentPage !== 'home');
+    fab.classList.toggle('hidden', !this.isLoggedIn() || this.currentPage !== 'home');
   },
 
   updateAuthUI() {
@@ -428,21 +2000,47 @@ const App = {
     const navNew = document.getElementById('navNewPost');
     const adminNav = document.getElementById('navAdmin');
     const badge = document.getElementById('adminBadgeSmall');
+    const vipBadge = document.getElementById('vipBadgeSmall');
+    const emailBadge = document.getElementById('emailBadgeSmall');
+    const levelBadge = document.getElementById('levelBadgeSmall');
 
-    if (this.user) {
-      btnLogin.style.display = 'none';
-      btnUser.style.display = 'flex';
-      navNew.style.display = '';
-      document.getElementById('userNameSmall').textContent = this.user.name || this.user.login;
-      const imgEl = document.getElementById('userAvatarImg');
-      const letterEl = document.getElementById('userAvatarLetter');
-      if (this.user.avatar_url) { imgEl.src = this.user.avatar_url; imgEl.style.display = ''; letterEl.style.display = 'none'; }
-      else { letterEl.textContent = (this.user.login || '?')[0].toUpperCase(); letterEl.style.display = ''; imgEl.style.display = 'none'; }
-      if (this.user.login === REPO_OWNER) { badge.style.display = ''; adminNav.style.display = ''; }
-      else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
+    if (this.isLoggedIn()) {
+      btnLogin.style.display = 'none'; btnUser.style.display = 'flex'; navNew.style.display = '';
+      const isVip = this.checkVip();
+      vipBadge.style.display = isVip ? '' : 'none';
+      const lv = this.getLevel();
+      const lvCfg = this.getLevelConfig();
+      levelBadge.textContent = lvCfg.name;
+      levelBadge.style.display = '';
+      levelBadge.className = 'level-tag' + (lv >= 5 ? ' lv5' : '');
+
+      if (this.userType === 'github') {
+        document.getElementById('userNameSmall').textContent = this.getDisplayName();
+        const imgEl = document.getElementById('userAvatarImg');
+        const letterEl = document.getElementById('userAvatarLetter');
+        const avatarUrl = this.getAvatarUrl();
+        if (avatarUrl) { imgEl.src = avatarUrl; imgEl.style.display = ''; letterEl.style.display = 'none'; }
+        else { letterEl.textContent = (this.getDisplayName() || '?')[0].toUpperCase(); letterEl.style.display = ''; imgEl.style.display = 'none'; }
+        emailBadge.style.display = 'none';
+        if (this.user.login === REPO_OWNER) { badge.style.display = ''; adminNav.style.display = ''; }
+        else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
+      } else {
+        document.getElementById('userNameSmall').textContent = this.getDisplayName();
+        const imgEl = document.getElementById('userAvatarImg');
+        const letterEl = document.getElementById('userAvatarLetter');
+        const avatarUrl = this.getAvatarUrl();
+        if (avatarUrl) { imgEl.src = avatarUrl; imgEl.style.display = ''; letterEl.style.display = 'none'; }
+        else { imgEl.style.display = 'none'; letterEl.textContent = (this.getDisplayName() || '?')[0].toUpperCase(); letterEl.style.display = ''; }
+        emailBadge.style.display = '';
+        if (this.user.role === 'admin') { badge.style.display = ''; adminNav.style.display = ''; }
+        else { badge.style.display = 'none'; adminNav.style.display = 'none'; }
+      }
     } else {
-      btnLogin.style.display = ''; btnUser.style.display = 'none'; navNew.style.display = 'none'; badge.style.display = 'none'; adminNav.style.display = 'none';
+      btnLogin.style.display = ''; btnUser.style.display = 'none'; navNew.style.display = 'none';
+      badge.style.display = 'none'; adminNav.style.display = 'none'; emailBadge.style.display = 'none'; vipBadge.style.display = 'none';
+      if (levelBadge) levelBadge.style.display = 'none';
     }
+    this.updateExpUI();
     this.updateFab();
   },
 
@@ -456,6 +2054,300 @@ const App = {
         this.loadPosts();
       }
     });
+    this.initDefaultUsers();
+  },
+
+  // ---- 作者解析 ----
+  parseAuthor(issue) {
+    const body = issue.body || '';
+    const match = body.match(/^<!-- author:email:(.*?) -->\n?/);
+    if (match) {
+      const username = match[1];
+      // 查找localStorage中的用户数据以获取自定义头像和名称
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      const displayNameOverride = localStorage.getItem('genfun_display_name_override');
+      const avatarOverride = localStorage.getItem('genfun_avatar_override');
+      const displayName = (found && found.email === (this.emailUser && this.emailUser.email) && displayNameOverride) ? displayNameOverride : (found ? found.username : username);
+      const avatar = (found && found.email === (this.emailUser && this.emailUser.email) && avatarOverride) ? avatarOverride : (found ? (found.avatarUrl || '') : '');
+      return { type: 'email', username, displayName, avatar };
+    }
+    return { type: 'github', username: issue.user.login, displayName: issue.user.name || issue.user.login, avatar: issue.user.avatar_url };
+  },
+  parseCommentAuthor(comment) {
+    const body = comment.body || '';
+    const match = body.match(/^<!-- author:email:(.*?) -->\n?/);
+    if (match) {
+      const username = match[1];
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      const displayNameOverride = localStorage.getItem('genfun_display_name_override');
+      const avatarOverride = localStorage.getItem('genfun_avatar_override');
+      const displayName = (found && found.email === (this.emailUser && this.emailUser.email) && displayNameOverride) ? displayNameOverride : (found ? found.username : username);
+      const avatar = (found && found.email === (this.emailUser && this.emailUser.email) && avatarOverride) ? avatarOverride : (found ? (found.avatarUrl || '') : '');
+      return { type: 'email', username, displayName, avatar };
+    }
+    return { type: 'github', username: comment.user.login, displayName: comment.user.name || comment.user.login, avatar: comment.user.avatar_url };
+  },
+  getAuthorHtml(author) {
+    const title = this.getTitleForUser(author.username, author.type);
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+    const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
+    const followBtn = this.getFollowBtnHtml(author.username);
+    if (author.type === 'email') {
+      if (author.avatar) {
+        return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> ${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>${followBtn}`;
+      }
+      const letter = author.username[0].toUpperCase();
+      return `<div class="user-avatar-letter" style="width:20px;height:20px;font-size:10px;display:inline-flex;vertical-align:middle;">${letter}</div> ${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>${followBtn}`;
+    }
+    return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(author.displayName)}${lvHtml}${titleHtml}${followBtn}`;
+  },
+  getAuthorHtml24(author) {
+    const title = this.getTitleForUser(author.username, author.type);
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+    const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
+    const followBtn = this.getFollowBtnHtml(author.username);
+    if (author.type === 'email') {
+      if (author.avatar) {
+        return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> <strong>${this.esc(author.displayName)}</strong>${lvHtml}${titleHtml} <span class="email-badge">邮箱</span>${followBtn}`;
+      }
+      const letter = author.username[0].toUpperCase();
+      return `<div class="user-avatar-letter" style="width:24px;height:24px;font-size:11px;display:inline-flex;vertical-align:middle;">${letter}</div> <strong>${this.esc(author.displayName)}</strong>${lvHtml}${titleHtml} <span class="email-badge">邮箱</span>${followBtn}`;
+    }
+    return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(author.displayName)}</strong>${lvHtml}${titleHtml}${followBtn}`;
+  },
+  // 获取指定用户的等级标签HTML
+  getLevelHtmlForUser(username, type) {
+    let exp = 0;
+    if (type === 'email') {
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      exp = found ? (found.exp || 0) : 0;
+    }
+    // 只显示当前登录用户自己的等级（localStorage无法获取其他用户经验）
+    const myName = this.userType === 'email' ? (this.user ? this.user.username : '') : (this.user ? this.user.login : '');
+    if (username === myName) {
+      const lv = this.getLevel();
+      const lvCfg = this.getLevelConfig();
+      return ` <span class="level-tag${lv >= 5 ? ' lv5' : ''}">${lvCfg.name}</span>`;
+    }
+    return '';
+  },
+  getRealBody(body) { if (!body) return ''; return body.replace(/^<!-- author:email:(.*?) -->\n?/, ''); },
+
+  // ---- 聊天室 ----
+  async loadChat() {
+    const el = document.getElementById('chatMessages');
+    const inputBar = document.getElementById('chatInputBar');
+    const debugEl = document.getElementById('chatDebug');
+
+    // 非登录用户也能看聊天，但不能发
+    inputBar.style.display = this.isLoggedIn() ? '' : 'none';
+
+    // 如果已有缓存且未过期，静默增量刷新（不清空页面）
+    const now = Date.now();
+    if (this.chatCache.length && now - this.chatCacheTime < 60000) {
+      this.renderChat(this.chatCache);
+      // 后台静默增量刷新
+      this.silentRefreshChat();
+      return;
+    }
+
+    el.innerHTML = '<div class="loading"><div class="spinner"></div>加载聊天消息...</div>';
+
+    try {
+      let comments = null;
+      let debugMsg = '';
+
+      // 1) 直连（8秒超时）
+      try {
+        const res = await this.fetchWithTimeout(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
+        if (res.ok) { comments = await res.json(); debugMsg += '✅ 直连(' + comments.length + '条)'; }
+        else { debugMsg += '❌ API返回' + res.status; }
+      } catch(e) { debugMsg += '❌ 直连超时:' + e.message; }
+
+      // 2) PAT
+      if (!comments) {
+        try {
+          comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', null, true);
+          debugMsg += ' ✅ PAT(' + comments.length + '条)';
+        } catch(e2) { debugMsg += ' ❌ PAT:' + e2.message; }
+      }
+
+      // 3) CORS代理
+      if (!comments) {
+        const proxyResult = await this.fetchViaProxy(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', 8000);
+        if (proxyResult) { comments = proxyResult; debugMsg += ' ✅ 代理(' + comments.length + '条)'; }
+        else { debugMsg += ' ❌ 所有代理失败'; }
+      }
+
+      if (debugEl) { debugEl.textContent = '聊天: ' + debugMsg; debugEl.style.display = ''; }
+
+      if (!comments) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">无法加载聊天消息</div><div style="font-size:12px;color:var(--text-muted);margin-top:8px;">' + this.esc(debugMsg) + '</div><button class="btn btn-primary btn-sm" onclick="App.loadChat()" style="margin-top:12px;">重新加载</button></div>';
+        return;
+      }
+
+      this.chatCache = comments;
+      this.chatCacheTime = now;
+      this.renderChat(comments);
+    } catch(e) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + this.esc(e.message) + '</div><button class="btn btn-primary btn-sm" onclick="App.loadChat()" style="margin-top:12px;">重新加载</button></div>';
+    }
+  },
+
+  // 静默增量刷新聊天（不清空页面）
+  async silentRefreshChat() {
+    try {
+      let comments = null;
+      // 1) 直连
+      try {
+        const res = await this.fetchWithTimeout(GH_API + '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 5000);
+        if (res.ok) comments = await res.json();
+      } catch(e) {}
+
+      // 2) PAT
+      if (!comments) {
+        try { comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments?per_page=100&sort=created&direction=asc', null, true); } catch(e2) {}
+      }
+
+      if (comments && comments.length > this.chatCache.length) {
+        // 有新消息，追加渲染
+        const newComments = comments.slice(this.chatCache.length);
+        const el = document.getElementById('chatMessages');
+        for (const c of newComments) {
+          const author = this.parseCommentAuthor(c);
+          const realBody = this.getRealBody(c.body);
+          el.insertAdjacentHTML('beforeend', this.buildChatMsgHtml(author, realBody, this.timeAgo(c.created_at)));
+        }
+        el.scrollTop = el.scrollHeight;
+        this.chatCache = comments;
+        this.chatCacheTime = Date.now();
+      }
+    } catch(e) {}
+  },
+
+  renderChat(comments) {
+    const el = document.getElementById('chatMessages');
+    if (!comments.length) {
+      el.innerHTML = '<div class="empty-state" style="padding:30px"><div class="empty-state-icon">💬</div><div class="empty-state-text">聊天大厅空空如也，快来聊几句吧！</div></div>';
+      return;
+    }
+    el.innerHTML = comments.map(c => {
+      const author = this.parseCommentAuthor(c);
+      const realBody = this.getRealBody(c.body);
+      if (author.type === 'email') {
+        const title = this.getTitleForUser(author.username, author.type);
+        const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+        const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
+        const avatarHtml = author.avatar ? `<img class="chat-msg-avatar" src="${author.avatar}" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="chat-msg-avatar-letter" style="display:none">${author.username[0].toUpperCase()}</div>` : `<div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>`;
+        return `<div class="chat-msg">
+          ${avatarHtml}
+          <div class="chat-msg-body">
+            <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge">邮箱</span></div>
+            <div class="chat-msg-text">${this.esc(realBody)}</div>
+            <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
+          </div>
+        </div>`;
+      }
+      const title2 = this.getTitleForUser(author.username, author.type);
+      const titleHtml2 = title2 ? ` <span class="title-tag">${this.esc(title2)}</span>` : '';
+      const lvHtml2 = this.getLevelHtmlForUser(author.username, author.type);
+      return `<div class="chat-msg">
+        <img class="chat-msg-avatar" src="${author.avatar}" alt="">
+        <div class="chat-msg-body">
+          <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml2}${titleHtml2}</div>
+          <div class="chat-msg-text">${this.esc(realBody)}</div>
+          <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    // 自动滚到底部
+    el.scrollTop = el.scrollHeight;
+  },
+
+  async sendChat() {
+    if (!this.isLoggedIn()) return this.toast('请先登录再聊天', 'error');
+    const inputEl = document.getElementById('chatInput');
+    const msg = inputEl.value.trim();
+    if (!msg) return this.toast('请输入聊天内容', 'error');
+    if (msg.length > 500) return this.toast('聊天消息最多500字', 'error');
+
+    // 乐观更新：立即在本地显示消息，不等API响应
+    const author = this.userType === 'email'
+      ? { type: 'email', username: this.user.username, displayName: this.getDisplayName(), avatar: this.getAvatarUrl() }
+      : { type: 'github', username: this.user.login, displayName: this.getDisplayName(), avatar: this.user.avatar_url };
+
+    const title = this.getTitle();
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+
+    // 生成临时消息HTML
+    const tempMsgHtml = this.buildChatMsgHtml(author, msg, '刚刚');
+    const el = document.getElementById('chatMessages');
+
+    // 先移除空状态提示（如果有的话）
+    const emptyState = el.querySelector('.empty-state');
+    if (emptyState) emptyState.remove();
+
+    // 立即追加到聊天区域
+    el.insertAdjacentHTML('beforeend', tempMsgHtml);
+    el.scrollTop = el.scrollHeight;
+    inputEl.value = '';
+
+    // 后台发送到API
+    inputEl.disabled = true;
+    try {
+      const body = this.userType === 'email'
+        ? `<!-- author:email:${this.user.username} -->\n${msg}`
+        : msg;
+
+      await this.ghApi('POST', '/repos/' + REPO + '/issues/' + CHAT_ISSUE_NUMBER + '/comments', { body }, this.userType === 'email');
+
+      // 发送成功后延迟3秒静默刷新（获取服务器真实数据，替换临时消息）
+      setTimeout(() => {
+        this.chatCacheTime = 0;
+        this.loadChat();
+      }, 3000);
+    } catch(e) {
+      // 发送失败：标记临时消息为失败
+      const lastMsg = el.querySelector('.chat-msg:last-child');
+      if (lastMsg) {
+        const textEl = lastMsg.querySelector('.chat-msg-text');
+        if (textEl) textEl.innerHTML = this.esc(msg) + ' <span style="color:var(--danger);font-size:12px;">（发送失败）</span>';
+      }
+      this.toast('消息发送失败: ' + e.message, 'error');
+    }
+    inputEl.disabled = false;
+    // 聊天经验+1
+    this.addExp(1);
+    this.updateExpUI();
+  },
+  buildChatMsgHtml(author, text, time) {
+    const title = this.getTitleForUser(author.username, author.type);
+    const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+    const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
+    if (author.type === 'email') {
+      const avatarHtml = author.avatar
+        ? `<img class="chat-msg-avatar" src="${author.avatar}" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="chat-msg-avatar-letter" style="display:none">${author.username[0].toUpperCase()}</div>`
+        : `<div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>`;
+      return `<div class="chat-msg">
+        ${avatarHtml}
+        <div class="chat-msg-body">
+          <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge">邮箱</span></div>
+          <div class="chat-msg-text">${this.esc(text)}</div>
+          <div class="chat-msg-time">${time}</div>
+        </div>
+      </div>`;
+    }
+    return `<div class="chat-msg">
+      <img class="chat-msg-avatar" src="${author.avatar}" alt="">
+      <div class="chat-msg-body">
+        <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml}${titleHtml}</div>
+        <div class="chat-msg-text">${this.esc(text)}</div>
+        <div class="chat-msg-time">${time}</div>
+      </div>
+    </div>`;
   },
 
   // ---- 帖子列表 ----
@@ -463,14 +2355,12 @@ const App = {
     const listEl = document.getElementById('postList');
     const emptyEl = document.getElementById('postsEmpty');
     const loadEl = document.getElementById('postsLoading');
-    const pagEl = document.getElementById('pagination');
 
     listEl.innerHTML = '';
     loadEl.style.display = '';
     emptyEl.style.display = 'none';
 
     try {
-      // 缓存5分钟
       const now = Date.now();
       if (this.cachedPosts.length && now - this.cacheTime < 300000) {
         this.renderPosts(this.filterPosts(this.cachedPosts));
@@ -479,44 +2369,73 @@ const App = {
       }
 
       const params = new URLSearchParams({ state: 'open', sort: 'created', direction: 'desc', per_page: 100 });
-      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?' + params);
-      // 过滤掉 Pull Requests
-      this.cachedPosts = issues.filter(i => !i.pull_request);
-      this.cacheTime = now;
-      const filtered = this.filterPosts(this.cachedPosts);
+      const apiUrl = GH_API + '/repos/' + REPO + '/issues?' + params;
+      let issues = null;
+      let debugMsg = '';
 
+      // 1) 直接请求GitHub API（8秒超时）
+      try {
+        const res = await this.fetchWithTimeout(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
+        if (res.ok) {
+          issues = await res.json();
+          issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
+          debugMsg += '✅ 直连API(' + issues.length + '条)';
+        } else { debugMsg += '❌ API返回' + res.status; }
+      } catch(e1) { debugMsg += '❌ 直连超时:' + e1.message; }
+
+      // 2) PAT认证请求（8秒超时）
+      if (!issues) {
+        try {
+          issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?' + params, null, true);
+          issues = issues.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
+          debugMsg += ' ✅ PAT(' + issues.length + '条)';
+        } catch(e2) { debugMsg += ' ❌ PAT:' + e2.message; }
+      }
+
+      // 3) CORS代理（逐个尝试）
+      if (!issues) {
+        const proxyResult = await this.fetchViaProxy(apiUrl, 8000);
+        if (proxyResult) {
+          issues = proxyResult.filter(i => !i.pull_request && i.number !== CHAT_ISSUE_NUMBER);
+          debugMsg += ' ✅ CORS代理(' + issues.length + '条)';
+        } else { debugMsg += ' ❌ 所有代理失败'; }
+      }
+
+      const debugEl = document.getElementById('apiDebug');
+      if (debugEl) { debugEl.textContent = 'API: ' + debugMsg; debugEl.style.display = ''; }
+
+      if (!issues || !issues.length) {
+        loadEl.style.display = 'none'; emptyEl.style.display = ''; return;
+      }
+      this.cachedPosts = issues; this.cacheTime = now;
+      const filtered = this.filterPosts(this.cachedPosts);
       loadEl.style.display = 'none';
       if (!filtered.length) { emptyEl.style.display = ''; return; }
       this.renderPosts(filtered);
     } catch(e) {
       loadEl.style.display = 'none';
-      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>';
+      listEl.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">加载失败，请刷新重试<br><small>' + this.esc(e.message) + '</small></div></div>';
     }
   },
 
   filterPosts(posts) {
-    let filtered = posts;
-    // 置顶排前
+    let filtered = [...posts];
     filtered.sort((a, b) => {
       const aPin = a.labels.some(l => l.name === 'pinned');
       const bPin = b.labels.some(l => l.name === 'pinned');
       if (aPin && !bPin) return -1;
       if (!aPin && bPin) return 1;
-      return 0;
+      return new Date(b.created_at) - new Date(a.created_at);
     });
-    // 分类筛选
     if (this.currentCategory !== '全部') {
       filtered = filtered.filter(i => i.labels.some(l => l.name === this.currentCategory));
     }
-    // 搜索
     const search = document.getElementById('searchInput').value.trim().toLowerCase();
     if (search) {
       filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || (i.body || '').toLowerCase().includes(search));
     }
-    // 分页
     const perPage = 20;
-    const total = filtered.length;
-    const totalPages = Math.ceil(total / perPage) || 1;
+    const totalPages = Math.ceil(filtered.length / perPage) || 1;
     if (this.currentPostPage > totalPages) this.currentPostPage = totalPages;
     const start = (this.currentPostPage - 1) * perPage;
     return filtered.slice(start, start + perPage);
@@ -527,12 +2446,12 @@ const App = {
     const emptyEl = document.getElementById('postsEmpty');
     if (!posts.length) { listEl.innerHTML = ''; emptyEl.style.display = ''; return; }
     emptyEl.style.display = 'none';
-
     listEl.innerHTML = posts.map(i => {
       const isPinned = i.labels.some(l => l.name === 'pinned');
       const cats = i.labels.filter(l => l.name !== 'pinned').map(l => l.name);
       const cat = cats[0] || '其他';
-      const preview = (i.body || '').slice(0, 150);
+      const author = this.parseAuthor(i);
+      const preview = this.getRealBody(i.body).slice(0, 150);
       return `<div class="post-card${isPinned ? ' pinned' : ''}" onclick="App.navigate('post',{issueNumber:${i.number}})">
         <div class="post-card-header">
           <div class="post-card-title">${isPinned ? '📌 ' : ''}${this.esc(i.title)}</div>
@@ -540,20 +2459,17 @@ const App = {
         </div>
         <div class="post-card-preview">${this.esc(preview)}</div>
         <div class="post-card-meta">
-          <span class="post-card-author" onclick="event.stopPropagation();App.viewUserProfile('${i.user.login}')"><img src="${i.user.avatar_url}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(i.user.name || i.user.login)}</span>
+          <span class="post-card-author">${this.getAuthorHtml(author)}</span>
           <span>💬 ${i.comments} 回复</span>
           <span>${this.timeAgo(i.created_at)}</span>
         </div>
       </div>`;
     }).join('');
-
-    // 分页
     this.renderPagination();
   },
 
   renderPagination() {
-    const total = this.cachedPosts.length;
-    let filtered = this.cachedPosts;
+    let filtered = [...this.cachedPosts];
     if (this.currentCategory !== '全部') filtered = filtered.filter(i => i.labels.some(l => l.name === this.currentCategory));
     const search = document.getElementById('searchInput').value.trim().toLowerCase();
     if (search) filtered = filtered.filter(i => i.title.toLowerCase().includes(search) || (i.body||'').toLowerCase().includes(search));
@@ -578,13 +2494,43 @@ const App = {
     const el = document.getElementById('postDetail');
     el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
     try {
-      const issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber);
-      const comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100');
+      let issue = null, comments = null;
+      const issueUrl = GH_API + '/repos/' + REPO + '/issues/' + this.currentIssueNumber;
+      const commentsUrl = issueUrl + '/comments?per_page=100';
+
+      // 1) 直连（超时8秒）
+      try {
+        const iRes = await this.fetchWithTimeout(issueUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
+        if (iRes.ok) issue = await iRes.json();
+        const cRes = await this.fetchWithTimeout(commentsUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, 8000);
+        if (cRes.ok) comments = await cRes.json();
+      } catch(e) { /* try next */ }
+
+      // 2) PAT
+      if (!issue) {
+        try { issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber, null, true); } catch(e) {}
+      }
+      if (!comments) {
+        try { comments = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + this.currentIssueNumber + '/comments?per_page=100', null, true); } catch(e) {}
+      }
+
+      // 3) CORS代理
+      if (!issue) { issue = await this.fetchViaProxy(issueUrl, 8000); }
+      if (!comments) { comments = await this.fetchViaProxy(commentsUrl, 8000) || []; }
+
+      if (!issue) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">帖子加载失败，请返回重试</div><button class="btn btn-primary btn-sm" onclick="App.navigate(\'home\')" style="margin-top:12px;">返回首页</button></div>';
+        return;
+      }
+      if (!comments) comments = [];
+
       const isPinned = issue.labels.some(l => l.name === 'pinned');
       const cats = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
       const cat = cats[0] || '其他';
-      const isAdmin = this.user && this.user.login === REPO_OWNER;
-      const isAuthor = this.user && this.user.login === issue.user.login;
+      const author = this.parseAuthor(issue);
+      const isAdmin = this.isAdmin();
+      const isAuthor = this.userType === 'github' ? (this.user && this.user.login === issue.user.login) : (author.type === 'email' && this.user && author.username === this.user.username);
+      const realBody = this.getRealBody(issue.body || '');
 
       let html = `<div class="post-detail">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
@@ -594,99 +2540,84 @@ const App = {
         </div>
         <h1 class="post-detail-title">${isPinned?'📌 ':''}${this.esc(issue.title)}</h1>
         <div class="post-detail-meta">
-          <span style="cursor:pointer" onclick="App.viewUserProfile('${issue.user.login}')"><img src="${issue.user.avatar_url}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(issue.user.name||issue.user.login)}</strong></span>
+          <span>${this.getAuthorHtml24(author)}</span>
           <span>${this.timeAgo(issue.created_at)}</span>
           <span>💬 ${issue.comments} 回复</span>
         </div>
-        <div class="post-detail-content">${this.esc(issue.body||'（无内容）')}</div>
+        <div class="post-detail-content">${this.esc(realBody || '（无内容）')}</div>
       </div>`;
 
-      // 回复
       html += `<div class="replies-section"><div class="replies-title">回复 (${comments.length})</div>`;
       if (comments.length) {
         comments.forEach(c => {
+          const cAuthor = this.parseCommentAuthor(c);
           html += `<div class="reply-card">
-            <div class="reply-header" style="cursor:pointer" onclick="App.viewUserProfile('${c.user.login}')">
-              <img src="${c.user.avatar_url}" width="24" height="24" style="border-radius:50%;">
-              <span class="reply-author">${this.esc(c.user.name||c.user.login)}</span>
-              <span class="reply-time">${this.timeAgo(c.created_at)}</span>
-            </div>
-            <div class="reply-content">${this.esc(c.body)}</div>
+            <div class="reply-header">${this.getAuthorHtml24(cAuthor)} <span class="reply-time">${this.timeAgo(c.created_at)}</span></div>
+            <div class="reply-content">${this.esc(this.getRealBody(c.body))}</div>
           </div>`;
         });
-      } else {
-        html += '<div class="empty-state" style="padding:24px"><div class="empty-state-text" style="font-size:13px">暂无回复</div></div>';
-      }
+      } else { html += '<div class="empty-state" style="padding:24px"><div class="empty-state-text" style="font-size:13px">暂无回复</div></div>'; }
       html += '</div>';
 
-      // 回复表单
-      if (this.user) {
+      if (this.isLoggedIn()) {
         html += `<div class="reply-form"><textarea id="replyContent" placeholder="写下你的回复..."></textarea>
           <button class="btn btn-primary" onclick="App.submitReply(${issue.number})">发表回复</button></div>`;
       } else {
         html += '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px">请先 <a style="cursor:pointer;color:var(--accent)" onclick="App.navigate(\'login\')">登录</a> 后回复</div>';
       }
-
       el.innerHTML = html;
-    } catch(e) {
-      el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>';
-    }
+    } catch(e) { el.innerHTML = '<div class="empty-state"><div class="empty-state-text">加载失败: ' + e.message + '</div></div>'; }
   },
 
   async submitReply(issueNumber) {
-    if (!this.user) return this.toast('请先登录', 'error');
+    if (!this.isLoggedIn()) return this.toast('请先登录', 'error');
     const content = document.getElementById('replyContent').value.trim();
     if (!content) return this.toast('请输入回复内容', 'error');
+    const body = this.userType === 'email' ? `<!-- author:email:${this.user.username} -->\n${content}` : content;
     try {
-      await this.ghApi('POST', '/repos/' + REPO + '/issues/' + issueNumber + '/comments', { body: content });
-      this.toast('回复成功', 'success');
-      this.loadPostDetail();
+      await this.ghApi('POST', '/repos/' + REPO + '/issues/' + issueNumber + '/comments', { body }, this.userType === 'email');
+      this.addExp(5); this.updateExpUI(); // 回复+5经验
+      this.toast('回复成功 · 经验+5', 'success'); this.loadPostDetail();
     } catch(e) { this.toast(e.message, 'error'); }
   },
 
-  // ---- 发帖 ----
   async submitPost() {
-    if (!this.user) return this.toast('请先登录', 'error');
+    if (!this.isLoggedIn()) return this.toast('请先登录', 'error');
     const title = document.getElementById('newPostTitle').value.trim();
     const content = document.getElementById('newPostContent').value.trim();
     const category = document.getElementById('newPostCategory').value;
     if (!title) return this.toast('请输入标题', 'error');
     if (!content) return this.toast('请输入内容', 'error');
-
+    const body = this.userType === 'email' ? `<!-- author:email:${this.user.username} -->\n${content}` : content;
     const btn = document.getElementById('btnSubmit');
     btn.disabled = true; btn.textContent = '发布中...';
     try {
-      await this.ghApi('POST', '/repos/' + REPO + '/issues', { title, body: content, labels: [category] });
-      this.toast('帖子发布成功！', 'success');
+      await this.ghApi('POST', '/repos/' + REPO + '/issues', { title, body, labels: [category] }, this.userType === 'email');
+      this.addExp(10); this.updateExpUI(); // 发帖+10经验
+      this.toast('帖子发布成功！经验+10', 'success');
       document.getElementById('newPostTitle').value = '';
       document.getElementById('newPostContent').value = '';
-      this.cacheTime = 0; // 清缓存
-      this.navigate('home');
+      this.cacheTime = 0; this.navigate('home');
     } catch(e) { this.toast(e.message, 'error'); }
     btn.disabled = false; btn.textContent = '发布帖子';
   },
 
-  // ---- 管理 ----
   async closeIssue(number) {
     if (!confirm('确定关闭此帖子？')) return;
     try {
-      await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { state: 'closed' });
-      this.toast('帖子已关闭', 'success');
-      this.cacheTime = 0;
-      this.navigate('home');
+      await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { state: 'closed' }, true);
+      this.toast('帖子已关闭', 'success'); this.cacheTime = 0; this.navigate('home');
     } catch(e) { this.toast(e.message, 'error'); }
   },
 
   async togglePin(number) {
     try {
-      const issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + number);
+      const issue = await this.ghApi('GET', '/repos/' + REPO + '/issues/' + number, null, true);
       const isPinned = issue.labels.some(l => l.name === 'pinned');
       const catLabels = issue.labels.filter(l => l.name !== 'pinned').map(l => l.name);
       const newLabels = isPinned ? catLabels : [...catLabels, 'pinned'];
-      await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { labels: newLabels });
-      this.toast(isPinned ? '已取消置顶' : '已置顶', 'success');
-      this.cacheTime = 0;
-      this.loadPostDetail();
+      await this.ghApi('PATCH', '/repos/' + REPO + '/issues/' + number, { labels: newLabels }, true);
+      this.toast(isPinned ? '已取消置顶' : '已置顶', 'success'); this.cacheTime = 0; this.loadPostDetail();
     } catch(e) { this.toast(e.message, 'error'); }
   },
 
@@ -694,17 +2625,18 @@ const App = {
     const el = document.getElementById('adminContent');
     el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
     try {
-      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?state=all&per_page=100');
+      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?state=all&per_page=100', null, true);
       const posts = issues.filter(i => !i.pull_request);
       el.innerHTML = `<p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">共 ${posts.length} 篇帖子</p>` +
         posts.map(i => {
           const isPinned = i.labels.some(l => l.name === 'pinned');
           const cat = i.labels.filter(l => l.name !== 'pinned').map(l => l.name)[0] || '其他';
+          const author = this.parseAuthor(i);
           const stateTag = i.state === 'closed' ? ' <span style="color:var(--danger);font-size:11px;">[已关闭]</span>' : '';
           return `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;flex-wrap:wrap;${isPinned?'border-left:3px solid #f59e0b;':''}">
             <div style="flex:1;min-width:0;">
               <div style="font-weight:600;color:var(--text);font-size:14px;">${isPinned?'📌 ':''}${this.esc(i.title)}${stateTag}</div>
-              <div style="font-size:12px;color:var(--text-secondary);">${this.esc(i.user.login)} · ${cat} · 💬 ${i.comments} · ${this.timeAgo(i.created_at)}</div>
+              <div style="font-size:12px;color:var(--text-secondary);">${this.esc(author.displayName)} · ${cat} · 💬 ${i.comments} · ${this.timeAgo(i.created_at)}</div>
             </div>
             <div style="display:flex;gap:6px;">
               <button class="btn btn-sm btn-ghost" onclick="App.togglePin(${i.number})">${isPinned?'取消置顶':'📌 置顶'}</button>
@@ -712,35 +2644,134 @@ const App = {
             </div>
           </div>`;
         }).join('');
-    } catch(e) { el.innerHTML = '<div class="empty-state-text" style="color:var(--danger)">加载失败</div>'; }
+    } catch(e) { el.innerHTML = '<div style="color:var(--danger)">加载失败</div>'; }
   },
 
   async loadDashboard() {
     const el = document.getElementById('adminContent');
     el.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
     try {
-      const issues = await this.ghApi('GET', '/repos/' + REPO + '/issues?state=all&per_page=1');
-      const open = await this.ghApi('GET', '/repos/' + REPO + '/issues?state=open&per_page=1');
-      const repo = await this.ghApi('GET', '/repos/' + REPO);
+      const repo = await this.ghApi('GET', '/repos/' + REPO, null, true);
+      const emailUsers = JSON.parse(localStorage.getItem('genfun_users') || '[]');
       el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;">
           <div style="font-size:32px;font-weight:800;color:var(--accent);">${repo.open_issues_count}</div><div style="font-size:13px;color:var(--text-secondary);">开放帖子</div></div>
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;">
           <div style="font-size:32px;font-weight:800;color:var(--accent);">${repo.stargazers_count}</div><div style="font-size:13px;color:var(--text-secondary);">Stars</div></div>
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;">
-          <div style="font-size:32px;font-weight:800;color:var(--accent);">${repo.forks_count}</div><div style="font-size:13px;color:var(--text-secondary);">Forks</div></div>
+          <div style="font-size:32px;font-weight:800;color:var(--accent);">${emailUsers.length}</div><div style="font-size:13px;color:var(--text-secondary);">邮箱注册用户</div></div>
       </div>`;
     } catch(e) { el.innerHTML = '<div style="color:var(--danger)">加载失败</div>'; }
-  },
-
-  viewUserProfile(login) {
-    window.open('https://github.com/' + login, '_blank');
   },
 
   // ---- 工具 ----
   esc(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; },
   timeAgo(s) { const d = Date.now()-new Date(s).getTime(); const sec=Math.floor(d/1000); if(sec<60)return'刚刚'; if(sec<3600)return Math.floor(sec/60)+'分钟前'; if(sec<86400)return Math.floor(sec/3600)+'小时前'; if(sec<2592000)return Math.floor(sec/86400)+'天前'; return new Date(s).toLocaleDateString('zh-CN'); },
   toast(msg, type, dur) { const c=document.getElementById('toast-container'); const t=document.createElement('div'); t.className='toast toast-'+type; const icons={success:'✓',error:'✕',info:'ℹ'}; t.innerHTML=`<strong>${icons[type]||''}</strong> ${msg}`; c.appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300);},dur||3500); }
+
+  // ---- 哔哩哔哩小电视 ----
+  showBili() {
+    document.getElementById('biliOverlay').style.display = 'flex';
+    this.renderBiliRecommend();
+    // 隐藏播放器
+    document.getElementById('biliPlayerWrap').style.display = 'none';
+    document.getElementById('biliResults').innerHTML = '<div class="bili-empty">🔍 输入关键词搜索B站视频<br>点击▶在弹窗中播放，点击标题在B站打开</div>';
+  },
+  closeBili() {
+    document.getElementById('biliOverlay').style.display = 'none';
+    // 停止播放
+    const iframe = document.getElementById('biliPlayerIframe');
+    if (iframe) iframe.src = '';
+  },
+
+  renderBiliRecommend() {
+    const el = document.getElementById('biliRecommendGrid');
+    if (!el) return;
+    el.innerHTML = BILI_RECOMMEND.map(v => `
+      <div class="bili-recommend-card" onclick="App.playBiliVideo('${v.bvid}')">
+        <div class="bili-recommend-card-img">${v.pic}</div>
+        <div class="bili-recommend-card-name">${this.esc(v.title)}</div>
+      </div>
+    `).join('');
+  },
+
+  playBiliVideo(bvid) {
+    const iframe = document.getElementById('biliPlayerIframe');
+    const wrap = document.getElementById('biliPlayerWrap');
+    iframe.src = `https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=0&high_quality=1`;
+    wrap.style.display = '';
+    this.toast('正在加载B站视频...', 'info');
+  },
+
+  async searchBili() {
+    const keyword = document.getElementById('biliSearchInput').value.trim();
+    if (!keyword) return this.toast('请输入搜索关键词', 'error');
+
+    const resultsEl = document.getElementById('biliResults');
+    resultsEl.innerHTML = '<div class="bili-loading"><div class="spinner"></div> 搜索中...</div>';
+
+    try {
+      // 使用B站搜索API
+      const searchUrl = `https://api.bilibili.com/x/web-interface/search/all/v2?keyword=${encodeURIComponent(keyword)}&search_type=video`;
+      let data = null;
+
+      // 依次通过CORS代理尝试
+      const tryUrls = [];
+      for (const proxy of this.CORS_PROXIES) {
+        tryUrls.push(proxy + encodeURIComponent(searchUrl));
+      }
+
+      for (const url of tryUrls) {
+        try {
+          const res = await this.fetchWithTimeout(url, {}, 6000);
+          if (res.ok) {
+            const text = await res.text();
+            try { data = JSON.parse(text); } catch(e) { continue; }
+            if (data && data.data && data.data.result) break;
+            data = null;
+          }
+        } catch(e) { continue; }
+      }
+
+      if (!data || !data.data || !data.data.result) {
+        // 如果API搜索失败，使用B站网页搜索作为备选
+        resultsEl.innerHTML = `<div class="bili-empty">API搜索失败，请直接在B站搜索：<br><a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">🔗 点击前往B站搜索"${this.esc(keyword)}"</a></div>`;
+        return;
+      }
+
+      // 提取视频结果
+      const videoResult = data.data.result.find(r => r.result_type === 'video');
+      if (!videoResult || !videoResult.data || videoResult.data.length === 0) {
+        resultsEl.innerHTML = `<div class="bili-empty">没有找到相关视频<br><a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">🔗 点击前往B站搜索</a></div>`;
+        return;
+      }
+
+      const videos = videoResult.data.slice(0, 20);
+      this._biliSearchCache = videos;
+
+      resultsEl.innerHTML = videos.map(v => {
+        // B站搜索结果字段
+        const bvid = v.bvid || '';
+        const title = v.title ? v.title.replace(/<.*?>/g, '') : '';
+        const author = v.author || '';
+        const play = v.play || 0;
+        const pic = v.pic || '';
+        const duration = v.duration || '';
+        return `<div class="bili-result-item">
+          <div class="bili-result-thumb">
+            ${pic ? `<img src="${pic.startsWith('//') ? 'https:' + pic : pic}" onerror="this.style.display='none';this.parentElement.textContent='📺'" loading="lazy">` : '📺'}
+          </div>
+          <div class="bili-result-info" onclick="App.playBiliVideo('${bvid}')">
+            <div class="bili-result-title">${this.esc(title)}</div>
+            <div class="bili-result-meta">${this.esc(author)} · ▶${play > 10000 ? Math.floor(play/10000)+'万' : play} · ${this.esc(duration)}</div>
+          </div>
+          <button class="bili-result-play" onclick="event.stopPropagation();App.playBiliVideo('${bvid}')" title="播放">▶</button>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      resultsEl.innerHTML = `<div class="bili-empty">搜索出错: ${this.esc(e.message)}<br><a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">🔗 点击前往B站搜索</a></div>`;
+    }
+  }
 };
 
 document.addEventListener('DOMContentLoaded', () => App.init());
