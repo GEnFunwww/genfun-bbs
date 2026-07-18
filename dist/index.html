@@ -46,8 +46,8 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .header-left { display:flex; align-items:center; gap:24px; }
 .logo { font-size:20px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
 .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--accent),var(--accent-alt)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; font-weight:900; }
-.nav { display:flex; gap:4px; }
-.nav-btn { padding:6px 16px; border-radius:20px; border:none; background:transparent; color:var(--text-secondary); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.nav { display:flex; gap:4px; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; } .nav::-webkit-scrollbar { display:none; }
+.nav-btn { padding:6px 16px; border-radius:20px; border:none; background:transparent; color:var(--text-secondary); font-size:14px; cursor:pointer; transition:var(--transition); font-family:inherit; white-space:nowrap; }
 .nav-btn:hover { color:var(--text); background:var(--bg-hover); }
 .nav-btn.active { color:#fff; background:var(--accent); font-weight:600; }
 
@@ -328,7 +328,68 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .exp-bar-mini { display:inline-flex; align-items:center; gap:6px; margin-left:4px; }
 .exp-bar-mini-bar { width:60px; height:6px; background:var(--bg-secondary); border-radius:3px; overflow:hidden; }
 .exp-bar-mini-fill { height:100%; background:var(--accent); border-radius:3px; }
-.exp-bar-mini-text { font-size:10px; color:var(--text-muted); } { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} }
+.exp-bar-mini-text { font-size:10px; color:var(--text-muted); }
+
+/* 左下角小广告 */
+.mini-ad { position:fixed; bottom:8px; left:8px; z-index:998; background:var(--bg-card); border:1px solid var(--border-light); border-radius:6px; padding:4px 8px; font-size:10px; color:var(--text-muted); cursor:pointer; transition:var(--transition); max-width:120px; overflow:hidden; display:flex; align-items:center; gap:4px; opacity:0.7; }
+.mini-ad:hover { opacity:1; border-color:var(--accent); transform:scale(1.02); }
+.mini-ad-icon { font-size:12px; }
+.mini-ad-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2; }
+
+/* 推荐歌曲标签页 */
+.music-tabs { display:flex; gap:0; margin-bottom:12px; border-bottom:1px solid var(--border); }
+.music-tab { padding:8px 16px; border:none; background:none; color:var(--text-secondary); font-size:13px; cursor:pointer; font-family:inherit; font-weight:600; border-bottom:2px solid transparent; transition:var(--transition); }
+.music-tab:hover { color:var(--text); }
+.music-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.music-recommend-list { display:flex; flex-direction:column; }
+.music-rec-item { display:flex; align-items:center; padding:10px 14px; cursor:pointer; transition:var(--transition); border-bottom:1px solid var(--border); gap:10px; }
+.music-rec-item:hover { background:var(--bg-hover); }
+.music-rec-rank { width:24px; text-align:center; font-weight:700; font-size:14px; color:var(--text-secondary); flex-shrink:0; }
+.music-rec-rank.top1 { color:#ffd700; font-size:16px; }
+.music-rec-rank.top2 { color:#c0c0c0; }
+.music-rec-rank.top3 { color:#cd7f32; }
+.music-rec-info { flex:1; min-width:0; }
+.music-rec-name { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.music-rec-artist { font-size:12px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.music-rec-play { width:32px; height:32px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); border:none; flex-shrink:0; }
+.music-rec-play:hover { transform:scale(1.1); }
+.music-rec-tag { font-size:9px; padding:1px 6px; border-radius:6px; background:linear-gradient(135deg,#ffd700,#ffaa00); color:#1a1a1a; font-weight:700; flex-shrink:0; }
+
+/* 哔哩哔哩小电视弹窗 */
+.bili-overlay { position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.bili-modal { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; width:520px; max-width:92vw; max-height:85vh; display:flex; flex-direction:column; box-shadow:var(--shadow-lg); animation:modalIn 0.3s ease; position:relative; }
+.bili-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.bili-header-icon { font-size:28px; }
+.bili-header-title { font-size:18px; font-weight:800; }
+.bili-header-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-secondary); font-size:20px; cursor:pointer; padding:4px 8px; }
+.bili-search-row { display:flex; gap:8px; margin-bottom:12px; }
+.bili-search-row input { flex:1; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
+.bili-search-row input:focus { border-color:var(--accent); }
+.bili-search-row button { padding:10px 18px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-size:14px; cursor:pointer; font-family:inherit; font-weight:600; white-space:nowrap; }
+.bili-results { flex:1; overflow-y:auto; min-height:120px; max-height:350px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-secondary); }
+.bili-result-item { display:flex; align-items:center; padding:10px 14px; cursor:pointer; transition:var(--transition); border-bottom:1px solid var(--border); gap:10px; }
+.bili-result-item:hover { background:var(--bg-hover); }
+.bili-result-item:last-child { border-bottom:none; }
+.bili-result-thumb { width:80px; height:50px; border-radius:6px; background:var(--bg-secondary); overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.bili-result-thumb img { width:100%; height:100%; object-fit:cover; }
+.bili-result-info { flex:1; min-width:0; }
+.bili-result-title { font-size:14px; font-weight:600; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.bili-result-meta { font-size:12px; color:var(--text-secondary); }
+.bili-result-play { width:32px; height:32px; border-radius:50%; background:#fb7299; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); border:none; flex-shrink:0; }
+.bili-result-play:hover { transform:scale(1.1); }
+.bili-player-wrap { margin-top:12px; border-radius:8px; overflow:hidden; background:#000; }
+.bili-player-wrap iframe { width:100%; aspect-ratio:16/9; border:none; }
+.bili-recommend { margin-top:12px; }
+.bili-recommend-title { font-size:14px; font-weight:600; margin-bottom:8px; color:var(--text); }
+.bili-recommend-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; }
+.bili-recommend-card { background:var(--bg-secondary); border:1px solid var(--border-light); border-radius:8px; padding:8px; cursor:pointer; transition:var(--transition); }
+.bili-recommend-card:hover { border-color:#fb7299; transform:translateY(-1px); }
+.bili-recommend-card-img { width:100%; aspect-ratio:16/10; background:var(--bg-card); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:4px; }
+.bili-recommend-card-name { font-size:12px; font-weight:600; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.bili-empty { text-align:center; padding:20px; color:var(--text-muted); font-size:13px; }
+.bili-loading { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; }
+
+@media (max-width:600px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} .mini-ad{bottom:4px; left:4px; font-size:9px; padding:3px 6px; max-width:100px;} }
 @media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} .fab-group{bottom:16px; right:16px;} }
 </style>
 </head>
@@ -341,6 +402,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
         <button class="nav-btn active" data-page="home" onclick="App.navigate('home')">首页</button>
         <button class="nav-btn" data-page="chat" onclick="App.navigate('chat')">💬 聊天</button>
         <button class="nav-btn" onclick="App.showMusic()" title="VIP点歌">🎵 点歌</button>
+        <button class="nav-btn" onclick="App.showBili()" title="哔哩哔哩小电视">📺</button>
         <button class="nav-btn" onclick="App.showCheckin()" title="签到">📅 签到</button>
         <button class="nav-btn" data-page="new" id="navNewPost" style="display:none" onclick="App.navigate('new')">发帖</button>
         <button class="nav-btn admin-nav-btn" data-page="admin" id="navAdmin" style="display:none" onclick="App.navigate('admin')">⚙ 管理</button>
@@ -545,6 +607,12 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
   <button class="fab hidden" id="fabNewPost" onclick="App.navigate('new')" title="发布新帖">+</button>
 </div>
 
+<!-- 左下角小广告 -->
+<div class="mini-ad" onclick="window.open('https://genfunwww.github.io/genfun-bbs/','_blank')" title="GENFUN论坛">
+  <span class="mini-ad-icon">💡</span>
+  <span class="mini-ad-text">GENFUN·发现精彩</span>
+</div>
+
 <!-- 会员弹窗 -->
 <div class="modal-overlay" id="vipModal" style="display:none" onclick="if(event.target===this)App.closeVipModal()">
   <div class="modal-box">
@@ -582,12 +650,22 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 
     <!-- VIP内容区 -->
     <div id="musicContent" style="display:none">
-      <div class="music-search-row">
-        <input type="text" id="musicSearchInput" placeholder="搜索歌曲名、歌手..." onkeydown="if(event.key==='Enter')App.searchMusic()">
-        <button onclick="App.searchMusic()">搜索</button>
+      <div class="music-tabs">
+        <button class="music-tab active" onclick="App.switchMusicTab('search')">🔍 搜索</button>
+        <button class="music-tab" onclick="App.switchMusicTab('recommend')">🔥 推荐</button>
       </div>
-      <div class="music-results" id="musicResults">
-        <div class="music-empty">输入关键词搜索歌曲，点击▶播放</div>
+      <div id="musicTabSearch">
+        <div class="music-search-row">
+          <input type="text" id="musicSearchInput" placeholder="搜索歌曲名、歌手..." onkeydown="if(event.key==='Enter')App.searchMusic()">
+          <button onclick="App.searchMusic()">搜索</button>
+        </div>
+        <div class="music-results" id="musicResults">
+          <div class="music-empty">输入关键词搜索歌曲，点击▶播放</div>
+        </div>
+      </div>
+      <div id="musicTabRecommend" style="display:none">
+        <div class="music-results" id="musicRecommendResults">
+        </div>
       </div>
       <div class="music-now-playing" id="musicNowPlaying" style="display:none">
         <div class="music-now-playing-cover" id="musicNPCover">🎵</div>
@@ -620,6 +698,37 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
     <button class="npb-btn secondary" onclick="App.musicNext()">⏭</button>
     <button class="npb-btn secondary" onclick="App.showMusic()">🎵</button>
     <button class="npb-close" onclick="App.musicStop()">✕</button>
+  </div>
+</div>
+
+<!-- 哔哩哔哩小电视弹窗 -->
+<div class="bili-overlay" id="biliOverlay" style="display:none" onclick="if(event.target===this)App.closeBili()">
+  <div class="bili-modal">
+    <div class="bili-header">
+      <span class="bili-header-icon">📺</span>
+      <span class="bili-header-title">小电视 · 哔哩哔哩</span>
+    </div>
+    <button class="bili-header-close" onclick="App.closeBili()">✕</button>
+
+    <div class="bili-search-row">
+      <input type="text" id="biliSearchInput" placeholder="搜索B站视频..." onkeydown="if(event.key==='Enter')App.searchBili()">
+      <button onclick="App.searchBili()">搜索</button>
+    </div>
+
+    <div class="bili-results" id="biliResults">
+      <div class="bili-empty">🔍 输入关键词搜索B站视频<br>点击▶在弹窗中播放，点击标题在B站打开</div>
+    </div>
+
+    <!-- B站视频播放器 -->
+    <div class="bili-player-wrap" id="biliPlayerWrap" style="display:none">
+      <iframe id="biliPlayerIframe" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+    </div>
+
+    <!-- 推荐视频 -->
+    <div class="bili-recommend">
+      <div class="bili-recommend-title">🔥 推荐视频</div>
+      <div class="bili-recommend-grid" id="biliRecommendGrid"></div>
+    </div>
   </div>
 </div>
 
@@ -684,6 +793,32 @@ const CHECKIN_REWARDS = [
   { day:5, reward:'经验+100+点歌1天', type:'exp_music', value:100, musicDays:1 },
   { day:6, reward:'红色主题', type:'theme', value:'red' },
   { day:7, reward:'点歌3天', type:'music', musicDays:3 },
+];
+
+// 推荐歌曲（Believer永远排第一）
+const RECOMMEND_SONGS = [
+  { id:459689407, name:'Believer', artist:'Imagine Dragons', album:'Evolve', pinned:true, tag:'🔥霸榜' },
+  { id:1901371647, name:'Birds', artist:'Imagine Dragons', album:'Origins', pinned:false },
+  { id:1397345223, name:'Thunder', artist:'Imagine Dragons', album:'Evolve', pinned:false },
+  { id:108322, name:'Numb', artist:'Linkin Park', album:'Meteora', pinned:false },
+  { id:27876900, name:'Faded', artist:'Alan Walker', album:'Different World', pinned:false },
+  { id:436514312, name:'Something Just Like This', artist:'The Chainsmokers / Coldplay', album:'', pinned:false },
+  { id:516556821, name:'Unity', artist:'TheFatRat', album:'', pinned:false },
+  { id:29723229, name:'Alone', artist:'Alan Walker', album:'Different World', pinned:false },
+  { id:1397744151, name:'Waiting For Love', artist:'Avicii', album:'Stories', pinned:false },
+  { id:442608771, name:'Legends Never Die', artist:'Against The Current', album:'', pinned:false },
+  { id:1374060473, name:'Whatever It Takes', artist:'Imagine Dragons', album:'Evolve', pinned:false },
+  { id:5238804, name:'Demons', artist:'Imagine Dragons', album:'Night Visions', pinned:false },
+];
+
+// 哔哩哔哩推荐视频
+const BILI_RECOMMEND = [
+  { bvid:'BV1GJ411x7h7', title:'【 Imagine Dragons 】Believer 官方MV', pic:'🎵' },
+  { bvid:'BV1xx411c7mC', title:'最燃动漫混剪！', pic:'🔥' },
+  { bvid:'BV1Gs411J7oV', title:'10分钟看完一部经典电影', pic:'🎬' },
+  { bvid:'BV1Jx411F7NH', title:'猫咪日常合集', pic:'🐱' },
+  { bvid:'BV1Ks411J7oA', title:'游戏高光时刻集锦', pic:'🎮' },
+  { bvid:'BV1Es411J7o2', title:'科普：宇宙到底有多大？', pic:'🌌' },
 ];
 
 const App = {
@@ -1056,6 +1191,8 @@ const App = {
   _musicPlaylist: [],
   _musicCurrentIdx: -1,
   _musicIsPlaying: false,
+  _musicCurrentTab: 'search',
+  _biliSearchCache: [],
 
   showMusic() {
     const overlay = document.getElementById('musicOverlay');
@@ -1066,8 +1203,13 @@ const App = {
       document.getElementById('musicContent').style.display = '';
       // 显示点歌天数信息
       if (!this.checkVip() && this.musicAccessDays > 0) {
-        document.getElementById('musicContent').querySelector('.music-empty').textContent = `你有${this.musicAccessDays}天点歌权限 · VIP永久免费`;
+        const emptyEl = document.getElementById('musicResults').querySelector('.music-empty');
+        if (emptyEl) emptyEl.textContent = `你有${this.musicAccessDays}天点歌权限 · VIP永久免费`;
       }
+      // 渲染推荐歌曲
+      this.renderRecommendSongs();
+      // 切换到搜索标签
+      this.switchMusicTab(this._musicCurrentTab);
     } else {
       document.getElementById('musicVipLock').style.display = '';
       document.getElementById('musicContent').style.display = 'none';
@@ -1081,6 +1223,36 @@ const App = {
     document.getElementById('musicOverlay').style.display = 'none';
   },
 
+  switchMusicTab(tab) {
+    this._musicCurrentTab = tab;
+    const tabs = document.querySelectorAll('.music-tab');
+    tabs.forEach(t => t.classList.toggle('active', t.textContent.includes(tab === 'search' ? '搜索' : '推荐')));
+    document.getElementById('musicTabSearch').style.display = tab === 'search' ? '' : 'none';
+    document.getElementById('musicTabRecommend').style.display = tab === 'recommend' ? '' : 'none';
+    if (tab === 'recommend') this.renderRecommendSongs();
+  },
+
+  renderRecommendSongs() {
+    const el = document.getElementById('musicRecommendResults');
+    if (!el) return;
+    // 将推荐歌曲加入播放列表（Believer永远排第一）
+    this._musicPlaylist = RECOMMEND_SONGS.map(s => ({
+      id: s.id, name: s.name, artist: s.artist, album: s.album || '', duration: 0
+    }));
+    el.innerHTML = RECOMMEND_SONGS.map((s, i) => {
+      const rankCls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+      const tagHtml = s.pinned ? `<span class="music-rec-tag">${s.tag || '🔥霸榜'}</span>` : '';
+      return `<div class="music-rec-item" onclick="App.playMusicAt(${i})">
+        <div class="music-rec-rank ${rankCls}">${i + 1}</div>
+        <div class="music-rec-info">
+          <div class="music-rec-name">${this.esc(s.name)} ${tagHtml}</div>
+          <div class="music-rec-artist">${this.esc(s.artist)} · ${this.esc(s.album || '')}</div>
+        </div>
+        <button class="music-rec-play" onclick="event.stopPropagation();App.playMusicAt(${i})">▶</button>
+      </div>`;
+    }).join('');
+  },
+
   async searchMusic() {
     const keyword = document.getElementById('musicSearchInput').value.trim();
     if (!keyword) return this.toast('请输入搜索关键词', 'error');
@@ -1089,31 +1261,32 @@ const App = {
     resultsEl.innerHTML = '<div class="music-loading"><div class="spinner"></div> 搜索中...</div>';
 
     try {
-      // 使用网易云音乐搜索API（通过CORS代理）
+      // 使用网易云音乐搜索API（通过多个CORS代理尝试）
       const searchUrl = `https://music.163.com/api/search/get/web?s=${encodeURIComponent(keyword)}&type=1&limit=30`;
       let data = null;
 
-      // 1) 直连尝试
-      try {
-        const res = await this.fetchWithTimeout(searchUrl, {
-          headers: { 'Accept': 'application/json' }
-        }, 5000);
-        if (res.ok) data = await res.json();
-      } catch(e) {}
+      // 依次尝试：直连 → 各CORS代理
+      const tryUrls = [searchUrl];
+      for (const proxy of this.CORS_PROXIES) {
+        tryUrls.push(proxy + encodeURIComponent(searchUrl));
+      }
 
-      // 2) CORS代理
-      if (!data) {
-        for (const proxy of this.CORS_PROXIES) {
-          try {
-            const proxyUrl = proxy + encodeURIComponent(searchUrl);
-            const res = await this.fetchWithTimeout(proxyUrl, {}, 8000);
-            if (res.ok) { data = await res.json(); break; }
-          } catch(e) {}
-        }
+      for (const url of tryUrls) {
+        try {
+          const res = await this.fetchWithTimeout(url, {
+            headers: url === searchUrl ? { 'Accept': 'application/json' } : {}
+          }, 6000);
+          if (res.ok) {
+            const text = await res.text();
+            try { data = JSON.parse(text); } catch(e) { continue; }
+            if (data && data.result && data.result.songs) break;
+            data = null;
+          }
+        } catch(e) { continue; }
       }
 
       if (!data || !data.result || !data.result.songs) {
-        resultsEl.innerHTML = '<div class="music-empty">搜索失败，请换个关键词试试</div>';
+        resultsEl.innerHTML = '<div class="music-empty">搜索失败，请换个关键词试试<br>💡 也可以点击"推荐"标签听热门歌曲</div>';
         return;
       }
 
@@ -1138,7 +1311,7 @@ const App = {
           </div>
         `).join('');
     } catch(e) {
-      resultsEl.innerHTML = '<div class="music-empty">搜索出错: ' + this.esc(e.message) + '</div>';
+      resultsEl.innerHTML = '<div class="music-empty">搜索出错: ' + this.esc(e.message) + '<br>💡 点击"推荐"标签听热门歌曲</div>';
     }
   },
 
@@ -1158,54 +1331,72 @@ const App = {
 
     // 尝试获取歌曲URL
     try {
-      // 尝试多个音乐源获取播放URL
       let playUrl = null;
 
-      // 方法1: 使用第三方API获取网易云外链
+      // 方法1: 使用网易云外链（通过CORS代理）
       const outerLinkUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
-      
-      // 方法2: 直接尝试网易云API获取详情
-      try {
-        const detailUrl = `https://music.163.com/api/song/enhance/player/url?id=${song.id}&ids=[${song.id}]&br=320000`;
-        let detailData = null;
+      for (const proxy of this.CORS_PROXIES) {
         try {
-          const res = await this.fetchWithTimeout(detailUrl, {}, 5000);
-          if (res.ok) detailData = await res.json();
-        } catch(e) {}
-        if (!detailData) {
-          for (const proxy of this.CORS_PROXIES) {
-            try {
-              const proxyUrl = proxy + encodeURIComponent(detailUrl);
-              const res = await this.fetchWithTimeout(proxyUrl, {}, 8000);
-              if (res.ok) { detailData = await res.json(); break; }
-            } catch(e) {}
+          const testUrl = proxy + encodeURIComponent(outerLinkUrl);
+          const testRes = await this.fetchWithTimeout(testUrl, { method: 'HEAD' }, 3000);
+          if (testRes.ok || testRes.status === 302 || testRes.status === 301) {
+            playUrl = testUrl;
+            break;
           }
-        }
-        if (detailData && detailData.data && detailData.data[0] && detailData.data[0].url) {
-          playUrl = detailData.data[0].url;
-        }
-      } catch(e) {}
+        } catch(e) {}
+      }
 
-      // 如果没拿到直接URL，用外链（通过CORS代理）
+      // 方法2: 直接尝试网易云API获取播放URL
       if (!playUrl) {
+        const detailUrl = `https://music.163.com/api/song/enhance/player/url?id=${song.id}&ids=[${song.id}]&br=320000`;
+        const tryUrls2 = [detailUrl];
         for (const proxy of this.CORS_PROXIES) {
+          tryUrls2.push(proxy + encodeURIComponent(detailUrl));
+        }
+        for (const url of tryUrls2) {
           try {
-            playUrl = proxy + encodeURIComponent(outerLinkUrl);
-            // 先测试URL是否可用
-            const testRes = await this.fetchWithTimeout(playUrl, { method: 'HEAD' }, 3000);
-            if (testRes.ok || testRes.status === 302) break;
-            playUrl = null;
-          } catch(e) { playUrl = null; }
+            const res = await this.fetchWithTimeout(url, {}, 5000);
+            if (res.ok) {
+              const detailData = await res.json();
+              if (detailData && detailData.data && detailData.data[0] && detailData.data[0].url) {
+                playUrl = detailData.data[0].url;
+                break;
+              }
+            }
+          } catch(e) {}
         }
       }
 
-      // 最后尝试直接外链
+      // 方法3: 使用第三方音乐解析API
+      if (!playUrl) {
+        const apiUrls = [
+          `https://api.injahow.cn/meting/?type=url&id=${song.id}&server=netease`,
+        ];
+        for (const apiUrl of apiUrls) {
+          for (const proxy of this.CORS_PROXIES.slice(0, 2)) {
+            try {
+              const res = await this.fetchWithTimeout(proxy + encodeURIComponent(apiUrl), {}, 5000);
+              if (res.ok) {
+                const text = await res.text();
+                if (text && text.startsWith('http')) {
+                  playUrl = text.trim();
+                  break;
+                }
+              }
+            } catch(e) {}
+          }
+          if (playUrl) break;
+        }
+      }
+
+      // 方法4: 最后直接用外链
       if (!playUrl) {
         playUrl = outerLinkUrl;
       }
 
       if (!this._musicAudio) {
         this._musicAudio = new Audio();
+        this._musicAudio.crossOrigin = 'anonymous';
         this._musicAudio.addEventListener('ended', () => this.musicNext());
         this._musicAudio.addEventListener('timeupdate', () => this.updateMusicProgress());
         this._musicAudio.addEventListener('error', () => {
@@ -1222,9 +1413,18 @@ const App = {
         document.getElementById('nowPlayingBar').classList.add('show');
         this.toast('正在播放: ' + song.name, 'success');
       }).catch(e => {
-        this.toast('播放失败，该歌曲可能无法播放', 'error');
-        this._musicIsPlaying = false;
-        this.updateMusicPlayingUI();
+        // 如果CORS代理失败，尝试直接播放
+        this._musicAudio.src = outerLinkUrl;
+        this._musicAudio.play().then(() => {
+          this._musicIsPlaying = true;
+          this.updateMusicPlayingUI();
+          document.getElementById('nowPlayingBar').classList.add('show');
+          this.toast('正在播放: ' + song.name, 'success');
+        }).catch(() => {
+          this.toast('播放失败，该歌曲可能无法播放，试试推荐列表的歌曲', 'error');
+          this._musicIsPlaying = false;
+          this.updateMusicPlayingUI();
+        });
       });
     } catch(e) {
       this.toast('播放出错: ' + e.message, 'error');
@@ -2470,6 +2670,110 @@ const App = {
   esc(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; },
   timeAgo(s) { const d = Date.now()-new Date(s).getTime(); const sec=Math.floor(d/1000); if(sec<60)return'刚刚'; if(sec<3600)return Math.floor(sec/60)+'分钟前'; if(sec<86400)return Math.floor(sec/3600)+'小时前'; if(sec<2592000)return Math.floor(sec/86400)+'天前'; return new Date(s).toLocaleDateString('zh-CN'); },
   toast(msg, type, dur) { const c=document.getElementById('toast-container'); const t=document.createElement('div'); t.className='toast toast-'+type; const icons={success:'✓',error:'✕',info:'ℹ'}; t.innerHTML=`<strong>${icons[type]||''}</strong> ${msg}`; c.appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300);},dur||3500); }
+
+  // ---- 哔哩哔哩小电视 ----
+  showBili() {
+    document.getElementById('biliOverlay').style.display = 'flex';
+    this.renderBiliRecommend();
+    // 隐藏播放器
+    document.getElementById('biliPlayerWrap').style.display = 'none';
+    document.getElementById('biliResults').innerHTML = '<div class="bili-empty">🔍 输入关键词搜索B站视频<br>点击▶在弹窗中播放，点击标题在B站打开</div>';
+  },
+  closeBili() {
+    document.getElementById('biliOverlay').style.display = 'none';
+    // 停止播放
+    const iframe = document.getElementById('biliPlayerIframe');
+    if (iframe) iframe.src = '';
+  },
+
+  renderBiliRecommend() {
+    const el = document.getElementById('biliRecommendGrid');
+    if (!el) return;
+    el.innerHTML = BILI_RECOMMEND.map(v => `
+      <div class="bili-recommend-card" onclick="App.playBiliVideo('${v.bvid}')">
+        <div class="bili-recommend-card-img">${v.pic}</div>
+        <div class="bili-recommend-card-name">${this.esc(v.title)}</div>
+      </div>
+    `).join('');
+  },
+
+  playBiliVideo(bvid) {
+    const iframe = document.getElementById('biliPlayerIframe');
+    const wrap = document.getElementById('biliPlayerWrap');
+    iframe.src = `https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=0&high_quality=1`;
+    wrap.style.display = '';
+    this.toast('正在加载B站视频...', 'info');
+  },
+
+  async searchBili() {
+    const keyword = document.getElementById('biliSearchInput').value.trim();
+    if (!keyword) return this.toast('请输入搜索关键词', 'error');
+
+    const resultsEl = document.getElementById('biliResults');
+    resultsEl.innerHTML = '<div class="bili-loading"><div class="spinner"></div> 搜索中...</div>';
+
+    try {
+      // 使用B站搜索API
+      const searchUrl = `https://api.bilibili.com/x/web-interface/search/all/v2?keyword=${encodeURIComponent(keyword)}&search_type=video`;
+      let data = null;
+
+      // 依次通过CORS代理尝试
+      const tryUrls = [];
+      for (const proxy of this.CORS_PROXIES) {
+        tryUrls.push(proxy + encodeURIComponent(searchUrl));
+      }
+
+      for (const url of tryUrls) {
+        try {
+          const res = await this.fetchWithTimeout(url, {}, 6000);
+          if (res.ok) {
+            const text = await res.text();
+            try { data = JSON.parse(text); } catch(e) { continue; }
+            if (data && data.data && data.data.result) break;
+            data = null;
+          }
+        } catch(e) { continue; }
+      }
+
+      if (!data || !data.data || !data.data.result) {
+        // 如果API搜索失败，使用B站网页搜索作为备选
+        resultsEl.innerHTML = `<div class="bili-empty">API搜索失败，请直接在B站搜索：<br><a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">🔗 点击前往B站搜索"${this.esc(keyword)}"</a></div>`;
+        return;
+      }
+
+      // 提取视频结果
+      const videoResult = data.data.result.find(r => r.result_type === 'video');
+      if (!videoResult || !videoResult.data || videoResult.data.length === 0) {
+        resultsEl.innerHTML = `<div class="bili-empty">没有找到相关视频<br><a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">🔗 点击前往B站搜索</a></div>`;
+        return;
+      }
+
+      const videos = videoResult.data.slice(0, 20);
+      this._biliSearchCache = videos;
+
+      resultsEl.innerHTML = videos.map(v => {
+        // B站搜索结果字段
+        const bvid = v.bvid || '';
+        const title = v.title ? v.title.replace(/<.*?>/g, '') : '';
+        const author = v.author || '';
+        const play = v.play || 0;
+        const pic = v.pic || '';
+        const duration = v.duration || '';
+        return `<div class="bili-result-item">
+          <div class="bili-result-thumb">
+            ${pic ? `<img src="${pic.startsWith('//') ? 'https:' + pic : pic}" onerror="this.style.display='none';this.parentElement.textContent='📺'" loading="lazy">` : '📺'}
+          </div>
+          <div class="bili-result-info" onclick="App.playBiliVideo('${bvid}')">
+            <div class="bili-result-title">${this.esc(title)}</div>
+            <div class="bili-result-meta">${this.esc(author)} · ▶${play > 10000 ? Math.floor(play/10000)+'万' : play} · ${this.esc(duration)}</div>
+          </div>
+          <button class="bili-result-play" onclick="event.stopPropagation();App.playBiliVideo('${bvid}')" title="播放">▶</button>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      resultsEl.innerHTML = `<div class="bili-empty">搜索出错: ${this.esc(e.message)}<br><a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">🔗 点击前往B站搜索</a></div>`;
+    }
+  }
 };
 
 document.addEventListener('DOMContentLoaded', () => App.init());
