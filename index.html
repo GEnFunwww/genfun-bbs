@@ -288,8 +288,47 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 /* 称号标签 */
 .title-tag { font-size:11px; padding:2px 8px; border-radius:10px; background:linear-gradient(135deg,#ffd700,#ffaa00); color:#1a1a1a; font-weight:600; margin-left:4px; display:inline-block; white-space:nowrap; letter-spacing:0.5px; }
 .title-tag-dark { background:linear-gradient(135deg,#ffd700,#e6a800); color:#222; }
-
-@media (max-width:768px) { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} }
+/* 经验等级标签 */
+.level-tag { font-size:11px; padding:2px 8px; border-radius:10px; background:var(--bg-secondary); color:var(--accent); font-weight:600; margin-left:4px; display:inline-block; white-space:nowrap; border:1px solid var(--accent-light); }
+.level-tag.lv5 { background:linear-gradient(135deg,#ffd700,#ff6b6b); color:#1a1a1a; border:none; }
+/* 签到面板 */
+.checkin-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:300; }
+.checkin-panel { background:var(--bg-primary); border-radius:16px; padding:24px; max-width:420px; width:90%; box-shadow:0 20px 40px rgba(0,0,0,0.3); }
+.checkin-title { font-size:18px; font-weight:700; text-align:center; margin-bottom:16px; }
+.checkin-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-bottom:20px; }
+.checkin-day { aspect-ratio:1; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:12px; background:var(--bg-secondary); border:2px solid var(--border); cursor:default; position:relative; transition:var(--transition); }
+.checkin-day.done { background:var(--accent-light); border-color:var(--accent); color:var(--accent); }
+.checkin-day.done::after { content:'✓'; position:absolute; bottom:2px; right:4px; font-size:10px; color:var(--accent); }
+.checkin-day.current { border-color:var(--accent); box-shadow:0 0 8px var(--accent-light); cursor:pointer; }
+.checkin-day-num { font-weight:700; font-size:14px; }
+.checkin-day-reward { font-size:9px; color:var(--text-muted); margin-top:2px; text-align:center; line-height:1.2; }
+.checkin-day.done .checkin-day-reward { color:var(--accent); }
+.checkin-btn { display:block; width:100%; padding:12px; border-radius:12px; border:none; background:var(--accent); color:#fff; font-size:16px; font-weight:700; cursor:pointer; text-align:center; font-family:inherit; transition:var(--transition); }
+.checkin-btn:hover { background:var(--accent-hover); }
+.checkin-btn:disabled { opacity:0.5; cursor:not-allowed; }
+.checkin-info { text-align:center; font-size:13px; color:var(--text-secondary); margin-top:12px; }
+.checkin-exp-bar { width:100%; height:8px; background:var(--bg-secondary); border-radius:4px; margin:8px 0; overflow:hidden; }
+.checkin-exp-fill { height:100%; background:var(--accent); border-radius:4px; transition:width 0.5s; }
+.checkin-exp-text { font-size:12px; color:var(--text-secondary); text-align:center; }
+/* 粉丝/关注按钮 */
+.follow-btn { padding:4px 12px; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:#fff; font-size:12px; cursor:pointer; font-family:inherit; transition:var(--transition); font-weight:600; }
+.follow-btn:hover { opacity:0.85; }
+.follow-btn.following { background:var(--bg-secondary); color:var(--text-secondary); border-color:var(--border); }
+.follow-btn.following:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+.fans-row { display:flex; justify-content:center; gap:16px; margin-top:8px; }
+.fans-stat { font-size:12px; color:var(--text-secondary); }
+.fans-stat strong { color:var(--text); font-size:14px; }
+/* VIP主题混搭 */
+.accent-mix-row { display:flex; align-items:center; gap:8px; margin-top:8px; }
+.accent-mix-label { font-size:12px; color:var(--text-secondary); }
+.color-picker-wrap { position:relative; }
+.color-picker-wrap input[type="color"] { width:32px; height:32px; border:2px solid var(--border); border-radius:8px; cursor:pointer; padding:0; background:none; }
+.accent-preview { width:32px; height:32px; border-radius:8px; border:2px solid var(--border); }
+/* 经验条 */
+.exp-bar-mini { display:inline-flex; align-items:center; gap:6px; margin-left:4px; }
+.exp-bar-mini-bar { width:60px; height:6px; background:var(--bg-secondary); border-radius:3px; overflow:hidden; }
+.exp-bar-mini-fill { height:100%; background:var(--accent); border-radius:3px; }
+.exp-bar-mini-text { font-size:10px; color:var(--text-muted); } { #app{padding:0 12px;} .header{padding:0 12px; margin:0 -12px;} .header-left{gap:12px;} .logo{font-size:16px;} .nav-btn{padding:5px 10px; font-size:12px;} .fab-group{bottom:24px; right:24px;} }
 @media (max-width:480px) { .header{height:52px;} .nav{gap:2px;} .nav-btn{padding:4px 8px; font-size:11px;} .category-tabs{overflow-x:auto; flex-wrap:nowrap;} .cat-tab{flex-shrink:0;} .fab-group{bottom:16px; right:16px;} }
 </style>
 </head>
@@ -302,6 +341,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
         <button class="nav-btn active" data-page="home" onclick="App.navigate('home')">首页</button>
         <button class="nav-btn" data-page="chat" onclick="App.navigate('chat')">💬 聊天</button>
         <button class="nav-btn" onclick="App.showMusic()" title="VIP点歌">🎵 点歌</button>
+        <button class="nav-btn" onclick="App.showCheckin()" title="签到">📅 签到</button>
         <button class="nav-btn" data-page="new" id="navNewPost" style="display:none" onclick="App.navigate('new')">发帖</button>
         <button class="nav-btn admin-nav-btn" data-page="admin" id="navAdmin" style="display:none" onclick="App.navigate('admin')">⚙ 管理</button>
       </nav>
@@ -316,6 +356,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
         <span class="admin-badge" id="adminBadgeSmall" style="display:none">管理</span>
         <span class="vip-badge" id="vipBadgeSmall" style="display:none">VIP</span>
         <span class="email-badge" id="emailBadgeSmall" style="display:none">邮箱</span>
+        <span class="level-tag" id="levelBadgeSmall" style="display:none">LV1</span>
       </button>
     </div>
   </header>
@@ -329,6 +370,12 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <div class="profile-avatar-hint" id="profileAvatarHint">点击头像更换图片 / 输入头像URL</div>
       <div class="profile-name-display" id="profileNameDisplay"></div>
       <div class="profile-badges" id="profileBadges"></div>
+      <div class="fans-row" id="profileFansRow">
+        <div class="fans-stat"><strong id="profileFansCount">0</strong> 粉丝</div>
+        <div class="fans-stat"><strong id="profileFollowingCount">0</strong> 关注</div>
+      </div>
+      <div class="checkin-exp-bar"><div class="checkin-exp-fill" id="profileExpFill" style="width:0%"></div></div>
+      <div class="checkin-exp-text" id="profileExpText">LV1 · 0/50 经验</div>
       <div class="profile-field">
         <label>修改名称</label>
         <input type="text" class="profile-input" id="profileNameInput" placeholder="输入新名称" maxlength="20">
@@ -504,8 +551,16 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
     <div class="modal-icon">👑</div>
     <div class="modal-title">GENFUN 会员中心</div>
     <div class="accent-picker" id="accentPicker"></div>
-    <div class="modal-desc">💡 蓝色为主题默认色，所有人可用。<br>其他6种主题色为<strong>会员专属</strong>，开通会员即可解锁！<br><br>开通会员请联系：</div>
+    <div class="modal-desc">💡 蓝色为主题默认色，所有人可用。<br>其他6种主题色为<strong>会员专属</strong>，开通会员即可解锁！<br>VIP还可<strong>自定义任意颜色混搭</strong>！<br><br>开通会员请联系：</div>
     <div class="modal-qq">QQ：3932892962</div>
+    <div id="vipCustomColor" style="display:none;margin-top:12px;">
+      <div class="accent-mix-label">🎨 自定义主题色（VIP混搭）</div>
+      <div class="accent-mix-row">
+        <div class="color-picker-wrap"><input type="color" id="vipCustomColorPicker" value="#3b82f6" onchange="App.setCustomAccent(this.value)"></div>
+        <div class="accent-preview" id="vipColorPreview" style="background:#3b82f6"></div>
+        <button style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;" onclick="App.setAccent('blue')">恢复默认</button>
+      </div>
+    </div>
     <button class="modal-close" onclick="App.closeVipModal()">关闭</button>
   </div>
 </div>
@@ -568,6 +623,18 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
   </div>
 </div>
 
+<!-- 签到弹窗 -->
+<div class="checkin-overlay" id="checkinOverlay" style="display:none" onclick="if(event.target===this)App.closeCheckin()">
+  <div class="checkin-panel">
+    <div class="checkin-title">📅 每日签到</div>
+    <div class="checkin-grid" id="checkinGrid"></div>
+    <button class="checkin-btn" id="checkinBtn" onclick="App.doCheckin()">签到</button>
+    <div class="checkin-info" id="checkinInfo"></div>
+    <div class="checkin-exp-bar"><div class="checkin-exp-fill" id="checkinExpFill" style="width:0%"></div></div>
+    <div class="checkin-exp-text" id="checkinExpText"></div>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 
 <script>
@@ -599,6 +666,26 @@ const ACCENT_COLORS = [
   { name:'红色', color:'red', accent:'#ef4444', free:false },
 ];
 
+// 经验等级配置
+const LEVEL_CONFIG = [
+  { level:1, name:'LV1', exp:50,   label:'新手' },
+  { level:2, name:'LV2', exp:100,  label:'入门' },
+  { level:3, name:'LV3', exp:500,  label:'熟练' },
+  { level:4, name:'LV4', exp:1000, label:'达人' },
+  { level:5, name:'LV5', exp:5000, label:'大师' },
+];
+
+// 签到奖励配置（7天一轮）
+const CHECKIN_REWARDS = [
+  { day:1, reward:'称号', detail:'夏日淌水', type:'title', value:'夏日淌水' },
+  { day:2, reward:'经验+10', type:'exp', value:10 },
+  { day:3, reward:'经验+50', type:'exp', value:50 },
+  { day:4, reward:'经验+100', type:'exp', value:100 },
+  { day:5, reward:'经验+100+点歌1天', type:'exp_music', value:100, musicDays:1 },
+  { day:6, reward:'红色主题', type:'theme', value:'red' },
+  { day:7, reward:'点歌3天', type:'music', musicDays:3 },
+];
+
 const App = {
   ghToken: localStorage.getItem('gh_token') || '',
   ghUser: JSON.parse(localStorage.getItem('gh_user') || 'null'),
@@ -618,31 +705,50 @@ const App = {
   captchaCode: '',
   chatCache: [],
   chatCacheTime: 0,
+  // 经验系统
+  exp: parseInt(localStorage.getItem('genfun_exp') || '0'),
+  checkinDay: parseInt(localStorage.getItem('genfun_checkin_day') || '0'),
+  checkinLast: localStorage.getItem('genfun_checkin_last') || '',
+  musicAccessDays: parseInt(localStorage.getItem('genfun_music_access_days') || '0'),
+  // 粉丝系统
+  following: JSON.parse(localStorage.getItem('genfun_following') || '[]'),
 
   init() {
     this.initTheme();
     this.initAccent();
     this.restoreUser();
     this.updateAuthUI();
+    this.updateExpUI();
     this.bindEvents();
     this.loadPosts();
   },
 
   // ---- 主题色 ----
   initAccent() {
-    document.documentElement.setAttribute('data-accent', this.accentColor);
+    const custom = localStorage.getItem('genfun_accent_custom');
+    if (custom) {
+      this.setCustomAccent(custom);
+    } else {
+      document.documentElement.setAttribute('data-accent', this.accentColor);
+    }
   },
 
   setAccent(color) {
     const cfg = ACCENT_COLORS.find(c => c.color === color);
     if (!cfg) return;
-    // 非免费色需要VIP
-    if (!cfg.free && !this.checkVip()) {
+    // 非免费色需要VIP或签到解锁
+    const checkinUnlock = localStorage.getItem('genfun_checkin_theme_' + color) === 'true';
+    if (!cfg.free && !this.checkVip() && !checkinUnlock) {
       this.showVipModal();
       return;
     }
     this.accentColor = color;
     localStorage.setItem('genfun_accent', color);
+    localStorage.removeItem('genfun_accent_custom'); // 清除自定义颜色
+    // 清除自定义CSS变量
+    document.documentElement.style.removeProperty('--accent');
+    document.documentElement.style.removeProperty('--accent-light');
+    document.documentElement.style.removeProperty('--accent-hover');
     document.documentElement.setAttribute('data-accent', color);
     this.renderAccentPicker();
     this.toast('主题色已切换为' + cfg.name, 'success');
@@ -653,7 +759,7 @@ const App = {
     if (!el) return;
     el.innerHTML = ACCENT_COLORS.map(c => {
       const active = c.color === this.accentColor;
-      const locked = !c.free && !this.checkVip();
+      const locked = !c.free && !this.checkVip() && localStorage.getItem('genfun_checkin_theme_' + c.color) !== 'true';
       return `<div class="accent-dot${active?' active':''}${locked?' locked':''}" data-color="${c.color}" onclick="App.setAccent('${c.color}')" title="${c.name}${locked?' (会员专属)':''}"></div>`;
     }).join('');
   },
@@ -661,12 +767,291 @@ const App = {
   showVipModal() {
     document.getElementById('vipModal').style.display = '';
     this.renderAccentPicker();
+    // VIP才能看到自定义颜色
+    const custom = document.getElementById('vipCustomColor');
+    if (custom) custom.style.display = this.checkVip() ? '' : 'none';
+    // 恢复当前自定义颜色值
+    const picker = document.getElementById('vipCustomColorPicker');
+    const preview = document.getElementById('vipColorPreview');
+    const savedCustom = localStorage.getItem('genfun_accent_custom');
+    if (savedCustom && picker) { picker.value = savedCustom; }
+    if (savedCustom && preview) { preview.style.background = savedCustom; }
   },
   closeVipModal() {
     document.getElementById('vipModal').style.display = 'none';
   },
 
-  // ---- 在线点歌（VIP专属） ----
+  // ---- VIP主题混搭（自定义颜色） ----
+  setCustomAccent(color) {
+    if (!this.checkVip()) { this.showVipModal(); return; }
+    // 设置自定义accent颜色
+    document.documentElement.style.setProperty('--accent', color);
+    // 计算light版本
+    const r = parseInt(color.slice(1,3),16), g = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
+    const light = `rgba(${r},${g},${b},0.15)`;
+    document.documentElement.style.setProperty('--accent-light', light);
+    const hover = `rgb(${Math.max(0,r-30)},${Math.max(0,g-30)},${Math.max(0,b-30)})`;
+    document.documentElement.style.setProperty('--accent-hover', hover);
+    localStorage.setItem('genfun_accent_custom', color);
+    localStorage.removeItem('genfun_accent'); // 清除预设值
+    this.accentColor = 'custom';
+    document.getElementById('vipColorPreview').style.background = color;
+    this.renderAccentPicker();
+    this.toast('主题色已自定义！', 'success');
+  },
+
+  // ---- 经验系统 ----
+  getLevel() {
+    let lv = 1;
+    for (const cfg of LEVEL_CONFIG) {
+      if (this.exp >= cfg.exp) lv = cfg.level;
+    }
+    // LV4需要签到7天
+    if (lv >= 4) {
+      const totalCheckins = parseInt(localStorage.getItem('genfun_total_checkins') || '0');
+      if (totalCheckins < 7) lv = 3;
+    }
+    // LV5需要VIP
+    if (lv >= 5 && !this.checkVip()) lv = 4;
+    return lv;
+  },
+
+  getLevelConfig() {
+    const lv = this.getLevel();
+    return LEVEL_CONFIG.find(c => c.level === lv) || LEVEL_CONFIG[0];
+  },
+
+  getNextLevelConfig() {
+    const lv = this.getLevel();
+    return LEVEL_CONFIG.find(c => c.level === lv + 1) || null;
+  },
+
+  addExp(amount) {
+    this.exp += amount;
+    localStorage.setItem('genfun_exp', this.exp);
+    const oldLv = parseInt(localStorage.getItem('genfun_level_cache') || '1');
+    const newLv = this.getLevel();
+    localStorage.setItem('genfun_level_cache', newLv);
+    if (newLv > oldLv) {
+      const cfg = LEVEL_CONFIG.find(c => c.level === newLv);
+      this.toast(`🎉 升级到 ${cfg.name}（${cfg.label}）！`, 'success');
+      // LV5自动VIP
+      if (newLv >= 5 && !this.isVip) {
+        this.isVip = true;
+        localStorage.setItem('genfun_vip', 'true');
+        this.toast('🌟 LV5大师！自动获得VIP！', 'success');
+      }
+    }
+  },
+
+  getExpBarPercent() {
+    const lv = this.getLevel();
+    const nextCfg = this.getNextLevelConfig();
+    if (!nextCfg) return 100;
+    const currentExp = LEVEL_CONFIG.find(c => c.level === lv).exp;
+    const nextExp = nextCfg.exp;
+    const progress = this.exp - currentExp;
+    const range = nextExp - currentExp;
+    return Math.min(100, Math.max(0, Math.round((progress / range) * 100)));
+  },
+
+  updateExpUI() {
+    const lv = this.getLevel();
+    const lvCfg = this.getLevelConfig();
+    const nextCfg = this.getNextLevelConfig();
+    // 头部等级标签
+    const levelBadge = document.getElementById('levelBadgeSmall');
+    if (levelBadge) {
+      levelBadge.textContent = lvCfg.name;
+      levelBadge.style.display = this.isLoggedIn() ? '' : 'none';
+      levelBadge.className = 'level-tag' + (lv >= 5 ? ' lv5' : '');
+    }
+    // 个人资料弹窗中的经验条
+    const expFill = document.getElementById('profileExpFill');
+    const expText = document.getElementById('profileExpText');
+    if (expFill) expFill.style.width = this.getExpBarPercent() + '%';
+    if (expText) {
+      if (nextCfg) expText.textContent = `${lvCfg.name}(${lvCfg.label}) · ${this.exp}/${nextCfg.exp} 经验`;
+      else expText.textContent = `${lvCfg.name}(${lvCfg.label}) · ${this.exp} 经验 · 已满级！`;
+    }
+    // 签到面板中的经验条
+    const cExpFill = document.getElementById('checkinExpFill');
+    const cExpText = document.getElementById('checkinExpText');
+    if (cExpFill) cExpFill.style.width = this.getExpBarPercent() + '%';
+    if (cExpText) {
+      if (nextCfg) cExpText.textContent = `${lvCfg.name} · ${this.exp}/${nextCfg.exp} 经验`;
+      else cExpText.textContent = `${lvCfg.name} · ${this.exp} 经验 · 已满级！`;
+    }
+  },
+
+  // ---- 签到系统 ----
+  showCheckin() {
+    if (!this.isLoggedIn()) { this.navigate('login'); this.toast('请先登录', 'info'); return; }
+    this.renderCheckin();
+    document.getElementById('checkinOverlay').style.display = '';
+  },
+
+  closeCheckin() {
+    document.getElementById('checkinOverlay').style.display = 'none';
+  },
+
+  renderCheckin() {
+    const grid = document.getElementById('checkinGrid');
+    const btn = document.getElementById('checkinBtn');
+    const info = document.getElementById('checkinInfo');
+    const today = new Date().toISOString().slice(0, 10);
+    const alreadyChecked = this.checkinLast === today;
+    // 渲染7天格子
+    grid.innerHTML = CHECKIN_REWARDS.map((r, i) => {
+      const dayNum = i + 1;
+      const isDone = this.checkinDay >= dayNum;
+      const isCurrent = this.checkinDay === dayNum - 1 && !alreadyChecked;
+      let cls = 'checkin-day';
+      if (isDone) cls += ' done';
+      if (isCurrent) cls += ' current';
+      return `<div class="${cls}">
+        <div class="checkin-day-num">Day${dayNum}</div>
+        <div class="checkin-day-reward">${r.reward}</div>
+      </div>`;
+    }).join('');
+    // 按钮
+    if (alreadyChecked) {
+      btn.textContent = '✅ 今日已签到';
+      btn.disabled = true;
+    } else {
+      btn.textContent = '📅 立即签到';
+      btn.disabled = false;
+    }
+    // 信息
+    const cycleDay = (this.checkinDay % 7) + 1;
+    const nextReward = CHECKIN_REWARDS.find(r => r.day === (alreadyChecked ? (cycleDay % 7) + 1 : cycleDay));
+    if (alreadyChecked) {
+      info.textContent = `当前第${cycleDay}天 · 明天签到可获得：${nextReward ? nextReward.reward : '经验'}`;
+    } else {
+      info.textContent = `当前第${cycleDay}天 · 签号可获得：${nextReward ? nextReward.reward : '经验'}`;
+    }
+    this.updateExpUI();
+  },
+
+  doCheckin() {
+    if (!this.isLoggedIn()) return;
+    const today = new Date().toISOString().slice(0, 10);
+    if (this.checkinLast === today) { this.toast('今日已签到！', 'info'); return; }
+    // 计算签到天数
+    if (this.checkinDay >= 7) {
+      // 一轮结束，重新开始
+      this.checkinDay = 0;
+    }
+    this.checkinDay++;
+    this.checkinLast = today;
+    localStorage.setItem('genfun_checkin_day', this.checkinDay);
+    localStorage.setItem('genfun_checkin_last', today);
+    // 累计签到天数
+    const total = parseInt(localStorage.getItem('genfun_total_checkins') || '0') + 1;
+    localStorage.setItem('genfun_total_checkins', total);
+    // 获取奖励
+    const reward = CHECKIN_REWARDS.find(r => r.day === this.checkinDay);
+    if (reward) {
+      let rewardMsg = `签到Day${this.checkinDay}成功！`;
+      if (reward.type === 'title' || reward.type === 'exp_title') {
+        // 赋予称号
+        this.setTitle(reward.value);
+        rewardMsg += ` 获得"${reward.value}"称号`;
+      }
+      if (reward.type === 'exp' || reward.type === 'exp_music' || reward.type === 'exp_title') {
+        this.addExp(reward.value);
+        rewardMsg += ` 经验+${reward.value}`;
+      }
+      if (reward.type === 'music' || reward.type === 'exp_music') {
+        this.musicAccessDays += (reward.musicDays || 0);
+        localStorage.setItem('genfun_music_access_days', this.musicAccessDays);
+        rewardMsg += ` 点歌${reward.musicDays}天`;
+      }
+      if (reward.type === 'theme') {
+        localStorage.setItem('genfun_checkin_theme_' + reward.value, 'true');
+        rewardMsg += ` 解锁${reward.value === 'red' ? '红色' : reward.value}主题色`;
+      }
+      this.toast(rewardMsg, 'success');
+    } else {
+      this.addExp(5); // 默认+5经验
+      this.toast('签到成功！经验+5', 'success');
+    }
+    this.renderCheckin();
+    this.updateAuthUI();
+  },
+
+  setTitle(title) {
+    if (this.userType === 'email' && this.emailUser) {
+      this.emailUser.title = title;
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const idx = users.findIndex(u => u.email === this.emailUser.email);
+      if (idx >= 0) { users[idx].title = title; localStorage.setItem('genfun_users', JSON.stringify(users)); }
+      localStorage.setItem('genfun_email_user', JSON.stringify(this.emailUser));
+    } else {
+      localStorage.setItem('genfun_title_override', title);
+    }
+  },
+
+  // ---- 粉丝系统 ----
+  getFollowers() {
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    const myUsername = this.userType === 'email' ? this.user.username : this.user.login;
+    let count = 0;
+    for (const u of users) {
+      if (u.following && u.following.includes(myUsername)) count++;
+    }
+    // 也检查GitHub用户（本地存储）
+    const ghFollowing = JSON.parse(localStorage.getItem('genfun_gh_following_' + myUsername) || '[]');
+    return count;
+  },
+
+  getFollowingCount() { return this.following.length; },
+
+  followUser(username) {
+    if (!this.isLoggedIn()) return;
+    if (this.following.includes(username)) return;
+    this.following.push(username);
+    localStorage.setItem('genfun_following', JSON.stringify(this.following));
+    // 更新被关注用户的粉丝数（在genfun_users中记录）
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    const target = users.find(u => u.username === username);
+    if (target) {
+      if (!target.followers) target.followers = [];
+      target.followers.push(this.userType === 'email' ? this.user.username : this.user.login);
+      localStorage.setItem('genfun_users', JSON.stringify(users));
+    }
+    this.toast('已关注 ' + username, 'success');
+    this.updateFansUI();
+  },
+
+  unfollowUser(username) {
+    this.following = this.following.filter(f => f !== username);
+    localStorage.setItem('genfun_following', JSON.stringify(this.following));
+    const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+    const myName = this.userType === 'email' ? this.user.username : this.user.login;
+    const target = users.find(u => u.username === username);
+    if (target && target.followers) {
+      target.followers = target.followers.filter(f => f !== myName);
+      localStorage.setItem('genfun_users', JSON.stringify(users));
+    }
+    this.toast('已取消关注', 'info');
+    this.updateFansUI();
+  },
+
+  isFollowing(username) { return this.following.includes(username); },
+
+  updateFansUI() {
+    const fansCount = document.getElementById('profileFansCount');
+    const followingCount = document.getElementById('profileFollowingCount');
+    if (fansCount) fansCount.textContent = this.getFollowers();
+    if (followingCount) followingCount.textContent = this.getFollowingCount();
+  },
+
+  getFollowBtnHtml(username) {
+    if (!this.isLoggedIn() || (this.userType === 'email' && this.user.username === username) || (this.userType === 'github' && this.user.login === username)) return '';
+    const isF = this.isFollowing(username);
+    return `<button class="follow-btn${isF ? ' following' : ''}" onclick="App.${isF ? 'unfollowUser' : 'followUser'}('${this.esc(username)}')">${isF ? '已关注' : '+关注'}</button>`;
+  },
   _musicAudio: null,
   _musicPlaylist: [],
   _musicCurrentIdx: -1,
@@ -675,9 +1060,14 @@ const App = {
   showMusic() {
     const overlay = document.getElementById('musicOverlay');
     overlay.style.display = 'flex';
-    if (this.checkVip()) {
+    // VIP或者有签到获得的点歌权限都能使用
+    if (this.checkVip() || this.musicAccessDays > 0) {
       document.getElementById('musicVipLock').style.display = 'none';
       document.getElementById('musicContent').style.display = '';
+      // 显示点歌天数信息
+      if (!this.checkVip() && this.musicAccessDays > 0) {
+        document.getElementById('musicContent').querySelector('.music-empty').textContent = `你有${this.musicAccessDays}天点歌权限 · VIP永久免费`;
+      }
     } else {
       document.getElementById('musicVipLock').style.display = '';
       document.getElementById('musicContent').style.display = 'none';
@@ -984,7 +1374,7 @@ const App = {
     if (users.find(u => u.email === email)) return this.toast('该邮箱/手机号已注册', 'error');
 
     const hash = await this.sha256(password);
-    const newUser = { email, username, passwordHash: hash, role: 'user', vip: false, title: '', createdAt: new Date().toISOString() };
+    const newUser = { email, username, passwordHash: hash, role: 'user', vip: false, title: '', exp: 0, following: [], followers: [], createdAt: new Date().toISOString() };
     if (email === 'Rr052052052@163.com' || email === 'T') { newUser.role = 'admin'; newUser.vip = true; newUser.title = '管理员'; }
     // VIP预设用户
     if (username === '是P' || email === '是P') { newUser.vip = true; }
@@ -1035,7 +1425,7 @@ const App = {
       }
     } else {
       this.sha256('T123456').then(hash => {
-        users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', vip: true, title: '管理员', createdAt: new Date().toISOString() });
+        users.push({ email: 'Rr052052052@163.com', username: 'T', passwordHash: hash, role: 'admin', vip: true, title: '管理员', exp: 5000, following: [], followers: [], createdAt: new Date().toISOString() });
         localStorage.setItem('genfun_users', JSON.stringify(users));
       });
     }
@@ -1217,7 +1607,15 @@ const App = {
       titleField.style.display = 'none';
     }
     if (this.isAdmin()) badgeHtml += `<span class="admin-badge">管理</span>`;
+    // 等级标签
+    const lv = this.getLevel();
+    const lvCfg = this.getLevelConfig();
+    badgeHtml += `<span class="level-tag${lv >= 5 ? ' lv5' : ''}">${lvCfg.name}</span>`;
     badges.innerHTML = badgeHtml;
+    // 粉丝信息
+    this.updateFansUI();
+    // 经验条
+    this.updateExpUI();
     overlay.style.display = 'flex';
   },
 
@@ -1406,11 +1804,17 @@ const App = {
     const badge = document.getElementById('adminBadgeSmall');
     const vipBadge = document.getElementById('vipBadgeSmall');
     const emailBadge = document.getElementById('emailBadgeSmall');
+    const levelBadge = document.getElementById('levelBadgeSmall');
 
     if (this.isLoggedIn()) {
       btnLogin.style.display = 'none'; btnUser.style.display = 'flex'; navNew.style.display = '';
       const isVip = this.checkVip();
       vipBadge.style.display = isVip ? '' : 'none';
+      const lv = this.getLevel();
+      const lvCfg = this.getLevelConfig();
+      levelBadge.textContent = lvCfg.name;
+      levelBadge.style.display = '';
+      levelBadge.className = 'level-tag' + (lv >= 5 ? ' lv5' : '');
 
       if (this.userType === 'github') {
         document.getElementById('userNameSmall').textContent = this.getDisplayName();
@@ -1436,7 +1840,9 @@ const App = {
     } else {
       btnLogin.style.display = ''; btnUser.style.display = 'none'; navNew.style.display = 'none';
       badge.style.display = 'none'; adminNav.style.display = 'none'; emailBadge.style.display = 'none'; vipBadge.style.display = 'none';
+      if (levelBadge) levelBadge.style.display = 'none';
     }
+    this.updateExpUI();
     this.updateFab();
   },
 
@@ -1488,26 +1894,47 @@ const App = {
   getAuthorHtml(author) {
     const title = this.getTitleForUser(author.username, author.type);
     const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+    const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
+    const followBtn = this.getFollowBtnHtml(author.username);
     if (author.type === 'email') {
       if (author.avatar) {
-        return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> ${this.esc(author.displayName)}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
+        return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> ${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>${followBtn}`;
       }
       const letter = author.username[0].toUpperCase();
-      return `<div class="user-avatar-letter" style="width:20px;height:20px;font-size:10px;display:inline-flex;vertical-align:middle;">${letter}</div> ${this.esc(author.displayName)}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>`;
+      return `<div class="user-avatar-letter" style="width:20px;height:20px;font-size:10px;display:inline-flex;vertical-align:middle;">${letter}</div> ${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge" style="margin-left:2px;">邮箱</span>${followBtn}`;
     }
-    return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(author.displayName)}${titleHtml}`;
+    return `<img src="${author.avatar}" width="20" height="20" style="border-radius:50%;vertical-align:middle;"> ${this.esc(author.displayName)}${lvHtml}${titleHtml}${followBtn}`;
   },
   getAuthorHtml24(author) {
     const title = this.getTitleForUser(author.username, author.type);
     const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+    const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
+    const followBtn = this.getFollowBtnHtml(author.username);
     if (author.type === 'email') {
       if (author.avatar) {
-        return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> <strong>${this.esc(author.displayName)}</strong>${titleHtml} <span class="email-badge">邮箱</span>`;
+        return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;object-fit:cover;"> <strong>${this.esc(author.displayName)}</strong>${lvHtml}${titleHtml} <span class="email-badge">邮箱</span>${followBtn}`;
       }
       const letter = author.username[0].toUpperCase();
-      return `<div class="user-avatar-letter" style="width:24px;height:24px;font-size:11px;display:inline-flex;vertical-align:middle;">${letter}</div> <strong>${this.esc(author.displayName)}</strong>${titleHtml} <span class="email-badge">邮箱</span>`;
+      return `<div class="user-avatar-letter" style="width:24px;height:24px;font-size:11px;display:inline-flex;vertical-align:middle;">${letter}</div> <strong>${this.esc(author.displayName)}</strong>${lvHtml}${titleHtml} <span class="email-badge">邮箱</span>${followBtn}`;
     }
-    return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(author.displayName)}</strong>${titleHtml}`;
+    return `<img src="${author.avatar}" width="24" height="24" style="border-radius:50%;vertical-align:middle;"> <strong>${this.esc(author.displayName)}</strong>${lvHtml}${titleHtml}${followBtn}`;
+  },
+  // 获取指定用户的等级标签HTML
+  getLevelHtmlForUser(username, type) {
+    let exp = 0;
+    if (type === 'email') {
+      const users = JSON.parse(localStorage.getItem('genfun_users') || '[]');
+      const found = users.find(u => u.email === username || u.username === username);
+      exp = found ? (found.exp || 0) : 0;
+    }
+    // 只显示当前登录用户自己的等级（localStorage无法获取其他用户经验）
+    const myName = this.userType === 'email' ? (this.user ? this.user.username : '') : (this.user ? this.user.login : '');
+    if (username === myName) {
+      const lv = this.getLevel();
+      const lvCfg = this.getLevelConfig();
+      return ` <span class="level-tag${lv >= 5 ? ' lv5' : ''}">${lvCfg.name}</span>`;
+    }
+    return '';
   },
   getRealBody(body) { if (!body) return ''; return body.replace(/^<!-- author:email:(.*?) -->\n?/, ''); },
 
@@ -1615,11 +2042,12 @@ const App = {
       if (author.type === 'email') {
         const title = this.getTitleForUser(author.username, author.type);
         const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+        const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
         const avatarHtml = author.avatar ? `<img class="chat-msg-avatar" src="${author.avatar}" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="chat-msg-avatar-letter" style="display:none">${author.username[0].toUpperCase()}</div>` : `<div class="chat-msg-avatar-letter">${author.username[0].toUpperCase()}</div>`;
         return `<div class="chat-msg">
           ${avatarHtml}
           <div class="chat-msg-body">
-            <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml} <span class="email-badge">邮箱</span></div>
+            <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge">邮箱</span></div>
             <div class="chat-msg-text">${this.esc(realBody)}</div>
             <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
           </div>
@@ -1627,10 +2055,11 @@ const App = {
       }
       const title2 = this.getTitleForUser(author.username, author.type);
       const titleHtml2 = title2 ? ` <span class="title-tag">${this.esc(title2)}</span>` : '';
+      const lvHtml2 = this.getLevelHtmlForUser(author.username, author.type);
       return `<div class="chat-msg">
         <img class="chat-msg-avatar" src="${author.avatar}" alt="">
         <div class="chat-msg-body">
-          <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml2}</div>
+          <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml2}${titleHtml2}</div>
           <div class="chat-msg-text">${this.esc(realBody)}</div>
           <div class="chat-msg-time">${this.timeAgo(c.created_at)}</div>
         </div>
@@ -1692,12 +2121,14 @@ const App = {
       this.toast('消息发送失败: ' + e.message, 'error');
     }
     inputEl.disabled = false;
+    // 聊天经验+1
+    this.addExp(1);
+    this.updateExpUI();
   },
-
-  // 构建单条聊天消息HTML
   buildChatMsgHtml(author, text, time) {
     const title = this.getTitleForUser(author.username, author.type);
     const titleHtml = title ? ` <span class="title-tag">${this.esc(title)}</span>` : '';
+    const lvHtml = this.getLevelHtmlForUser(author.username, author.type);
     if (author.type === 'email') {
       const avatarHtml = author.avatar
         ? `<img class="chat-msg-avatar" src="${author.avatar}" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="chat-msg-avatar-letter" style="display:none">${author.username[0].toUpperCase()}</div>`
@@ -1705,7 +2136,7 @@ const App = {
       return `<div class="chat-msg">
         ${avatarHtml}
         <div class="chat-msg-body">
-          <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml} <span class="email-badge">邮箱</span></div>
+          <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml}${titleHtml} <span class="email-badge">邮箱</span></div>
           <div class="chat-msg-text">${this.esc(text)}</div>
           <div class="chat-msg-time">${time}</div>
         </div>
@@ -1714,7 +2145,7 @@ const App = {
     return `<div class="chat-msg">
       <img class="chat-msg-avatar" src="${author.avatar}" alt="">
       <div class="chat-msg-body">
-        <div class="chat-msg-name">${this.esc(author.displayName)}${titleHtml}</div>
+        <div class="chat-msg-name">${this.esc(author.displayName)}${lvHtml}${titleHtml}</div>
         <div class="chat-msg-text">${this.esc(text)}</div>
         <div class="chat-msg-time">${time}</div>
       </div>
@@ -1947,7 +2378,8 @@ const App = {
     const body = this.userType === 'email' ? `<!-- author:email:${this.user.username} -->\n${content}` : content;
     try {
       await this.ghApi('POST', '/repos/' + REPO + '/issues/' + issueNumber + '/comments', { body }, this.userType === 'email');
-      this.toast('回复成功', 'success'); this.loadPostDetail();
+      this.addExp(5); this.updateExpUI(); // 回复+5经验
+      this.toast('回复成功 · 经验+5', 'success'); this.loadPostDetail();
     } catch(e) { this.toast(e.message, 'error'); }
   },
 
@@ -1963,7 +2395,8 @@ const App = {
     btn.disabled = true; btn.textContent = '发布中...';
     try {
       await this.ghApi('POST', '/repos/' + REPO + '/issues', { title, body, labels: [category] }, this.userType === 'email');
-      this.toast('帖子发布成功！', 'success');
+      this.addExp(10); this.updateExpUI(); // 发帖+10经验
+      this.toast('帖子发布成功！经验+10', 'success');
       document.getElementById('newPostTitle').value = '';
       document.getElementById('newPostContent').value = '';
       this.cacheTime = 0; this.navigate('home');
