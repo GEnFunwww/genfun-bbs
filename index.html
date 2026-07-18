@@ -177,6 +177,55 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 .modal-qq { font-size:20px; font-weight:700; color:var(--accent); padding:12px; background:var(--accent-light); border-radius:var(--radius-sm); margin-bottom:16px; user-select:all; }
 .modal-close { padding:10px 32px; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-size:14px; cursor:pointer; font-family:inherit; }
 
+/* 点歌弹窗 */
+.music-overlay { position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.music-modal { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px; width:480px; max-width:92vw; max-height:85vh; display:flex; flex-direction:column; box-shadow:var(--shadow-lg); animation:modalIn 0.3s ease; }
+.music-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.music-header-icon { font-size:28px; }
+.music-header-title { font-size:18px; font-weight:800; }
+.music-header-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-secondary); font-size:20px; cursor:pointer; padding:4px 8px; }
+.music-search-row { display:flex; gap:8px; margin-bottom:12px; }
+.music-search-row input { flex:1; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
+.music-search-row input:focus { border-color:var(--accent); }
+.music-search-row button { padding:10px 18px; border-radius:var(--radius-sm); border:none; background:var(--accent); color:#fff; font-size:14px; cursor:pointer; font-family:inherit; font-weight:600; white-space:nowrap; }
+.music-results { flex:1; overflow-y:auto; min-height:120px; max-height:300px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-secondary); }
+.music-result-item { display:flex; align-items:center; padding:10px 14px; cursor:pointer; transition:var(--transition); border-bottom:1px solid var(--border); gap:10px; }
+.music-result-item:hover { background:var(--bg-hover); }
+.music-result-item:last-child { border-bottom:none; }
+.music-result-name { flex:1; font-size:14px; }
+.music-result-artist { font-size:12px; color:var(--text-secondary); }
+.music-result-play { width:32px; height:32px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); border:none; }
+.music-result-play:hover { transform:scale(1.1); }
+.music-now-playing { display:flex; align-items:center; gap:10px; padding:12px 0; margin-top:8px; border-top:1px solid var(--border); }
+.music-now-playing-cover { width:48px; height:48px; border-radius:8px; background:var(--bg-secondary); display:flex; align-items:center; justify-content:center; font-size:24px; overflow:hidden; }
+.music-now-playing-info { flex:1; }
+.music-now-playing-song { font-size:14px; font-weight:600; }
+.music-now-playing-artist { font-size:12px; color:var(--text-secondary); }
+.music-controls { display:flex; align-items:center; gap:8px; }
+.music-ctrl-btn { width:36px; height:36px; border-radius:50%; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition:var(--transition); }
+.music-ctrl-btn:hover { background:var(--bg-hover); }
+.music-ctrl-btn.play-btn { width:42px; height:42px; background:var(--accent); color:#fff; border:none; font-size:18px; }
+.music-ctrl-btn.play-btn:hover { background:var(--accent-hover); }
+.music-progress { width:100%; height:4px; background:var(--bg-secondary); border-radius:2px; cursor:pointer; margin-top:8px; position:relative; }
+.music-progress-bar { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s linear; }
+.music-loading { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; }
+.music-empty { text-align:center; padding:20px; color:var(--text-muted); font-size:13px; }
+.music-vip-lock { text-align:center; padding:40px 20px; }
+.music-vip-lock-icon { font-size:48px; margin-bottom:12px; }
+.music-vip-lock-text { font-size:14px; color:var(--text-secondary); margin-bottom:16px; line-height:1.6; }
+
+/* 底部播放条 */
+.now-playing-bar { position:fixed; bottom:0; left:0; right:0; z-index:9999; background:var(--bg-card); border-top:1px solid var(--border); padding:8px 16px; display:flex; align-items:center; gap:10px; transition:transform 0.3s ease; transform:translateY(100%); }
+.now-playing-bar.show { transform:translateY(0); }
+.npb-info { flex:1; min-width:0; }
+.npb-song { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.npb-artist { font-size:11px; color:var(--text-secondary); }
+.npb-controls { display:flex; gap:6px; align-items:center; }
+.npb-btn { width:30px; height:30px; border-radius:50%; border:none; background:var(--accent); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; transition:var(--transition); }
+.npb-btn:hover { transform:scale(1.1); }
+.npb-btn.secondary { background:var(--bg-secondary); color:var(--text); border:1px solid var(--border); }
+.npb-close { background:none; border:none; color:var(--text-secondary); font-size:18px; cursor:pointer; padding:4px; }
+
 /* 主题色选择器 */
 .accent-picker { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px; }
 .accent-dot { width:36px; height:36px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:var(--transition); display:flex; align-items:center; justify-content:center; }
@@ -252,6 +301,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
       <nav class="nav" id="mainNav">
         <button class="nav-btn active" data-page="home" onclick="App.navigate('home')">首页</button>
         <button class="nav-btn" data-page="chat" onclick="App.navigate('chat')">💬 聊天</button>
+        <button class="nav-btn" onclick="App.showMusic()" title="VIP点歌">🎵 点歌</button>
         <button class="nav-btn" data-page="new" id="navNewPost" style="display:none" onclick="App.navigate('new')">发帖</button>
         <button class="nav-btn admin-nav-btn" data-page="admin" id="navAdmin" style="display:none" onclick="App.navigate('admin')">⚙ 管理</button>
       </nav>
@@ -460,6 +510,64 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
   </div>
 </div>
 
+<!-- 点歌弹窗 -->
+<div class="music-overlay" id="musicOverlay" style="display:none" onclick="if(event.target===this)App.closeMusic()">
+  <div class="music-modal" style="position:relative;">
+    <div class="music-header">
+      <span class="music-header-icon">🎵</span>
+      <span class="music-header-title">在线点歌 · VIP专属</span>
+    </div>
+    <button class="music-header-close" onclick="App.closeMusic()">✕</button>
+
+    <!-- VIP锁定提示 -->
+    <div class="music-vip-lock" id="musicVipLock">
+      <div class="music-vip-lock-icon">🔒</div>
+      <div class="music-vip-lock-text">点歌功能为<strong>VIP会员专属</strong><br>开通会员即可搜索并播放音乐！<br><br>请联系QQ：3932892962</div>
+    </div>
+
+    <!-- VIP内容区 -->
+    <div id="musicContent" style="display:none">
+      <div class="music-search-row">
+        <input type="text" id="musicSearchInput" placeholder="搜索歌曲名、歌手..." onkeydown="if(event.key==='Enter')App.searchMusic()">
+        <button onclick="App.searchMusic()">搜索</button>
+      </div>
+      <div class="music-results" id="musicResults">
+        <div class="music-empty">输入关键词搜索歌曲，点击▶播放</div>
+      </div>
+      <div class="music-now-playing" id="musicNowPlaying" style="display:none">
+        <div class="music-now-playing-cover" id="musicNPCover">🎵</div>
+        <div class="music-now-playing-info">
+          <div class="music-now-playing-song" id="musicNPSong">-</div>
+          <div class="music-now-playing-artist" id="musicNPArtist">-</div>
+        </div>
+        <div class="music-controls">
+          <button class="music-ctrl-btn" onclick="App.musicPrev()" title="上一首">⏮</button>
+          <button class="music-ctrl-btn play-btn" id="musicPlayBtn" onclick="App.musicTogglePlay()" title="播放/暂停">▶</button>
+          <button class="music-ctrl-btn" onclick="App.musicNext()" title="下一首">⏭</button>
+        </div>
+      </div>
+      <div class="music-progress" id="musicProgress" onclick="App.musicSeek(event)">
+        <div class="music-progress-bar" id="musicProgressBar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部播放条 -->
+<div class="now-playing-bar" id="nowPlayingBar">
+  <div class="npb-info">
+    <div class="npb-song" id="npbSong">-</div>
+    <div class="npb-artist" id="npbArtist">-</div>
+  </div>
+  <div class="npb-controls">
+    <button class="npb-btn secondary" onclick="App.musicPrev()">⏮</button>
+    <button class="npb-btn" id="npbPlayBtn" onclick="App.musicTogglePlay()">▶</button>
+    <button class="npb-btn secondary" onclick="App.musicNext()">⏭</button>
+    <button class="npb-btn secondary" onclick="App.showMusic()">🎵</button>
+    <button class="npb-close" onclick="App.musicStop()">✕</button>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 
 <script>
@@ -556,6 +664,244 @@ const App = {
   },
   closeVipModal() {
     document.getElementById('vipModal').style.display = 'none';
+  },
+
+  // ---- 在线点歌（VIP专属） ----
+  _musicAudio: null,
+  _musicPlaylist: [],
+  _musicCurrentIdx: -1,
+  _musicIsPlaying: false,
+
+  showMusic() {
+    const overlay = document.getElementById('musicOverlay');
+    overlay.style.display = 'flex';
+    if (this.checkVip()) {
+      document.getElementById('musicVipLock').style.display = 'none';
+      document.getElementById('musicContent').style.display = '';
+    } else {
+      document.getElementById('musicVipLock').style.display = '';
+      document.getElementById('musicContent').style.display = 'none';
+    }
+    // 如果正在播放，更新播放状态
+    if (this._musicIsPlaying) {
+      this.updateMusicPlayingUI();
+    }
+  },
+  closeMusic() {
+    document.getElementById('musicOverlay').style.display = 'none';
+  },
+
+  async searchMusic() {
+    const keyword = document.getElementById('musicSearchInput').value.trim();
+    if (!keyword) return this.toast('请输入搜索关键词', 'error');
+
+    const resultsEl = document.getElementById('musicResults');
+    resultsEl.innerHTML = '<div class="music-loading"><div class="spinner"></div> 搜索中...</div>';
+
+    try {
+      // 使用网易云音乐搜索API（通过CORS代理）
+      const searchUrl = `https://music.163.com/api/search/get/web?s=${encodeURIComponent(keyword)}&type=1&limit=30`;
+      let data = null;
+
+      // 1) 直连尝试
+      try {
+        const res = await this.fetchWithTimeout(searchUrl, {
+          headers: { 'Accept': 'application/json' }
+        }, 5000);
+        if (res.ok) data = await res.json();
+      } catch(e) {}
+
+      // 2) CORS代理
+      if (!data) {
+        for (const proxy of this.CORS_PROXIES) {
+          try {
+            const proxyUrl = proxy + encodeURIComponent(searchUrl);
+            const res = await this.fetchWithTimeout(proxyUrl, {}, 8000);
+            if (res.ok) { data = await res.json(); break; }
+          } catch(e) {}
+        }
+      }
+
+      if (!data || !data.result || !data.result.songs) {
+        resultsEl.innerHTML = '<div class="music-empty">搜索失败，请换个关键词试试</div>';
+        return;
+      }
+
+      const songs = data.result.songs;
+      this._musicPlaylist = songs.map(s => ({
+        id: s.id,
+        name: s.name,
+        artist: s.artists ? s.artists.map(a => a.name).join('/') : '未知',
+        album: s.album ? s.album.name : '',
+        duration: s.duration || 0
+      }));
+
+      resultsEl.innerHTML = this._musicPlaylist.length === 0
+        ? '<div class="music-empty">没有找到相关歌曲</div>'
+        : this._musicPlaylist.map((s, i) => `
+          <div class="music-result-item" onclick="App.playMusicAt(${i})">
+            <div class="music-result-name">
+              <div style="font-weight:600">${this.esc(s.name)}</div>
+              <div class="music-result-artist">${this.esc(s.artist)} · ${this.esc(s.album)}</div>
+            </div>
+            <button class="music-result-play" onclick="event.stopPropagation();App.playMusicAt(${i})">▶</button>
+          </div>
+        `).join('');
+    } catch(e) {
+      resultsEl.innerHTML = '<div class="music-empty">搜索出错: ' + this.esc(e.message) + '</div>';
+    }
+  },
+
+  async playMusicAt(idx) {
+    if (idx < 0 || idx >= this._musicPlaylist.length) return;
+    this._musicCurrentIdx = idx;
+    const song = this._musicPlaylist[idx];
+
+    // 更新UI显示
+    document.getElementById('musicNPSong').textContent = song.name;
+    document.getElementById('musicNPArtist').textContent = song.artist;
+    document.getElementById('musicNowPlaying').style.display = '';
+
+    // 更新底部播放条
+    document.getElementById('npbSong').textContent = song.name;
+    document.getElementById('npbArtist').textContent = song.artist;
+
+    // 尝试获取歌曲URL
+    try {
+      // 尝试多个音乐源获取播放URL
+      let playUrl = null;
+
+      // 方法1: 使用第三方API获取网易云外链
+      const outerLinkUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+      
+      // 方法2: 直接尝试网易云API获取详情
+      try {
+        const detailUrl = `https://music.163.com/api/song/enhance/player/url?id=${song.id}&ids=[${song.id}]&br=320000`;
+        let detailData = null;
+        try {
+          const res = await this.fetchWithTimeout(detailUrl, {}, 5000);
+          if (res.ok) detailData = await res.json();
+        } catch(e) {}
+        if (!detailData) {
+          for (const proxy of this.CORS_PROXIES) {
+            try {
+              const proxyUrl = proxy + encodeURIComponent(detailUrl);
+              const res = await this.fetchWithTimeout(proxyUrl, {}, 8000);
+              if (res.ok) { detailData = await res.json(); break; }
+            } catch(e) {}
+          }
+        }
+        if (detailData && detailData.data && detailData.data[0] && detailData.data[0].url) {
+          playUrl = detailData.data[0].url;
+        }
+      } catch(e) {}
+
+      // 如果没拿到直接URL，用外链（通过CORS代理）
+      if (!playUrl) {
+        for (const proxy of this.CORS_PROXIES) {
+          try {
+            playUrl = proxy + encodeURIComponent(outerLinkUrl);
+            // 先测试URL是否可用
+            const testRes = await this.fetchWithTimeout(playUrl, { method: 'HEAD' }, 3000);
+            if (testRes.ok || testRes.status === 302) break;
+            playUrl = null;
+          } catch(e) { playUrl = null; }
+        }
+      }
+
+      // 最后尝试直接外链
+      if (!playUrl) {
+        playUrl = outerLinkUrl;
+      }
+
+      if (!this._musicAudio) {
+        this._musicAudio = new Audio();
+        this._musicAudio.addEventListener('ended', () => this.musicNext());
+        this._musicAudio.addEventListener('timeupdate', () => this.updateMusicProgress());
+        this._musicAudio.addEventListener('error', () => {
+          this.toast('播放失败，该歌曲可能无法播放', 'error');
+          this._musicIsPlaying = false;
+          this.updateMusicPlayingUI();
+        });
+      }
+
+      this._musicAudio.src = playUrl;
+      this._musicAudio.play().then(() => {
+        this._musicIsPlaying = true;
+        this.updateMusicPlayingUI();
+        document.getElementById('nowPlayingBar').classList.add('show');
+        this.toast('正在播放: ' + song.name, 'success');
+      }).catch(e => {
+        this.toast('播放失败，该歌曲可能无法播放', 'error');
+        this._musicIsPlaying = false;
+        this.updateMusicPlayingUI();
+      });
+    } catch(e) {
+      this.toast('播放出错: ' + e.message, 'error');
+    }
+  },
+
+  musicTogglePlay() {
+    if (!this._musicAudio) return;
+    if (this._musicIsPlaying) {
+      this._musicAudio.pause();
+      this._musicIsPlaying = false;
+    } else {
+      this._musicAudio.play().catch(() => {});
+      this._musicIsPlaying = true;
+    }
+    this.updateMusicPlayingUI();
+  },
+
+  musicPrev() {
+    if (this._musicPlaylist.length === 0) return;
+    let idx = this._musicCurrentIdx - 1;
+    if (idx < 0) idx = this._musicPlaylist.length - 1;
+    this.playMusicAt(idx);
+  },
+
+  musicNext() {
+    if (this._musicPlaylist.length === 0) return;
+    let idx = this._musicCurrentIdx + 1;
+    if (idx >= this._musicPlaylist.length) idx = 0;
+    this.playMusicAt(idx);
+  },
+
+  musicStop() {
+    if (this._musicAudio) {
+      this._musicAudio.pause();
+      this._musicAudio.src = '';
+    }
+    this._musicIsPlaying = false;
+    this._musicCurrentIdx = -1;
+    document.getElementById('nowPlayingBar').classList.remove('show');
+    this.updateMusicPlayingUI();
+  },
+
+  musicSeek(event) {
+    if (!this._musicAudio || !this._musicAudio.duration) return;
+    const bar = document.getElementById('musicProgress');
+    const rect = bar.getBoundingClientRect();
+    const pct = (event.clientX - rect.left) / rect.width;
+    this._musicAudio.currentTime = pct * this._musicAudio.duration;
+  },
+
+  updateMusicProgress() {
+    if (!this._musicAudio || !this._musicAudio.duration) return;
+    const pct = (this._musicAudio.currentTime / this._musicAudio.duration) * 100;
+    document.getElementById('musicProgressBar').style.width = pct + '%';
+  },
+
+  updateMusicPlayingUI() {
+    const playBtn = document.getElementById('musicPlayBtn');
+    const npbPlayBtn = document.getElementById('npbPlayBtn');
+    if (this._musicIsPlaying) {
+      if (playBtn) playBtn.textContent = '⏸';
+      if (npbPlayBtn) npbPlayBtn.textContent = '⏸';
+    } else {
+      if (playBtn) playBtn.textContent = '▶';
+      if (npbPlayBtn) npbPlayBtn.textContent = '▶';
+    }
   },
 
   // VIP状态（管理员自动VIP）
