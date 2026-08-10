@@ -776,6 +776,55 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'GENFUN论坛.html'));
 });
 
+// ========== GitHub API 同源代理（解决中国网络封锁） ==========
+// 浏览器走同源 /gh（api.github.com）与 /ghc（github.com），服务端在东京节点转发，零 CORS、不受中国网络限制
+async function ghProxy(req, res, host) {
+  try {
+    // 去掉 /gh 或 /ghc 前缀，保留路径与查询串
+    let rest = req.originalUrl.replace(/^\/(gh|ghc)/, '');
+    if (!rest.startsWith('/')) rest = '/' + rest;
+    const targetUrl = `https://${host}${rest}`;
+
+    // 透传请求头（去掉 hop-by-hop 与来源相关头）
+    const fwdHeaders = {};
+    for (const [k, v] of Object.entries(req.headers)) {
+      const lk = k.toLowerCase();
+      if (['host', 'connection', 'content-length', 'origin', 'referer'].includes(lk)) continue;
+      fwdHeaders[k] = v;
+    }
+
+    const fetchOpts = { method: req.method, headers: fwdHeaders, redirect: 'follow' };
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      const ct = (req.headers['content-type'] || '').toLowerCase();
+      if (ct.includes('application/json')) {
+        fetchOpts.body = JSON.stringify(req.body || {});
+      } else if (ct.includes('application/x-www-form-urlencoded')) {
+        fetchOpts.body = new URLSearchParams(req.body || {}).toString();
+      } else if (typeof req.body === 'string') {
+        fetchOpts.body = req.body;
+      }
+    }
+
+    const upstream = await fetch(targetUrl, fetchOpts);
+
+    // 透传响应头（去掉编码/长度相关，避免压缩与分块问题）
+    const skip = ['content-encoding', 'content-length', 'transfer-encoding', 'connection'];
+    for (const [k, v] of upstream.headers.entries()) {
+      if (skip.includes(k.toLowerCase())) continue;
+      res.set(k, v);
+    }
+    res.set('Access-Control-Allow-Origin', '*');
+    const buf = Buffer.from(await upstream.arrayBuffer());
+    res.status(upstream.status);
+    res.send(buf);
+  } catch (e) {
+    console.error('[GitHub代理失败]', host, e.message);
+    res.status(502).json({ error: 'GitHub 代理请求失败: ' + e.message });
+  }
+}
+app.all('/gh/*', (req, res) => ghProxy(req, res, 'api.github.com'));
+app.all('/ghc/*', (req, res) => ghProxy(req, res, 'github.com'));
+
 // ========== 404 处理 ==========
 app.use((req, res) => {
   if (req.accepts('html')) {

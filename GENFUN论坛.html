@@ -755,7 +755,7 @@ a { color:var(--accent); text-decoration:none; } a:hover { color:var(--accent-ho
 const REPO_OWNER = 'GEnFunwww';
 const REPO_NAME = 'genfun-bbs';
 const REPO = REPO_OWNER + '/' + REPO_NAME;
-const GH_API = 'https://api.github.com';
+const GH_API = '/gh'; // 同源代理（由部署服务器转发到 api.github.com，解决中国网络封锁）
 const CLIENT_ID = 'Ov23liPJiMtpMicE7Jt4';
 const CHAT_ISSUE_NUMBER = 3; // 聊天大厅的Issue编号
 // 仓库token（分段存储避免密钥扫描）
@@ -1665,7 +1665,14 @@ const App = {
   },
 
   async fetchViaProxy(apiUrl, timeout = 8000) {
-    // 依次尝试3个CORS代理
+    // 同源代理（以 /gh 开头）直接请求：零 CORS、不受中国网络限制
+    if (apiUrl.startsWith('/')) {
+      try {
+        const res = await this.fetchWithTimeout(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } }, timeout);
+        if (res.ok) return await res.json();
+      } catch(e) { /* 继续尝试外部代理 */ }
+    }
+    // 外部 CORS 代理兜底（海外/代理可达时）
     for (const proxy of this.CORS_PROXIES) {
       try {
         const proxyUrl = proxy + encodeURIComponent(apiUrl);
@@ -1676,7 +1683,7 @@ const App = {
     return null;
   },
 
-  // ---- GitHub API ----
+  // ---- GitHub API（全部经同源 /gh 代理，解决中国网络封锁） ----
   async ghApi(method, path, body, usePat) {
     const token = usePat ? REPO_PAT : this.getAuthToken();
     const headers = { 'Accept': 'application/vnd.github.v3+json' };
@@ -1684,49 +1691,35 @@ const App = {
     if (body) headers['Content-Type'] = 'application/json';
     const opts = { method, headers };
     if (body) opts.body = JSON.stringify(body);
-    const apiUrl = GH_API + path;
+    const apiUrl = GH_API + path; // GH_API='/gh' 时即为同源代理
 
-    // 1) CORS代理优先（国内网络直连不通）
-    for (const proxy of this.CORS_PROXIES) {
-      try {
-        const proxyUrl = proxy + encodeURIComponent(apiUrl);
-        const proxyOpts = { ...opts };
-        // CORS代理需要转发headers
-        proxyOpts.headers = { ...headers };
-        const res = await this.fetchWithTimeout(proxyUrl, proxyOpts, 8000);
-        if (res.status === 401) {
-          if (!usePat && this.userType === 'github') { this.logout(); throw new Error('请先登录'); }
-          throw new Error('认证失败');
-        }
-        if (res.status === 204) return null;
-        if (res.ok) return await res.json();
-        // non-ok 但不是网络错误，继续尝试下一个代理
-      } catch(e) { continue; }
-    }
-
-    // 2) 直连（备用，海外网络可用）
     try {
-      const res = await this.fetchWithTimeout(apiUrl, opts, 5000);
+      const res = await this.fetchWithTimeout(apiUrl, opts, 12000);
       if (res.status === 401) {
         if (!usePat && this.userType === 'github') { this.logout(); throw new Error('请先登录'); }
         throw new Error('认证失败');
       }
-      if (!res.ok) { const e = await res.json(); throw new Error(e.message || '请求失败'); }
       if (res.status === 204) return null;
-      return res.json();
-    } catch(directErr) {
-      throw directErr;
+      if (!res.ok) {
+        let msg = '请求失败';
+        try { const e = await res.json(); if (e && e.message) msg = e.message; } catch(_) {}
+        throw new Error(msg);
+      }
+      return await res.json();
+    } catch (e) {
+      if (e.message === '认证失败' || e.message === '请先登录') throw e;
+      throw new Error('网络请求失败，请确认网络或稍后重试: ' + e.message);
     }
   },
 
   // ---- GitHub 设备流认证 ----
   async startDeviceAuth() {
     try {
-      const res = await fetch('https://github.com/login/device/code', {
+      const res = await this.fetchWithTimeout('/ghc/login/device/code', {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ client_id: CLIENT_ID, scope: 'public_repo' })
-      });
+      }, 12000);
       const data = await res.json();
       if (data.error) throw new Error(data.error_description);
       document.getElementById('emailLoginSection').style.display = 'none';
@@ -1739,11 +1732,11 @@ const App = {
 
   async pollToken(deviceCode, interval) {
     try {
-      const res = await fetch('https://github.com/login/oauth/access_token', {
+      const res = await this.fetchWithTimeout('/ghc/login/oauth/access_token', {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ client_id: CLIENT_ID, device_code: deviceCode, grant_type: 'urn:ietf:params:oauth:grant-type:device_code' })
-      });
+      }, 12000);
       const data = await res.json();
       if (data.access_token) {
         clearInterval(this.authInterval);

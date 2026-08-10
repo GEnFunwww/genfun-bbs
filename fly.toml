@@ -5,14 +5,8 @@ primary_region = "nrt"  # 东京（离中国近，速度快）
 [build]
   dockerfile = "Dockerfile"
 
-[[mounts]]
-  source = "genfun_data"
-  destination = "/data"
-  initial_size = "3gb"
-
 [env]
   PORT = "3456"
-  DATA_DIR = "/data/genbbs"
 
 [http_service]
   internal_port = 3456

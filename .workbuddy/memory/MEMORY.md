@@ -29,12 +29,12 @@
 - VIP主题混搭：VIP用户可用颜色选择器自定义任意accent色
 - 会员按钮（右下角👑按钮，弹窗提示加QQ3932892962）
 - 在线点歌（VIP专属）：导航栏🎵点歌按钮→弹窗→搜索/推荐双标签页→HTML5 Audio播放
-- 点歌搜索：依次尝试直连+CORS代理获取网易云API数据，4层播放URL fallback
+- 点歌搜索：CORS代理优先→直连备用，获取网易云API数据，4层播放URL fallback
 - 推荐歌曲：固定12首热门歌曲，Imagine Dragons的Believer永远排#1（🔥霸榜标签），前三名金银铜排名样式
 - 点歌权限：VIP永久免费，签到奖励可获得1天或3天点歌权限
 - 底部播放条：正在播放时底部显示歌曲信息和控制按钮（播放/暂停/上下首/关闭）
 - 左下角小广告：特别小的固定广告条"GENFUN·发现精彩"，hover放大
-- 哔哩哔哩小电视（📺）：导航栏📺按钮→弹窗→搜索B站视频→嵌入iframe播放+推荐视频6个
+- 哔哩哔哩小电视（📺）：VIP按钮旁边的📺图标→弹窗→搜索B站视频→嵌入iframe播放+推荐视频6个（导航栏按钮已移除，VIP按钮旁仍有入口）
 - 聊天室（大厅聊天=Issue#3 Comments，每天早上8点清理）
 - 右下角FAB发帖按钮
 - 预置管理员：T / Rr052052052@163.com / T123456（自动VIP）
@@ -59,6 +59,9 @@
 - 聊天大厅Issue编号: #3
 - 会员QQ: 3932892962
 - GitHub API 限流：未认证60次/小时，认证5000次/小时（有缓存）
+- CORS代理：blkproxy.iambhvsh.in/api/proxy（可用，支持GET/POST/DELETE+headers转发，30req/min/IP）
+- github.io在中国大陆被SNI阻断，所有API请求改为CORS代理优先
+- ghApi方法也通过CORS代理转发（含Authorization header）
 - LeanCloud已下线，改用GitHub Issues方案
 - 旧后端文件不再需要
 - 自定义域名尝试失败：Cloudflare不支持子域名(qd.je)，已放弃
